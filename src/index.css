@@ -1,0 +1,145 @@
+:root {
+  --ink: #16181c;
+  --muted: #8e9199;
+  --bg: #fdfdfc;
+  --rule: #ebebe8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Thin progress rule pinned to the very top of the page. */
+.progress {
+  position: fixed;
+  inset: 0 auto auto 0;
+  width: 100%;
+  height: 3px;
+  background: transparent;
+}
+
+.progress__fill {
+  height: 100%;
+  background: var(--ink);
+  transition: width 400ms ease;
+}
+
+.page {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 44px 24px 28px;
+}
+
+.breadcrumb {
+  font-size: 15px;
+  color: var(--muted);
+  margin-bottom: 56px;
+}
+
+.breadcrumb strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.question {
+  width: 100%;
+  max-width: 720px;
+  font-size: 30px;
+  line-height: 1.32;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+
+/* Centre stage holds the dot ring. */
+.stage {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  width: 100%;
+}
+
+.ring {
+  position: relative;
+  width: 74px;
+  height: 74px;
+}
+
+.ring__dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  margin: -4.5px;
+  border-radius: 50%;
+  background: var(--ink);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.18;
+    transform: var(--pos) scale(0.82);
+  }
+  40% {
+    opacity: 1;
+    transform: var(--pos) scale(1);
+  }
+}
+
+/* Faster, fuller pulse while "recording". */
+.ring--live .ring__dot {
+  animation-duration: 0.66s;
+}
+
+.footer {
+  width: 100%;
+  max-width: 860px;
+}
+
+.record {
+  width: 100%;
+  border: 0;
+  border-radius: 11px;
+  padding: 19px 24px;
+  background: var(--ink);
+  color: #fff;
+  font-family: inherit;
+  font-size: 16.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 150ms ease;
+}
+
+.record:hover {
+  opacity: 0.88;
+}
+
+.record--live {
+  background: #b3261e;
+}
+
+.hint {
+  margin: 14px 0 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+}
