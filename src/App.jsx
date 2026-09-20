@@ -7,12 +7,12 @@ const QUESTIONS = [
   'What made you start looking for a cofounder agreement in the first place?',
   'Walk me through the last time you and your cofounder disagreed on something.',
   'How did you land on the equity split you have today?',
-  'Can you tell me more about how you’re using ChatGPT in your day-to-day work?',
+  'What would make you recommend this to another founder?',
   'Which parts of that would you want an agent to handle for you?',
   'What would have to be true for you to trust it with something important?',
   'Where do you think it would get things wrong?',
   'How are you handling that today, without an agent?',
-  'What would make you recommend this to another founder?',
+  'Can you tell me more about how you’re using ChatGPT in your day-to-day work?',
   'Anything else you want to add before we wrap up?',
 ];
 
@@ -37,7 +37,7 @@ function DotRing({ live }) {
 }
 
 export default function App() {
-  const [index, setIndex] = useState(4);
+  const [index, setIndex] = useState(0);
   const [live, setLive] = useState(false);
 
   // Stopping a recording advances to the next question, wrapping at the end.
