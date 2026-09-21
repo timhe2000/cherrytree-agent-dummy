@@ -12,6 +12,8 @@ const SECTIONS = [
         text: 'Where is the company incorporated?',
         label: 'State of incorporation',
         options: ['Delaware', 'California', 'Not yet incorporated', 'Somewhere else'],
+        explainer:
+          'Delaware is the default for VC-backed startups — its corporate law is predictable and investors expect it. California is common if you’re staying small or bootstrapped, but adds its own franchise tax on top. Neither is wrong; it depends on whether you’re raising money.',
       },
     ],
   },
@@ -22,6 +24,8 @@ const SECTIONS = [
         text: 'How did you land on the equity split you have today?',
         label: 'Basis for the split',
         options: ['Even split', 'Based on contribution', 'Still deciding', 'A lawyer advised us'],
+        explainer:
+          'An even split is simple and signals trust, but can breed resentment if one founder ends up doing much more. Splitting by contribution feels fairer but is harder to agree on and revisit later. There’s no “correct” answer — just make sure you both actually agree on the reasoning.',
       },
       {
         text: 'What should happen to those shares if a founder leaves in year one?',
@@ -36,6 +40,8 @@ const SECTIONS = [
         text: 'What vesting schedule do you have in mind?',
         label: 'Vesting schedule',
         options: ['4 years, 1-year cliff', '3 years, no cliff', 'Not sure yet'],
+        explainer:
+          '4 years with a 1-year cliff is the startup standard: you earn nothing if you leave in year one, then vest monthly after. It protects the company if a founder bails early. A shorter schedule with no cliff vests faster, but gives equity away even to someone who leaves almost immediately.',
       },
       {
         text: 'Should vesting accelerate if the company gets acquired?',
@@ -54,6 +60,8 @@ const SECTIONS = [
         text: 'How do you want to break a deadlock?',
         label: 'Deadlock resolution',
         options: ['An outside advisor', 'The CEO decides', 'Coin flip', 'Not sure yet'],
+        explainer:
+          'An outside advisor is neutral but slows things down and costs a favor or a fee. Letting the CEO decide keeps things fast but concentrates power with one founder. Whatever you pick, it matters more that you agree on it now, before you actually need it.',
       },
     ],
   },
@@ -64,13 +72,15 @@ const SECTIONS = [
         text: 'Has everything built so far been assigned to the company?',
         label: 'IP assignment',
         options: ['Yes', 'No', 'Not sure'],
+        explainer:
+          'If code or designs aren’t formally assigned to the company, the company may not actually own them — even if a founder built them on a company laptop. This matters most for anything built before incorporation, which doesn’t transfer automatically.',
       },
       { text: 'Was any of it built before the company existed?', label: 'Pre-existing IP' },
     ],
   },
 ];
 
-const REPLY_DELAY_MS = 700;
+const REPLY_DELAY_MS = 1600;
 const FOLLOW_UP = 'Good question — a real agent would answer that here.';
 const TOTAL_QUESTIONS = SECTIONS.reduce((sum, section) => sum + section.questions.length, 0);
 
@@ -211,6 +221,34 @@ export default function App() {
     }, REPLY_DELAY_MS);
   }
 
+  // Step back to the previous question in the current section, clearing its
+  // answer so it can be given again.
+  function goBack() {
+    if (thinking) return;
+    const section = si;
+
+    if (isComplete) {
+      const lastIndex = SECTIONS[section].questions.length - 1;
+      setThreads((current) =>
+        current.map((thread, i) => (i === section ? thread.slice(0, -1) : thread)),
+      );
+      updateAt(setCompleted, section, false);
+      updateAt(setPositions, section, lastIndex);
+      return;
+    }
+
+    if (qi === 0) return;
+    const prevIndex = qi - 1;
+    setThreads((current) =>
+      current.map((thread, i) => (i === section ? thread.slice(0, thread.length - 2) : thread)),
+    );
+    setAnswers((current) =>
+      current.map((row, i) => (i === section ? row.map((a, j) => (j === prevIndex ? null : a)) : row)),
+    );
+    updateAt(setPositions, section, prevIndex);
+    inputRef.current?.focus();
+  }
+
   // Each tab is its own conversation; opening an untouched one starts it.
   function openSection(index) {
     if (thinking || index === si) return;
@@ -238,6 +276,7 @@ export default function App() {
   const answered = answers.flat().filter(Boolean).length;
   const progress = (answered / TOTAL_QUESTIONS) * 100;
   const choices = !thinking && !isComplete ? SECTIONS[si].questions[qi].options : undefined;
+  const explainer = !thinking && !isComplete ? SECTIONS[si].questions[qi].explainer : undefined;
 
   return (
     <div className="app">
@@ -269,11 +308,21 @@ export default function App() {
         <div className="pane pane--chat">
           <main className="transcript" ref={transcriptRef}>
             <div className="thread">
-              {messages.map((message, i) => (
-                <div key={i} className={`msg msg--${message.role}`}>
-                  {message.text}
-                </div>
-              ))}
+              {(() => {
+                let lastAgentIndex = -1;
+                for (let i = messages.length - 1; i >= 0; i--) {
+                  if (messages[i].role === 'agent') {
+                    lastAgentIndex = i;
+                    break;
+                  }
+                }
+                const visible = lastAgentIndex === -1 ? [] : messages.slice(lastAgentIndex);
+                return visible.map((message, i) => (
+                  <div key={lastAgentIndex + i} className={`msg msg--${message.role}`}>
+                    {message.text}
+                  </div>
+                ));
+              })()}
 
               {thinking && (
                 <div className="msg msg--agent typing" aria-label="Typing">
@@ -282,6 +331,8 @@ export default function App() {
                   <span />
                 </div>
               )}
+
+              {explainer && <p className="explainer">{explainer}</p>}
 
               {choices && (
                 <div className="choices">
@@ -301,34 +352,45 @@ export default function App() {
           </main>
 
           <footer className="composer-wrap">
-            <div className="composer">
-              <textarea
-                ref={inputRef}
-                className="composer__input"
-                rows={1}
-                value={input}
-                onChange={handleInput}
-                onKeyDown={handleKeyDown}
-                // The placeholder carries the fact that this isn't just a form —
-                // answering and asking both happen in the same box.
-                placeholder={
-                  isComplete
-                    ? 'Ask a follow-up…'
-                    : choices
-                      ? 'Pick one, or ask a question…'
-                      : 'Answer, or ask a question…'
-                }
-                autoFocus
-              />
+            <div className="composer-row">
               <button
                 type="button"
-                className="composer__send"
-                onClick={() => send()}
-                disabled={!input.trim() || thinking}
-                aria-label="Send"
+                className="composer__back"
+                onClick={goBack}
+                disabled={thinking || (qi === 0 && !isComplete)}
+                aria-label="Back"
               >
-                ↑
+                ←
               </button>
+              <div className="composer">
+                <textarea
+                  ref={inputRef}
+                  className="composer__input"
+                  rows={1}
+                  value={input}
+                  onChange={handleInput}
+                  onKeyDown={handleKeyDown}
+                  // The placeholder carries the fact that this isn't just a form —
+                  // answering and asking both happen in the same box.
+                  placeholder={
+                    isComplete
+                      ? 'Ask a follow-up…'
+                      : choices
+                        ? 'Pick one, or ask a question…'
+                        : 'Answer, or ask a question…'
+                  }
+                  autoFocus
+                />
+                <button
+                  type="button"
+                  className="composer__send"
+                  onClick={() => send()}
+                  disabled={!input.trim() || thinking}
+                  aria-label="Send"
+                >
+                  →
+                </button>
+              </div>
             </div>
             <p className="hint">Dummy app — nothing is saved</p>
           </footer>
