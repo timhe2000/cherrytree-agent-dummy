@@ -1,7 +1,8 @@
 # cherrytree-agent-dummy
 
 Scratch project for trying out agent ideas. Nothing here is wired to Firebase,
-Clerk or any real data — the interview screen is a static mock.
+Clerk or any real data — the interview is a front-end mock: the agent works
+through a fixed list of questions and nothing you type is stored.
 
 ## Run it
 
@@ -17,8 +18,8 @@ on 3000.
 ## Live reload
 
 Vite's dev server hot-reloads on save. Edit `src/App.jsx` or `src/index.css`
-and the browser updates instantly, without a full refresh — React component
-state (current question, recording toggle) survives the update.
+and the browser updates instantly, without a full refresh — the transcript
+you've already built up survives the update.
 
 Start with:
 
