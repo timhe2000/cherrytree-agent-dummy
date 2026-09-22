@@ -7,13 +7,37 @@ const SECTIONS = [
   {
     name: 'Formation',
     questions: [
-      { text: 'To start, what does your company do?', label: 'Business of the company' },
+      {
+        text: 'To start, what does your company do?',
+        label: 'Business of the company',
+        explainer:
+          'This grounds the rest of the agreement — vesting, IP assignment, and decision rights all get interpreted in light of what the company actually does. There’s no wrong answer here, just be specific enough that the assignment and non-compete language later can point back to it.',
+      },
       {
         text: 'Where is the company incorporated?',
         label: 'State of incorporation',
-        options: ['Delaware', 'California', 'Not yet incorporated', 'Somewhere else'],
-        explainer:
-          'Delaware is the default for VC-backed startups — its corporate law is predictable and investors expect it. California is common if you’re staying small or bootstrapped, but adds its own franchise tax on top. Neither is wrong; it depends on whether you’re raising money.',
+        options: [
+          {
+            value: 'Delaware',
+            explainer:
+              'The default for VC-backed startups — predictable corporate law, and investors will often ask you to reincorporate here anyway before a raise.',
+          },
+          {
+            value: 'California',
+            explainer:
+              'Common if you’re staying small or bootstrapped, but adds its own franchise tax on top of whatever state you’re also registered in.',
+          },
+          {
+            value: 'Not yet incorporated',
+            explainer:
+              'Fine for now, but equity, vesting, and IP assignment can’t actually be legally binding until there’s an entity to assign them to.',
+          },
+          {
+            value: 'Somewhere else',
+            explainer:
+              'Less common for startups planning to raise — investors may ask you to reincorporate in Delaware before a priced round.',
+          },
+        ],
       },
     ],
   },
@@ -23,13 +47,34 @@ const SECTIONS = [
       {
         text: 'How did you land on the equity split you have today?',
         label: 'Basis for the split',
-        options: ['Even split', 'Based on contribution', 'Still deciding', 'A lawyer advised us'],
-        explainer:
-          'An even split is simple and signals trust, but can breed resentment if one founder ends up doing much more. Splitting by contribution feels fairer but is harder to agree on and revisit later. There’s no “correct” answer — just make sure you both actually agree on the reasoning.',
+        options: [
+          {
+            value: 'Even split',
+            explainer:
+              'Simple and signals trust, but can breed resentment if one founder ends up doing much more over time.',
+          },
+          {
+            value: 'Based on contribution',
+            explainer:
+              'Feels fairer on paper, but is harder to agree on up front and even harder to revisit later without conflict.',
+          },
+          {
+            value: 'Still deciding',
+            explainer:
+              'Fine to leave open, but the agreement should specify how and when you’ll actually decide — otherwise “later” tends to become “never.”',
+          },
+          {
+            value: 'A lawyer advised us',
+            explainer:
+              'Worth having the underlying reasoning documented anyway — a lawyer’s suggestion still needs both founders to actually agree with it.',
+          },
+        ],
       },
       {
         text: 'What should happen to those shares if a founder leaves in year one?',
         label: 'Shares on early departure',
+        explainer:
+          'A 1-year cliff already means nothing is owed if someone leaves that early — but for anything vested, most agreements also give the company (or remaining founders) a right to repurchase those shares at cost, so equity doesn’t outlive someone’s involvement. Without that clause, a departed founder can end up owning a chunk of a company they no longer work on.',
       },
     ],
   },
@@ -39,13 +84,29 @@ const SECTIONS = [
       {
         text: 'What vesting schedule do you have in mind?',
         label: 'Vesting schedule',
-        options: ['4 years, 1-year cliff', '3 years, no cliff', 'Not sure yet'],
-        explainer:
-          '4 years with a 1-year cliff is the startup standard: you earn nothing if you leave in year one, then vest monthly after. It protects the company if a founder bails early. A shorter schedule with no cliff vests faster, but gives equity away even to someone who leaves almost immediately.',
+        options: [
+          {
+            value: '4 years, 1-year cliff',
+            explainer:
+              'The startup standard — nothing vests if you leave in year one, then monthly after. Protects the company if a founder bails early.',
+          },
+          {
+            value: '3 years, no cliff',
+            explainer:
+              'Vests faster and rewards commitment sooner, but gives away equity even to someone who leaves almost immediately.',
+          },
+          {
+            value: 'Not sure yet',
+            explainer:
+              'Reasonable to leave open, but most investors will expect something close to the 4-year, 1-year-cliff standard before they’ll invest.',
+          },
+        ],
       },
       {
         text: 'Should vesting accelerate if the company gets acquired?',
         label: 'Acceleration on acquisition',
+        explainer:
+          'Single-trigger acceleration (vests immediately on acquisition) protects founders from being pushed out right after a deal to dodge unvested payouts, but can make the company less attractive to acquirers who want the team to stay. Double-trigger — acceleration only if you’re also let go post-acquisition — is the more common middle ground.',
       },
     ],
   },
@@ -55,13 +116,34 @@ const SECTIONS = [
       {
         text: 'Which decisions should need both founders to agree?',
         label: 'Decisions requiring unanimity',
+        explainer:
+          'The classic list is raising money, selling the company, taking on debt, and changing the equity split or firing a cofounder. Requiring unanimity on too much invites deadlock over small stuff; too little lets one founder make irreversible calls alone — most agreements stick to a short list of the biggest, hardest-to-undo decisions.',
       },
       {
         text: 'How do you want to break a deadlock?',
         label: 'Deadlock resolution',
-        options: ['An outside advisor', 'The CEO decides', 'Coin flip', 'Not sure yet'],
-        explainer:
-          'An outside advisor is neutral but slows things down and costs a favor or a fee. Letting the CEO decide keeps things fast but concentrates power with one founder. Whatever you pick, it matters more that you agree on it now, before you actually need it.',
+        options: [
+          {
+            value: 'An outside advisor',
+            explainer:
+              'Neutral, but slows things down and costs a favor or a fee every time it’s invoked.',
+          },
+          {
+            value: 'The CEO decides',
+            explainer:
+              'Keeps things fast, but concentrates power with one founder — worth naming explicitly rather than assuming.',
+          },
+          {
+            value: 'Coin flip',
+            explainer:
+              'Fully neutral and fast, but resolves nothing about who was actually right — fine for small stuff, risky for big calls.',
+          },
+          {
+            value: 'Not sure yet',
+            explainer:
+              'Worth deciding before you actually hit a deadlock — it’s much harder to agree on a process once you’re already stuck.',
+          },
+        ],
       },
     ],
   },
@@ -71,11 +153,30 @@ const SECTIONS = [
       {
         text: 'Has everything built so far been assigned to the company?',
         label: 'IP assignment',
-        options: ['Yes', 'No', 'Not sure'],
-        explainer:
-          'If code or designs aren’t formally assigned to the company, the company may not actually own them — even if a founder built them on a company laptop. This matters most for anything built before incorporation, which doesn’t transfer automatically.',
+        options: [
+          {
+            value: 'Yes',
+            explainer:
+              'Good — get the assignment documented in writing if it isn’t already, since “yes” without paperwork doesn’t hold up in diligence.',
+          },
+          {
+            value: 'No',
+            explainer:
+              'This needs to happen before a fundraise or acquisition — unassigned IP is one of the most common deal-blockers in diligence.',
+          },
+          {
+            value: 'Not sure',
+            explainer:
+              'Worth checking founder agreements, employment contracts, or IP assignment forms from any prior work — the answer affects what the company actually owns.',
+          },
+        ],
       },
-      { text: 'Was any of it built before the company existed?', label: 'Pre-existing IP' },
+      {
+        text: 'Was any of it built before the company existed?',
+        label: 'Pre-existing IP',
+        explainer:
+          'Pre-existing work isn’t automatically owned by the company — even as the sole founder, even if you built it specifically for this idea. It needs a formal assignment (or an explicit license if you want to keep personal ownership), since this is exactly what investors and acquirers diligence later.',
+      },
     ],
   },
 ];
@@ -141,6 +242,7 @@ export default function App() {
   const [input, setInput] = useState('');
   const [thinking, setThinking] = useState(false);
   const [draftOpen, setDraftOpen] = useState(false);
+  const [hoveredOption, setHoveredOption] = useState(null);
 
   const inputRef = useRef(null);
   const transcriptRef = useRef(null);
@@ -155,6 +257,11 @@ export default function App() {
     const scroller = transcriptRef.current;
     if (scroller) scroller.scrollTop = scroller.scrollHeight;
   }, [messages, thinking, si]);
+
+  // A new question means any hovered option from the last one is stale.
+  useEffect(() => {
+    setHoveredOption(null);
+  }, [si, qi]);
 
   // Clear the highlight on a freshly filled field after it has played.
   useEffect(() => {
@@ -185,10 +292,14 @@ export default function App() {
     const questions = SECTIONS[section].questions;
     const wasComplete = completed[section];
     const hasMore = qi + 1 < questions.length;
+    // No real NLP here — a trailing "?" is the stand-in for "this is a
+    // follow-up, not an answer to the current question."
+    const isFollowUp = !wasComplete && !choice && text.endsWith('?');
 
-    // A finished section is out of script, so further messages are follow-ups
-    // and must not overwrite an answer already captured in the draft.
-    if (!wasComplete) {
+    // A finished section is out of script, and a follow-up mid-section is
+    // off-script too — neither should overwrite an answer already captured
+    // in the draft or move the interview along.
+    if (!wasComplete && !isFollowUp) {
       setAnswers((current) =>
         current.map((row, i) => (i === section ? row.map((a, j) => (j === qi ? text : a)) : row)),
       );
@@ -196,11 +307,12 @@ export default function App() {
     }
 
     setTimeout(() => {
-      const reply = wasComplete
-        ? FOLLOW_UP
-        : hasMore
-          ? questions[qi + 1].text
-          : `That’s everything for ${SECTIONS[section].name}. Ask me anything about it, or pick another section above.`;
+      const reply =
+        wasComplete || isFollowUp
+          ? FOLLOW_UP
+          : hasMore
+            ? questions[qi + 1].text
+            : `That’s everything for ${SECTIONS[section].name}. Ask me anything about it, or pick another section above.`;
 
       setThreads((current) =>
         current.map((thread, i) =>
@@ -208,7 +320,7 @@ export default function App() {
         ),
       );
 
-      if (!wasComplete) {
+      if (!wasComplete && !isFollowUp) {
         if (hasMore) {
           updateAt(setPositions, section, qi + 1);
         } else {
@@ -275,8 +387,15 @@ export default function App() {
 
   const answered = answers.flat().filter(Boolean).length;
   const progress = (answered / TOTAL_QUESTIONS) * 100;
-  const choices = !thinking && !isComplete ? SECTIONS[si].questions[qi].options : undefined;
-  const explainer = !thinking && !isComplete ? SECTIONS[si].questions[qi].explainer : undefined;
+  const currentQuestion = SECTIONS[si].questions[qi];
+  const choices = !thinking && !isComplete ? currentQuestion.options : undefined;
+  // Multi-choice questions swap the explainer to whichever option is hovered;
+  // open-ended ones just show the question's own explainer.
+  const explainer = !thinking && !isComplete
+    ? choices
+      ? (choices.find((option) => option.value === hoveredOption)?.explainer)
+      : currentQuestion.explainer
+    : undefined;
 
   return (
     <div className="app">
@@ -309,16 +428,20 @@ export default function App() {
           <main className="transcript" ref={transcriptRef}>
             <div className="thread">
               {(() => {
-                let lastAgentIndex = -1;
+                // Anchor on the last agent message that actually moved the
+                // script forward (asked a question or closed the section) —
+                // not just the last agent message, since a follow-up reply
+                // shouldn't bump the current question off screen.
+                let anchor = -1;
                 for (let i = messages.length - 1; i >= 0; i--) {
-                  if (messages[i].role === 'agent') {
-                    lastAgentIndex = i;
+                  if (messages[i].role === 'agent' && messages[i].text !== FOLLOW_UP) {
+                    anchor = i;
                     break;
                   }
                 }
-                const visible = lastAgentIndex === -1 ? [] : messages.slice(lastAgentIndex);
+                const visible = anchor === -1 ? [] : messages.slice(anchor);
                 return visible.map((message, i) => (
-                  <div key={lastAgentIndex + i} className={`msg msg--${message.role}`}>
+                  <div key={anchor + i} className={`msg msg--${message.role}`}>
                     {message.text}
                   </div>
                 ));
@@ -332,22 +455,28 @@ export default function App() {
                 </div>
               )}
 
-              {explainer && <p className="explainer">{explainer}</p>}
+              {!choices && explainer && <p className="explainer">{explainer}</p>}
 
               {choices && (
                 <div className="choices">
                   {choices.map((option) => (
                     <button
-                      key={option}
+                      key={option.value}
                       type="button"
                       className="choice"
-                      onClick={() => send(option)}
+                      onClick={() => send(option.value)}
+                      onMouseEnter={() => setHoveredOption(option.value)}
+                      onMouseLeave={() => setHoveredOption(null)}
+                      onFocus={() => setHoveredOption(option.value)}
+                      onBlur={() => setHoveredOption(null)}
                     >
-                      {option}
+                      {option.value}
                     </button>
                   ))}
                 </div>
               )}
+
+              {choices && explainer && <p className="explainer explainer--option">{explainer}</p>}
             </div>
           </main>
 

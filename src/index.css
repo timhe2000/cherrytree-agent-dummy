@@ -239,7 +239,7 @@ body {
   align-self: flex-start;
   font-size: 30px;
   line-height: 1.32;
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: -0.015em;
   animation: rise 380ms ease both;
 }
@@ -307,6 +307,13 @@ body {
   line-height: 1.55;
   color: var(--muted);
   animation: rise 380ms ease both;
+}
+
+/* Trails the choice chips instead of the question text, so it needs
+   space above rather than pulling up into it. */
+.explainer--option {
+  margin: 10px 0 0;
+  animation: none;
 }
 
 /* Pickable answers for a question that defines `options`. */
