@@ -4,6 +4,8 @@
   --bg: #fdfdfc;
   --rule: #ebebe8;
   --bubble: #f2f1ee;
+  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --doc: 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
 }
 
 * {
@@ -20,7 +22,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--ink);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-family: var(--sans);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -152,69 +154,153 @@ body {
   flex: 1;
 }
 
+/* Dims the interview while the document is up, and gives you a large, obvious
+   place to click to get back to it. */
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: rgb(22 24 28 / 16%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 260ms ease;
+}
+
+.scrim--on {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .draft-panel {
   position: absolute;
   top: 0;
   right: 0;
   height: 100%;
-  width: min(440px, 88%);
-  background: #faf9f7;
+  width: min(560px, 92%);
+  background: #fffefb;
   border-left: 1px solid var(--rule);
   transform: translateX(100%);
-  transition: transform 260ms ease;
+  transition: transform 300ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 .draft-panel--open {
   transform: none;
-  box-shadow: -18px 0 40px rgb(22 24 28 / 7%);
+  box-shadow: -24px 0 60px rgb(22 24 28 / 10%);
 }
 
 .draft-panel__body {
   height: 100%;
   overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
-/* Tab on the left edge of the panel, so it travels with it. */
-.draft-handle {
+.draft-panel__close {
   position: absolute;
-  left: -30px;
+  top: 14px;
+  right: 16px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    opacity 200ms ease,
+    background 150ms ease,
+    color 150ms ease;
+}
+
+.draft-panel--open .draft-panel__close {
+  opacity: 1;
+}
+
+.draft-panel__close:hover {
+  background: var(--bubble);
+  color: var(--ink);
+}
+
+/* Tab on the left edge of the panel, so it travels with it. Closed, it names
+   what's behind it and how much of it exists; open, it's just a way back. */
+.draft-tab {
+  position: absolute;
+  left: -38px;
   top: 50%;
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
-  width: 30px;
-  padding: 14px 0;
+  gap: 10px;
+  width: 38px;
+  padding: 16px 0;
   border: 1px solid var(--rule);
   border-right: 0;
-  border-radius: 9px 0 0 9px;
-  background: #fff;
+  border-radius: 10px 0 0 10px;
+  background: #fffefb;
   color: var(--ink);
   font-family: inherit;
   cursor: pointer;
-  transition: background 150ms ease;
+  box-shadow: -6px 0 18px rgb(22 24 28 / 5%);
+  transition:
+    background 150ms ease,
+    border-color 150ms ease;
 }
 
-.draft-handle:hover {
+.draft-tab:hover {
   background: var(--bubble);
+  border-color: #d9d8d3;
 }
 
-.draft-handle__arrow {
-  font-size: 17px;
+.draft-tab__arrow {
+  font-size: 16px;
   line-height: 1;
+  color: var(--muted);
 }
 
-.draft-handle__count {
-  font-size: 10.5px;
-  color: var(--muted);
+.draft-tab__label {
   writing-mode: vertical-rl;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.draft-tab__count {
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+/* Fills as the document does — a progress read you can see with the panel shut. */
+.draft-tab__meter {
+  width: 3px;
+  height: 46px;
+  border-radius: 3px;
+  background: var(--rule);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.draft-tab__meter-fill {
+  width: 100%;
+  background: var(--ink);
+  border-radius: 3px;
+  transition: height 400ms ease;
 }
 
 .transcript {
   flex: 1;
   overflow-y: auto;
-  padding: 12vh 24px 24px;
+  padding: 7vh 24px 24px;
   /* Deliberately not `scroll-behavior: smooth` — where smooth scrolling isn't
      implemented, it silently turns scrollTop assignments into no-ops. */
 }
@@ -298,49 +384,75 @@ body {
   }
 }
 
-/* Beginner-facing context on what the options actually mean. */
-.explainer {
-  margin: -12px 0 0;
-  padding: 12px 14px;
-  border-left: 2px solid var(--rule);
-  font-size: 14.5px;
-  line-height: 1.55;
+/* What the agent says before asking — why this matters, what usually goes
+   wrong. Sits inside the agent turn, above the question, always visible. */
+.msg__lead {
+  margin: 0 0 14px;
+  max-width: 62ch;
+  font-size: 15.5px;
+  line-height: 1.6;
+  font-weight: 400;
+  letter-spacing: normal;
   color: var(--muted);
-  animation: rise 380ms ease both;
 }
 
-/* Trails the choice chips instead of the question text, so it needs
-   space above rather than pulling up into it. */
-.explainer--option {
-  margin: 10px 0 0;
-  animation: none;
-}
-
-/* Pickable answers for a question that defines `options`. */
+/* Pickable answers for a question that defines `options`. Each one states its
+   own tradeoff inline — reading them shouldn't require hovering one at a time. */
 .choices {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 8px;
-  margin-top: -6px;
+  margin-top: -4px;
 }
 
 .choice {
+  display: block;
+  width: 100%;
+  text-align: left;
   border: 1px solid var(--rule);
-  border-radius: 999px;
-  padding: 9px 16px;
+  border-radius: 10px;
+  padding: 13px 16px;
   background: #fff;
   color: var(--ink);
   font-family: inherit;
-  font-size: 15.5px;
   cursor: pointer;
   transition:
     border-color 150ms ease,
     background 150ms ease;
 }
 
-.choice:hover {
+.choice:hover,
+.choice:focus-visible {
+  border-color: #c9c8c3;
+  background: #fbfaf8;
+  outline: none;
+}
+
+/* What you picked last time, shown when you step back onto the question. */
+.choice--picked {
   border-color: var(--ink);
-  background: var(--bubble);
+  background: #fbfaf8;
+}
+
+.choice--picked .choice__value::after {
+  content: '✓';
+  margin-left: 7px;
+  font-size: 12px;
+}
+
+.choice__value {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.choice__why {
+  display: block;
+  margin-top: 4px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--muted);
 }
 
 .composer-wrap {
@@ -356,27 +468,29 @@ body {
   gap: 8px;
 }
 
+/* The composer is a single rule, not a box — the arrows either side sit on it
+   plainly so the whole row reads as one line. */
 .composer__back {
   flex: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
-  border: 1px solid var(--rule);
-  border-radius: 4px;
-  background: #fff;
-  color: var(--ink);
-  font-size: 15px;
+  width: 26px;
+  height: 26px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 16px;
   line-height: 1;
   cursor: pointer;
   transition:
     opacity 150ms ease,
-    background 150ms ease;
+    color 150ms ease;
 }
 
 .composer__back:hover:not(:disabled) {
-  background: var(--bubble);
+  color: var(--ink);
 }
 
 .composer__back:disabled {
@@ -390,15 +504,15 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 4px 8px 4px 16px;
-  background: #fff;
-  border: 1px solid var(--rule);
-  border-radius: 8px;
+  padding: 4px 0;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--rule);
   transition: border-color 150ms ease;
 }
 
 .composer:focus-within {
-  border-color: #c9c8c3;
+  border-bottom-color: var(--ink);
 }
 
 .composer__input {
@@ -424,20 +538,22 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: 26px;
+  height: 26px;
   border: 0;
-  border-radius: 4px;
-  background: var(--ink);
-  color: #fff;
-  font-size: 15px;
+  background: transparent;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 16px;
   line-height: 1;
   cursor: pointer;
-  transition: opacity 150ms ease;
+  transition:
+    opacity 150ms ease,
+    color 150ms ease;
 }
 
 .composer__send:hover:not(:disabled) {
-  opacity: 0.85;
+  opacity: 0.6;
 }
 
 .composer__send:disabled {
@@ -453,103 +569,291 @@ body {
   color: var(--muted);
 }
 
-/* ---- Draft pane ---- */
+/* ---- The document ---- */
 
-.draft {
-  max-width: 520px;
+/* Serif here and nowhere else: the preview should read as a different kind of
+   object from the interview that produces it. */
+.doc {
+  max-width: 560px;
   margin: 0 auto;
-  padding: 26px 28px 40px;
+  padding: 30px 34px 44px;
+  font-family: var(--doc);
 }
 
-.draft__head {
-  padding-bottom: 16px;
+.doc__head {
+  padding-bottom: 18px;
   border-bottom: 1px solid var(--rule);
 }
 
-.draft__title {
+.doc__eyebrow {
   margin: 0;
-  font-size: 19px;
-  font-weight: 600;
-  letter-spacing: -0.015em;
-}
-
-.draft__status {
-  margin: 4px 0 0;
-  font-size: 12.5px;
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
   color: var(--muted);
 }
 
-.clause {
-  padding: 20px 0 4px;
+.doc__title {
+  margin: 7px 0 14px;
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.doc__progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.doc__bar {
+  flex: 1;
+  height: 2px;
+  background: var(--rule);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.doc__bar-fill {
+  height: 100%;
+  background: var(--ink);
+  transition: width 400ms ease;
+}
+
+.doc__count {
+  flex: none;
+  font-family: var(--sans);
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.doc__foot {
+  margin-top: 26px;
+  font-family: var(--sans);
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* Sections dim when you're working elsewhere, so the panel always shows you
+   where in the document the conversation currently is. */
+.recitals,
+.article {
+  padding: 22px 0 6px;
   border-bottom: 1px solid var(--rule);
-  opacity: 0.62;
+  opacity: 0.55;
   transition: opacity 250ms ease;
 }
 
-.clause--active,
-.clause:hover {
+.recitals.is-active,
+.article.is-active,
+.recitals:hover,
+.article:hover {
   opacity: 1;
 }
 
-.clause__title {
+.recitals__title,
+.article__title {
+  margin: 0 0 14px;
+}
+
+/* A section heading is the way back into that part of the interview. */
+.section-jump {
   display: flex;
-  align-items: center;
-  gap: 9px;
-  margin: 0 0 12px;
-  font-size: 13px;
+  align-items: baseline;
+  gap: 10px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: var(--sans);
+  font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 150ms ease;
+}
+
+.section-jump:hover,
+.section-jump:focus-visible {
+  color: var(--ink);
+  outline: none;
+}
+
+.article__num {
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+/* Background is context, not a term — no numbering, lighter weight. */
+.recital {
+  margin-bottom: 13px;
+}
+
+.recital__label {
+  display: block;
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 3px;
+}
+
+.recital__value {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: left;
+  font-family: var(--doc);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.recital__value--empty {
+  color: #c6c4bd;
+}
+
+button.recital__value:hover,
+button.recital__value:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  outline: none;
+}
+
+span.recital__value {
+  cursor: default;
+}
+
+/* ---- Clauses ---- */
+
+.clause {
+  display: block;
+  position: relative;
+  width: 100%;
+  margin-bottom: 18px;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: left;
+  font-family: inherit;
+}
+
+.clause__heading {
+  display: block;
+  margin-bottom: 5px;
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--muted);
 }
 
 .clause__num {
-  display: grid;
-  place-items: center;
-  width: 19px;
-  height: 19px;
-  border-radius: 50%;
-  background: var(--bubble);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0;
+  margin-right: 7px;
+  font-variant-numeric: tabular-nums;
 }
 
-.field {
-  margin-bottom: 14px;
-  padding-left: 28px;
-}
-
-.field__label {
+.clause__text {
   display: block;
-  font-size: 11.5px;
-  color: var(--muted);
-  margin-bottom: 2px;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: #4a4d54;
 }
 
-.field__value {
-  display: block;
-  font-size: 14.5px;
-  line-height: 1.45;
-  color: #b4b3ae;
-  font-style: italic;
+/* A clause the agent has reached is a way into the conversation drafting it. */
+.clause--open {
+  cursor: pointer;
+  border-radius: 5px;
 }
 
-.field--filled .field__value {
-  color: var(--ink);
-  font-style: normal;
-}
-
-/* Brief flash when an answer lands in the draft. */
-.field--new {
-  animation: land 1.4s ease;
+.clause--open::before {
+  content: '';
+  position: absolute;
+  inset: -8px -10px;
   border-radius: 6px;
+  background: transparent;
+  transition: background 150ms ease;
+}
+
+.clause--open:hover::before,
+.clause--open:focus-visible::before {
+  background: #f1efe9;
+}
+
+.clause--open:focus-visible {
+  outline: none;
+}
+
+.clause--open > * {
+  position: relative;
+}
+
+/* Marks where the interview currently is, so the draft tells you your place. */
+.clause--current::after {
+  content: '';
+  position: absolute;
+  left: -16px;
+  top: 1px;
+  bottom: 1px;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--ink);
+}
+
+.clause__revisit {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.clause--open:hover .clause__revisit,
+.clause--open:focus-visible .clause__revisit {
+  opacity: 1;
+}
+
+/* ---- Slots ---- */
+
+/* What the conversation has settled, set into the clause around it. */
+.slot--filled {
+  color: var(--ink);
+  background: #f1eee4;
+  border-radius: 2px;
+  padding: 0 2px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* What it hasn't: a gap you can see the shape of, the way an unsigned
+   contract looks. */
+.slot--blank {
+  display: inline-block;
+  width: 8.5em;
+  max-width: 100%;
+  height: 0.85em;
+  margin-bottom: -0.1em;
+  border-bottom: 1px solid #cfcdc5;
+}
+
+.slot--fresh {
+  animation: land 1.4s ease;
 }
 
 @keyframes land {
   0% {
-    background: #e7eee8;
+    background: #dce8de;
   }
   100% {
-    background: transparent;
+    background: #f1eee4;
   }
 }

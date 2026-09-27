@@ -2,40 +2,74 @@ import { useEffect, useRef, useState } from 'react';
 
 // Edit anything in this file and the page updates instantly — no reload.
 // Placeholder content: every question is a stand-in, here to show the sections.
-// `options` renders pickable chips; `label` is how the answer reads in the draft.
+//
+// Each question is a turn the agent takes, not a form field:
+//   `lead`    — what the agent says before asking. Why this matters, what the
+//               tradeoff is, what usually goes wrong. Always on screen.
+//   `text`    — the question itself.
+//   `options` — pickable answers. Each carries its own `why`, also always on
+//               screen: reading the tradeoffs shouldn't require hunting for them.
+//   `label`   — how the answer reads back in the draft.
+//
+// A section with `clause: false` is context-gathering, not a term of the
+// agreement — it still shows in the draft, just not as a numbered clause.
 const SECTIONS = [
   {
-    name: 'Formation',
+    name: 'Background',
+    clause: false,
     questions: [
       {
-        text: 'To start, what does your company do?',
-        label: 'Business of the company',
-        explainer:
-          'This grounds the rest of the agreement — vesting, IP assignment, and decision rights all get interpreted in light of what the company actually does. There’s no wrong answer here, just be specific enough that the assignment and non-compete language later can point back to it.',
+        lead: 'I’m going to help you put together a cofounder agreement. Before any of the legal mechanics, though, I want to understand the two of you — most of the disputes I’ve watched play out didn’t come from bad paperwork. They came from two people who never said their assumptions out loud.',
+        text: 'So, to start: how did you two meet?',
+        label: 'How the founders met',
       },
       {
+        lead: 'That helps. I ask about the idea next because it quietly drives the equity conversation later — when one person brought the idea and the other joined to build it, they almost always remember that differently a year on.',
+        text: 'Where did the idea actually come from?',
+        label: 'Origin of the idea',
+      },
+      {
+        lead: 'Good. Now the day-to-day, because roles on paper and roles in practice drift apart fast, and the agreement should describe the real one.',
+        text: 'How are the two of you splitting the work right now?',
+        label: 'How the work is divided today',
+      },
+      {
+        lead: 'Last one before we get into the document. Uneven commitment is the single biggest source of resentment I see — one founder quits their job, the other keeps consulting “for a few more months,” and nobody ever goes back and renegotiates.',
+        text: 'Are you both full-time on this? If not, what’s the plan?',
+        label: 'Commitment level',
+      },
+    ],
+  },
+  {
+    name: 'Company',
+    questions: [
+      {
+        lead: 'Alright — with that context, let’s start building the actual agreement. This first question sounds obvious, but it does real work: the business description is what the IP assignment and any non-compete language point back to. Too vague and it protects nothing; too narrow and it misses whatever you pivot into.',
+        text: 'How would you describe what the company does?',
+        label: 'Business of the company',
+        clause: 'The Company is engaged in the following business: {}',
+      },
+      {
+        lead: 'Now the entity itself, which decides whose corporate law governs everything we’re about to write down.',
         text: 'Where is the company incorporated?',
         label: 'State of incorporation',
+        clause: 'Jurisdiction of incorporation: {}',
         options: [
           {
             value: 'Delaware',
-            explainer:
-              'The default for VC-backed startups — predictable corporate law, and investors will often ask you to reincorporate here anyway before a raise.',
+            why: 'The default for venture-backed startups — predictable corporate law, and investors will often ask you to reincorporate here before a priced round anyway.',
           },
           {
             value: 'California',
-            explainer:
-              'Common if you’re staying small or bootstrapped, but adds its own franchise tax on top of whatever state you’re also registered in.',
+            why: 'Common if you’re staying small or bootstrapped, but it adds its own franchise tax on top of whatever state you’re also registered in.',
           },
           {
             value: 'Not yet incorporated',
-            explainer:
-              'Fine for now, but equity, vesting, and IP assignment can’t actually be legally binding until there’s an entity to assign them to.',
+            why: 'Fine for now, and worth doing the thinking early — but equity, vesting, and IP assignment can’t bind anyone until there’s an entity to assign them to.',
           },
           {
             value: 'Somewhere else',
-            explainer:
-              'Less common for startups planning to raise — investors may ask you to reincorporate in Delaware before a priced round.',
+            why: 'Less common for startups planning to raise. Tell me where and I’ll flag anything that changes.',
           },
         ],
       },
@@ -45,36 +79,35 @@ const SECTIONS = [
     name: 'Equity',
     questions: [
       {
-        text: 'How did you land on the equity split you have today?',
+        lead: 'This is the section that ends friendships, so I’ll be direct. I’m not going to tell you what your split should be — that’s yours. But I do want the reasoning written down, because “we agreed it was fair” is not something either of you can point at in two years.',
+        text: 'How did you land on the split you have today?',
         label: 'Basis for the split',
+        clause: 'Founder Shares are allocated on the following basis: {}',
         options: [
           {
             value: 'Even split',
-            explainer:
-              'Simple and signals trust, but can breed resentment if one founder ends up doing much more over time.',
+            why: 'Simple, and it signals trust. The risk is resentment later if one of you ends up carrying noticeably more.',
           },
           {
             value: 'Based on contribution',
-            explainer:
-              'Feels fairer on paper, but is harder to agree on up front and even harder to revisit later without conflict.',
+            why: 'Fairer on paper, harder to agree on up front, and harder still to revisit later without a fight.',
           },
           {
             value: 'Still deciding',
-            explainer:
-              'Fine to leave open, but the agreement should specify how and when you’ll actually decide — otherwise “later” tends to become “never.”',
+            why: 'Fine to leave open — but then the agreement should say how and by when you’ll decide, or “later” becomes “never.”',
           },
           {
             value: 'A lawyer advised us',
-            explainer:
-              'Worth having the underlying reasoning documented anyway — a lawyer’s suggestion still needs both founders to actually agree with it.',
+            why: 'Worth documenting the reasoning anyway. A lawyer’s recommendation still needs both of you to actually agree with it.',
           },
         ],
       },
       {
-        text: 'What should happen to those shares if a founder leaves in year one?',
+        lead: 'Now the part founders skip. A one-year cliff means nothing is owed if someone walks early — but for whatever has vested, most agreements also give the company a right to buy those shares back at cost. Without that clause, a founder who left in month fourteen still owns a piece of everything you build afterward.',
+        text: 'What should happen to a founder’s shares if they leave in year one?',
         label: 'Shares on early departure',
-        explainer:
-          'A 1-year cliff already means nothing is owed if someone leaves that early — but for anything vested, most agreements also give the company (or remaining founders) a right to repurchase those shares at cost, so equity doesn’t outlive someone’s involvement. Without that clause, a departed founder can end up owning a chunk of a company they no longer work on.',
+        clause:
+          'If a Founder ceases to provide services to the Company during the first year, the parties intend the following: {}',
       },
     ],
   },
@@ -82,31 +115,30 @@ const SECTIONS = [
     name: 'Vesting',
     questions: [
       {
+        lead: 'Vesting is just the mechanism that makes equity track contribution over time. It’s worth saying that it protects the founder who stays at least as much as it protects the company.',
         text: 'What vesting schedule do you have in mind?',
         label: 'Vesting schedule',
+        clause: 'Founder Shares shall vest according to the following schedule: {}',
         options: [
           {
             value: '4 years, 1-year cliff',
-            explainer:
-              'The startup standard — nothing vests if you leave in year one, then monthly after. Protects the company if a founder bails early.',
+            why: 'The startup standard — nothing vests in year one, then monthly after. Investors will expect roughly this.',
           },
           {
             value: '3 years, no cliff',
-            explainer:
-              'Vests faster and rewards commitment sooner, but gives away equity even to someone who leaves almost immediately.',
+            why: 'Vests faster and rewards commitment sooner, but hands equity to someone who leaves almost immediately.',
           },
           {
             value: 'Not sure yet',
-            explainer:
-              'Reasonable to leave open, but most investors will expect something close to the 4-year, 1-year-cliff standard before they’ll invest.',
+            why: 'Reasonable. I’d anchor on the four-year, one-year-cliff standard unless you have a specific reason to move off it.',
           },
         ],
       },
       {
-        text: 'Should vesting accelerate if the company gets acquired?',
+        lead: 'One more here, and it’s the one founders most often wish they’d discussed. If you’re acquired holding unvested shares, an acquirer can let you go and keep that equity. Single-trigger acceleration vests everything the moment the deal closes; double-trigger only accelerates if you’re also pushed out afterward — that’s the more common landing spot, since acquirers are paying to keep the team.',
+        text: 'Should vesting accelerate if the company is acquired?',
         label: 'Acceleration on acquisition',
-        explainer:
-          'Single-trigger acceleration (vests immediately on acquisition) protects founders from being pushed out right after a deal to dodge unvested payouts, but can make the company less attractive to acquirers who want the team to stay. Double-trigger — acceleration only if you’re also let go post-acquisition — is the more common middle ground.',
+        clause: 'Upon a Change of Control, vesting shall accelerate as follows: {}',
       },
     ],
   },
@@ -114,34 +146,33 @@ const SECTIONS = [
     name: 'Decisions',
     questions: [
       {
-        text: 'Which decisions should need both founders to agree?',
+        lead: 'Governance now — who gets to decide what alone. The usual “both must agree” list is raising money, selling the company, taking on debt, changing the equity split, and firing a cofounder. Require unanimity on too much and you deadlock over expense reports; on too little and one of you can make an irreversible call by yourself.',
+        text: 'Which decisions should need both of you to agree?',
         label: 'Decisions requiring unanimity',
-        explainer:
-          'The classic list is raising money, selling the company, taking on debt, and changing the equity split or firing a cofounder. Requiring unanimity on too much invites deadlock over small stuff; too little lets one founder make irreversible calls alone — most agreements stick to a short list of the biggest, hardest-to-undo decisions.',
+        clause:
+          'The following matters require the unanimous written consent of all Founders: {}',
       },
       {
+        lead: 'And when you disagree on one of those — you will — the process has to exist before you need it. Agreeing on a tiebreaker while you’re already stuck is close to impossible.',
         text: 'How do you want to break a deadlock?',
         label: 'Deadlock resolution',
+        clause: 'In the event of a deadlock, the matter shall be resolved as follows: {}',
         options: [
           {
             value: 'An outside advisor',
-            explainer:
-              'Neutral, but slows things down and costs a favor or a fee every time it’s invoked.',
+            why: 'Neutral and usually respected, but it costs a favor or a fee and slows the decision down every time you invoke it.',
           },
           {
             value: 'The CEO decides',
-            explainer:
-              'Keeps things fast, but concentrates power with one founder — worth naming explicitly rather than assuming.',
+            why: 'Fast, and honest about where power already sits. Worth naming explicitly rather than letting it be assumed.',
           },
           {
             value: 'Coin flip',
-            explainer:
-              'Fully neutral and fast, but resolves nothing about who was actually right — fine for small stuff, risky for big calls.',
+            why: 'Perfectly neutral and instant, but it settles nothing about who was right. Fine for small calls, risky for big ones.',
           },
           {
             value: 'Not sure yet',
-            explainer:
-              'Worth deciding before you actually hit a deadlock — it’s much harder to agree on a process once you’re already stuck.',
+            why: 'The most common answer, and the one I’d push back on — this is much easier to decide now than mid-argument.',
           },
         ],
       },
@@ -151,31 +182,32 @@ const SECTIONS = [
     name: 'IP',
     questions: [
       {
+        lead: 'Last section, and it’s the one that actually blocks deals. Unassigned IP is among the most common things that stalls a fundraise or an acquisition once diligence starts.',
         text: 'Has everything built so far been assigned to the company?',
         label: 'IP assignment',
+        clause:
+          'All intellectual property created by the Founders to date has been assigned to the Company: {}',
         options: [
           {
             value: 'Yes',
-            explainer:
-              'Good — get the assignment documented in writing if it isn’t already, since “yes” without paperwork doesn’t hold up in diligence.',
+            why: 'Good — make sure it’s documented in writing. “Yes” without paperwork doesn’t survive diligence.',
           },
           {
             value: 'No',
-            explainer:
-              'This needs to happen before a fundraise or acquisition — unassigned IP is one of the most common deal-blockers in diligence.',
+            why: 'Then this goes near the top of the list. It needs to be cleaned up before you raise or sell.',
           },
           {
             value: 'Not sure',
-            explainer:
-              'Worth checking founder agreements, employment contracts, or IP assignment forms from any prior work — the answer affects what the company actually owns.',
+            why: 'Worth checking prior employment contracts and any IP assignment forms you signed elsewhere — the answer changes what the company actually owns.',
           },
         ],
       },
       {
+        lead: 'And the trickier half of that. Work you did before the company existed isn’t automatically the company’s — not if you built it specifically for this idea, not even if you’re the only person who touched it. It needs a formal assignment, or an explicit license if you want to keep personal ownership.',
         text: 'Was any of it built before the company existed?',
         label: 'Pre-existing IP',
-        explainer:
-          'Pre-existing work isn’t automatically owned by the company — even as the sole founder, even if you built it specifically for this idea. It needs a formal assignment (or an explicit license if you want to keep personal ownership), since this is exactly what investors and acquirers diligence later.',
+        clause:
+          'Intellectual property created prior to the Company’s formation is treated as follows: {}',
       },
     ],
   },
@@ -185,44 +217,191 @@ const REPLY_DELAY_MS = 1600;
 const FOLLOW_UP = 'Good question — a real agent would answer that here.';
 const TOTAL_QUESTIONS = SECTIONS.reduce((sum, section) => sum + section.questions.length, 0);
 
-const firstMessage = (index) => [{ role: 'agent', text: SECTIONS[index].questions[0].text }];
+/** An agent turn carries the lead-in alongside the question it introduces. */
+const agentTurn = (question) => ({ role: 'agent', text: question.text, lead: question.lead });
 
-/** The draft that fills in as the interview goes. */
-function Draft({ answers, justFilled, activeSection }) {
+/**
+ * Index of the last agent message that moved the script forward — the question
+ * currently on the table. Follow-up replies don't count, so asking one doesn't
+ * push the question you're actually on off the screen.
+ */
+function scriptAnchor(messages) {
+  for (let i = messages.length - 1; i >= 0; i--) {
+    if (messages[i].role === 'agent' && messages[i].text !== FOLLOW_UP) return i;
+  }
+  return -1;
+}
+
+/**
+ * Where in the thread the agent asked question `qi`. Script-advancing agent
+ * messages land in question order, so counting them locates any of them —
+ * including the closing message, which sits one past the last question.
+ */
+function questionMessageIndex(messages, qi) {
+  let seen = -1;
+  for (let i = 0; i < messages.length; i++) {
+    if (messages[i].role === 'agent' && messages[i].text !== FOLLOW_UP) {
+      seen += 1;
+      if (seen === qi) return i;
+    }
+  }
+  return -1;
+}
+
+const firstMessage = (index) => [agentTurn(SECTIONS[index].questions[0])];
+
+/**
+ * A clause reads as drafted prose with your answer set into it, so the panel
+ * shows the document taking shape rather than a transcript of your inputs.
+ * Until it's answered the slot is a blank, the way an unexecuted contract
+ * looks — a gap you can see the shape of.
+ */
+function Clause({ template, value, fresh }) {
+  const [before, after = ''] = template.split('{}');
   return (
-    <article className="draft">
-      <header className="draft__head">
-        <h2 className="draft__title">Cofounder Agreement</h2>
-        <p className="draft__status">Draft · updates as you answer</p>
+    <span className="clause__text">
+      {before}
+      {value ? (
+        <span className={`slot slot--filled ${fresh ? 'slot--fresh' : ''}`}>{value}</span>
+      ) : (
+        <span className="slot slot--blank" role="img" aria-label="not yet drafted" />
+      )}
+      {after}
+    </span>
+  );
+}
+
+/** The agreement as it stands, filling in as the interview goes. */
+function Draft({
+  answers,
+  justFilled,
+  activeSection,
+  activeQuestion,
+  canOpen,
+  onOpenSection,
+  onJump,
+}) {
+  const isTerm = (section) => section.clause !== false;
+  const totalTerms = SECTIONS.filter(isTerm).reduce((n, s) => n + s.questions.length, 0);
+  const draftedTerms = SECTIONS.reduce(
+    (n, section, si) =>
+      isTerm(section) ? n + section.questions.filter((_, qi) => answers[si][qi]).length : n,
+    0,
+  );
+
+  let clauseNumber = 0;
+
+  return (
+    <article className="doc">
+      <header className="doc__head">
+        <p className="doc__eyebrow">Draft · unexecuted</p>
+        <h2 className="doc__title">Cofounder Agreement</h2>
+        <div className="doc__progress">
+          <div className="doc__bar">
+            <div
+              className="doc__bar-fill"
+              style={{ width: `${(draftedTerms / totalTerms) * 100}%` }}
+            />
+          </div>
+          <span className="doc__count">
+            {draftedTerms} of {totalTerms} terms
+          </span>
+        </div>
       </header>
 
-      {SECTIONS.map((section, si) => (
-        <section
-          key={section.name}
-          className={`clause ${si === activeSection ? 'clause--active' : ''}`}
-        >
-          <h3 className="clause__title">
-            <span className="clause__num">{si + 1}</span>
-            {section.name}
-          </h3>
+      {SECTIONS.map((section, si) => {
+        const active = si === activeSection;
 
-          {section.questions.map((question, qi) => {
-            const value = answers[si][qi];
-            const key = `${si}-${qi}`;
-            return (
-              <div
-                key={key}
-                className={`field ${value ? 'field--filled' : ''} ${
-                  justFilled === key ? 'field--new' : ''
-                }`}
-              >
-                <span className="field__label">{question.label}</span>
-                <span className="field__value">{value || 'Not yet answered'}</span>
-              </div>
-            );
-          })}
-        </section>
-      ))}
+        // Background is context, not a term — it sits above the numbered
+        // clauses as recitals rather than pretending to be something signable.
+        if (!isTerm(section)) {
+          return (
+            <section key={section.name} className={`recitals ${active ? 'is-active' : ''}`}>
+              <h3 className="recitals__title">
+                <button type="button" className="section-jump" onClick={() => onOpenSection(si)}>
+                  {section.name}
+                </button>
+              </h3>
+              {section.questions.map((question, qi) => {
+                const value = answers[si][qi];
+                const key = `${si}-${qi}`;
+                const open = canOpen(si, qi);
+                return (
+                  <div key={key} className="recital">
+                    <span className="recital__label">{question.label}</span>
+                    {open ? (
+                      <button
+                        type="button"
+                        className={`recital__value ${value ? '' : 'recital__value--empty'} ${
+                          justFilled === key ? 'slot--fresh' : ''
+                        }`}
+                        onClick={() => onJump(si, qi)}
+                      >
+                        {value || '—'}
+                      </button>
+                    ) : (
+                      <span className="recital__value recital__value--empty">{value || '—'}</span>
+                    )}
+                  </div>
+                );
+              })}
+            </section>
+          );
+        }
+
+        clauseNumber += 1;
+        return (
+          <section key={section.name} className={`article ${active ? 'is-active' : ''}`}>
+            <h3 className="article__title">
+              <button type="button" className="section-jump" onClick={() => onOpenSection(si)}>
+                <span className="article__num">{clauseNumber}</span>
+                {section.name}
+              </button>
+            </h3>
+
+            {section.questions.map((question, qi) => {
+              const value = answers[si][qi];
+              const key = `${si}-${qi}`;
+              const current = active && qi === activeQuestion;
+              const body = (
+                <>
+                  <span className="clause__heading">
+                    <span className="clause__num">
+                      {clauseNumber}.{qi + 1}
+                    </span>
+                    {question.label}
+                  </span>
+                  <Clause template={question.clause} value={value} fresh={justFilled === key} />
+                </>
+              );
+
+              // A clause is a way into the conversation that drafts it — but
+              // only once the agent has actually got there. Jumping ahead would
+              // skip the questions in between.
+              return canOpen(si, qi) ? (
+                <button
+                  key={key}
+                  type="button"
+                  className={`clause clause--open ${current ? 'clause--current' : ''}`}
+                  onClick={() => onJump(si, qi)}
+                >
+                  {body}
+                  <span className="clause__revisit">{value ? 'Revisit' : 'Answer'}</span>
+                </button>
+              ) : (
+                <div key={key} className="clause">
+                  {body}
+                </div>
+              );
+            })}
+          </section>
+        );
+      })}
+
+      <footer className="doc__foot">
+        Placeholder language. Nothing here has been reviewed by a lawyer, and
+        nothing is saved.
+      </footer>
     </article>
   );
 }
@@ -242,7 +421,6 @@ export default function App() {
   const [input, setInput] = useState('');
   const [thinking, setThinking] = useState(false);
   const [draftOpen, setDraftOpen] = useState(false);
-  const [hoveredOption, setHoveredOption] = useState(null);
 
   const inputRef = useRef(null);
   const transcriptRef = useRef(null);
@@ -258,10 +436,15 @@ export default function App() {
     if (scroller) scroller.scrollTop = scroller.scrollHeight;
   }, [messages, thinking, si]);
 
-  // A new question means any hovered option from the last one is stale.
+  // Size the composer to its contents. Doing it here rather than in the change
+  // handler means it also works when the value changes on its own — clearing
+  // on send leaves behind the height the last answer grew it to otherwise.
   useEffect(() => {
-    setHoveredOption(null);
-  }, [si, qi]);
+    const field = inputRef.current;
+    if (!field) return;
+    field.style.height = 'auto';
+    field.style.height = `${field.scrollHeight}px`;
+  }, [input]);
 
   // Clear the highlight on a freshly filled field after it has played.
   useEffect(() => {
@@ -280,26 +463,27 @@ export default function App() {
     if (!text || thinking) return;
 
     const section = si;
-    setThreads((current) =>
-      current.map((thread, i) => (i === section ? [...thread, { role: 'user', text }] : thread)),
-    );
-    setInput('');
-    setThinking(true);
-
-    // Clearing the value doesn't undo the inline height the auto-grow set.
-    if (inputRef.current) inputRef.current.style.height = 'auto';
-
     const questions = SECTIONS[section].questions;
     const wasComplete = completed[section];
     const hasMore = qi + 1 < questions.length;
     // No real NLP here — a trailing "?" is the stand-in for "this is a
     // follow-up, not an answer to the current question."
     const isFollowUp = !wasComplete && !choice && text.endsWith('?');
-
     // A finished section is out of script, and a follow-up mid-section is
     // off-script too — neither should overwrite an answer already captured
     // in the draft or move the interview along.
-    if (!wasComplete && !isFollowUp) {
+    const isAnswer = !wasComplete && !isFollowUp;
+
+    // Nothing already said gets taken back — a revised answer is just the next
+    // thing you said, the way it would be in a real conversation. Only the
+    // draft treats it as a replacement.
+    setThreads((current) =>
+      current.map((thread, i) => (i === section ? [...thread, { role: 'user', text }] : thread)),
+    );
+    setInput('');
+    setThinking(true);
+
+    if (isAnswer) {
       setAnswers((current) =>
         current.map((row, i) => (i === section ? row.map((a, j) => (j === qi ? text : a)) : row)),
       );
@@ -307,20 +491,22 @@ export default function App() {
     }
 
     setTimeout(() => {
-      const reply =
-        wasComplete || isFollowUp
-          ? FOLLOW_UP
-          : hasMore
-            ? questions[qi + 1].text
-            : `That’s everything for ${SECTIONS[section].name}. Ask me anything about it, or pick another section above.`;
+      const next = SECTIONS[section + 1];
+      const closing = next
+        ? `That’s ${SECTIONS[section].name} covered. ${next.name} is what I’d look at next — but ask me anything about this first.`
+        : 'That’s the last section. The draft has everything you’ve told me — ask me anything about it.';
+
+      const reply = !isAnswer
+        ? { role: 'agent', text: FOLLOW_UP }
+        : hasMore
+          ? agentTurn(questions[qi + 1])
+          : { role: 'agent', text: closing };
 
       setThreads((current) =>
-        current.map((thread, i) =>
-          i === section ? [...thread, { role: 'agent', text: reply }] : thread,
-        ),
+        current.map((thread, i) => (i === section ? [...thread, reply] : thread)),
       );
 
-      if (!wasComplete && !isFollowUp) {
+      if (isAnswer) {
         if (hasMore) {
           updateAt(setPositions, section, qi + 1);
         } else {
@@ -333,32 +519,50 @@ export default function App() {
     }, REPLY_DELAY_MS);
   }
 
-  // Step back to the previous question in the current section, clearing its
-  // answer so it can be given again.
+  // Reopen a question that's already been answered — from the back button, or
+  // by clicking the clause it drafted. Revisiting is a revision, not a reset:
+  // the answer stays in the draft and stays in the transcript as a message you
+  // already sent, so you work on top of it rather than from a blank composer.
+  function revisit(section, target) {
+    if (thinking) return;
+
+    // Roll the thread back to just before the next question was asked, which
+    // leaves the one you're revisiting as the live turn with your answer under
+    // it. Anything said after that — follow-ups included — goes with it.
+    const cut = questionMessageIndex(threads[section], target + 1);
+    if (cut !== -1) updateAt(setThreads, section, threads[section].slice(0, cut));
+
+    if (completed[section]) updateAt(setCompleted, section, false);
+    updateAt(setPositions, section, target);
+    setSi(section);
+    inputRef.current?.focus();
+  }
+
   function goBack() {
     if (thinking) return;
-    const section = si;
+    const target = isComplete ? SECTIONS[si].questions.length - 1 : qi - 1;
+    if (target < 0) return;
+    revisit(si, target);
+  }
 
-    if (isComplete) {
-      const lastIndex = SECTIONS[section].questions.length - 1;
-      setThreads((current) =>
-        current.map((thread, i) => (i === section ? thread.slice(0, -1) : thread)),
-      );
-      updateAt(setCompleted, section, false);
-      updateAt(setPositions, section, lastIndex);
+  // A question in the draft is reachable once the agent has asked it. An
+  // untouched section has only its opening question — everything after that
+  // depends on answers that don't exist yet.
+  function canOpen(section, question) {
+    if (thinking) return false;
+    return threads[section].length === 0 ? question === 0 : question <= positions[section];
+  }
+
+  // Clicking a clause in the draft goes to the question that drafts it.
+  function jumpTo(section, question) {
+    if (!canOpen(section, question)) return;
+    if (threads[section].length === 0) {
+      updateAt(setThreads, section, firstMessage(section));
+      setSi(section);
+      inputRef.current?.focus();
       return;
     }
-
-    if (qi === 0) return;
-    const prevIndex = qi - 1;
-    setThreads((current) =>
-      current.map((thread, i) => (i === section ? thread.slice(0, thread.length - 2) : thread)),
-    );
-    setAnswers((current) =>
-      current.map((row, i) => (i === section ? row.map((a, j) => (j === prevIndex ? null : a)) : row)),
-    );
-    updateAt(setPositions, section, prevIndex);
-    inputRef.current?.focus();
+    revisit(section, question);
   }
 
   // Each tab is its own conversation; opening an untouched one starts it.
@@ -378,24 +582,16 @@ export default function App() {
     }
   }
 
-  // Grow the composer with the text, up to the max-height set in CSS.
   function handleInput(event) {
     setInput(event.target.value);
-    event.target.style.height = 'auto';
-    event.target.style.height = `${event.target.scrollHeight}px`;
   }
 
   const answered = answers.flat().filter(Boolean).length;
   const progress = (answered / TOTAL_QUESTIONS) * 100;
-  const currentQuestion = SECTIONS[si].questions[qi];
-  const choices = !thinking && !isComplete ? currentQuestion.options : undefined;
-  // Multi-choice questions swap the explainer to whichever option is hovered;
-  // open-ended ones just show the question's own explainer.
-  const explainer = !thinking && !isComplete
-    ? choices
-      ? (choices.find((option) => option.value === hoveredOption)?.explainer)
-      : currentQuestion.explainer
-    : undefined;
+  const choices = !thinking && !isComplete ? SECTIONS[si].questions[qi].options : undefined;
+  // Non-null only when this question has been answered before, i.e. you've
+  // stepped back onto it.
+  const priorAnswer = answers[si][qi];
 
   return (
     <div className="app">
@@ -428,20 +624,14 @@ export default function App() {
           <main className="transcript" ref={transcriptRef}>
             <div className="thread">
               {(() => {
-                // Anchor on the last agent message that actually moved the
-                // script forward (asked a question or closed the section) —
-                // not just the last agent message, since a follow-up reply
-                // shouldn't bump the current question off screen.
-                let anchor = -1;
-                for (let i = messages.length - 1; i >= 0; i--) {
-                  if (messages[i].role === 'agent' && messages[i].text !== FOLLOW_UP) {
-                    anchor = i;
-                    break;
-                  }
-                }
+                // Show the question on the table and everything since — which
+                // after stepping back includes the answer you already gave it.
+                const anchor = scriptAnchor(messages);
                 const visible = anchor === -1 ? [] : messages.slice(anchor);
                 return visible.map((message, i) => (
                   <div key={anchor + i} className={`msg msg--${message.role}`}>
+                    {/* The agent frames the question before asking it. */}
+                    {message.lead && <p className="msg__lead">{message.lead}</p>}
                     {message.text}
                   </div>
                 ));
@@ -455,28 +645,25 @@ export default function App() {
                 </div>
               )}
 
-              {!choices && explainer && <p className="explainer">{explainer}</p>}
-
+              {/* Each option states its own tradeoff — no hovering required. */}
               {choices && (
                 <div className="choices">
                   {choices.map((option) => (
                     <button
                       key={option.value}
                       type="button"
-                      className="choice"
+                      className={`choice ${
+                        option.value === priorAnswer ? 'choice--picked' : ''
+                      }`}
                       onClick={() => send(option.value)}
-                      onMouseEnter={() => setHoveredOption(option.value)}
-                      onMouseLeave={() => setHoveredOption(null)}
-                      onFocus={() => setHoveredOption(option.value)}
-                      onBlur={() => setHoveredOption(null)}
+                      aria-pressed={option.value === priorAnswer}
                     >
-                      {option.value}
+                      <span className="choice__value">{option.value}</span>
+                      <span className="choice__why">{option.why}</span>
                     </button>
                   ))}
                 </div>
               )}
-
-              {choices && explainer && <p className="explainer explainer--option">{explainer}</p>}
             </div>
           </main>
 
@@ -505,7 +692,7 @@ export default function App() {
                     isComplete
                       ? 'Ask a follow-up…'
                       : choices
-                        ? 'Pick one, or ask a question…'
+                        ? 'Pick one, or say it in your own words…'
                         : 'Answer, or ask a question…'
                   }
                   autoFocus
@@ -525,25 +712,67 @@ export default function App() {
           </footer>
         </div>
 
-        {/* Collapsed by default; the handle on the right edge pulls it open. */}
-        <aside className={`draft-panel ${draftOpen ? 'draft-panel--open' : ''}`}>
+        <div
+          className={`scrim ${draftOpen ? 'scrim--on' : ''}`}
+          onClick={() => setDraftOpen(false)}
+          aria-hidden="true"
+        />
+
+        {/* Collapsed by default; the tab on the right edge pulls it open. */}
+        <aside
+          className={`draft-panel ${draftOpen ? 'draft-panel--open' : ''}`}
+          aria-label="Agreement preview"
+        >
           <button
             type="button"
-            className="draft-handle"
+            className="draft-tab"
             onClick={() => setDraftOpen((open) => !open)}
             aria-expanded={draftOpen}
-            aria-label={draftOpen ? 'Hide draft' : 'Show draft'}
+            aria-label={draftOpen ? 'Hide the agreement' : 'Show the agreement'}
           >
-            <span className="draft-handle__arrow">{draftOpen ? '›' : '‹'}</span>
+            <span className="draft-tab__arrow">{draftOpen ? '›' : '‹'}</span>
             {!draftOpen && (
-              <span className="draft-handle__count">
-                {answered}/{TOTAL_QUESTIONS}
-              </span>
+              <>
+                <span className="draft-tab__label">Agreement</span>
+                <span className="draft-tab__meter">
+                  <span
+                    className="draft-tab__meter-fill"
+                    style={{ height: `${progress}%` }}
+                  />
+                </span>
+                <span className="draft-tab__count">
+                  {answered}/{TOTAL_QUESTIONS}
+                </span>
+              </>
             )}
           </button>
 
+          <button
+            type="button"
+            className="draft-panel__close"
+            onClick={() => setDraftOpen(false)}
+            tabIndex={draftOpen ? 0 : -1}
+            aria-label="Close"
+          >
+            ✕
+          </button>
+
           <div className="draft-panel__body">
-            <Draft answers={answers} justFilled={justFilled} activeSection={si} />
+            <Draft
+              answers={answers}
+              justFilled={justFilled}
+              activeSection={si}
+              activeQuestion={qi}
+              canOpen={canOpen}
+              onOpenSection={(section) => {
+                openSection(section);
+                setDraftOpen(false);
+              }}
+              onJump={(section, question) => {
+                jumpTo(section, question);
+                setDraftOpen(false);
+              }}
+            />
           </div>
         </aside>
       </div>
