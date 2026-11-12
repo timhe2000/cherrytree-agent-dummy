@@ -1261,7 +1261,8 @@ select:disabled {
   color: #47433f;
   max-width: 620px;
   line-height: 1.5;
-  margin-bottom: 40px;
+  margin-bottom: 28px;
+  text-wrap: balance;
 }
 .lp-hero-actions {
   display: flex;
@@ -1778,6 +1779,10 @@ select:disabled {
     max-height: none;
     height: min(480px, calc(100svh - 220px));
   }
+  /* Shrink the whole card (content included) so more of the painting shows. */
+  .lp-feat-v2-scene .lp-fp-white {
+    scale: 0.9;
+  }
 }
 
 /* Titles under the scene; the selected one is dark and shows its description. */
@@ -1949,6 +1954,7 @@ select:disabled {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  white-space: nowrap;
 }
 .lp-agv-cal-key i {
   display: inline-block;
@@ -3098,6 +3104,11 @@ body:has(.lp-has-curtain) {
     font-size: clamp(36px, 10vw, 72px);
     letter-spacing: -0.5px;
   }
+  /* Match the headline's widest line, which scales with the 10vw headline size. */
+  .lp-hero-sub {
+    font-size: 15px;
+    max-width: 78vw;
+  }
   .lp-pricing-pg-h1 {
     font-size: clamp(36px, 10vw, 72px);
     letter-spacing: -0.5px;
@@ -3138,12 +3149,16 @@ body:has(.lp-has-curtain) {
   }
   .lp-footer-top {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 24px;
+    align-items: center;
+    gap: 12px;
+  }
+  .lp-footer-copy {
+    order: 1;
   }
   .lp-footer-links {
     gap: 0 24px;
     flex-wrap: wrap;
+    justify-content: center;
   }
   /* Thumb-sized tap targets, without changing how the links look. */
   .lp-footer-links a,

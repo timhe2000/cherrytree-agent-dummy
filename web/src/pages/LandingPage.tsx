@@ -573,7 +573,7 @@ function LandingPage() {
   usePageMeta({
     title: 'Cherrytree — Build your cofounder agreement',
     description:
-      'Answer guided questions with your cofounders and get a complete Cofounder Agreement. No sketchy templates, no overpriced lawyers.',
+      'Answer guided questions and get a complete Cofounder Agreement. No sketchy templates or overpriced lawyers.',
   });
 
   // Hero headline — the green highlight sweeps in once, when scrolled into view
@@ -714,8 +714,8 @@ function LandingPage() {
             </span>
           </h1>
           <p className="lp-hero-sub">
-            Answer guided questions with your cofounders and get a complete Cofounder Agreement. No
-            sketchy templates or overpriced lawyers.
+            Answer guided questions and get a complete Cofounder Agreement. No sketchy templates or
+            overpriced lawyers.
           </p>
           <div className="lp-hero-actions">
             <button className="lp-btn-primary" onClick={goDash}>
