@@ -3494,16 +3494,20 @@ input.lp-eq-modal-input[type='text'] {
 .lp-about-points {
   list-style: none;
   padding: 0;
-}
-.lp-about-point {
+  /* One set of columns shared by every row (subgrid): number, headline (as wide as the longest),
+     hairline, and a fixed-width description column on the right. */
   display: grid;
-  /* Number column is just wide enough that the headline sits close to it. */
-  grid-template-columns: 32px minmax(0, 1fr) minmax(0, 0.6fr) minmax(0, 1.4fr);
-  align-items: center;
-  padding: 28px 0;
+  grid-template-columns: 32px max-content minmax(48px, 1fr) 19.5em; /* 19.5em breaks point 1 after “startups,”. */
   font-family: var(--lp-sans);
   font-size: 17px;
   line-height: 1.75;
+}
+.lp-about-point {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+  align-items: center;
+  padding: 28px 0;
 }
 .lp-about-point-num,
 .lp-about-point-title {
@@ -3514,37 +3518,35 @@ input.lp-eq-modal-input[type='text'] {
   font-size: inherit;
   margin: 0;
 }
+/* Equal space on both sides, so the line sits balanced between headlines and descriptions. */
 .lp-about-point-rule {
   height: 1px;
-  margin: 0 32px;
+  /* 81% of the 56px-inset line (two 10% trims), trimmed evenly from both ends. */
+  margin: 0 calc(9.5% + 45.36px);
   background: rgba(0, 0, 0, 0.08);
 }
 .lp-about-point-body {
   margin: 0;
   color: var(--lp-muted);
-  /* A fixed-width, left-aligned column against the right edge; rows share one left edge. */
-  justify-self: end;
-  width: 100%;
-  max-width: 19.5em; /* Breaks point 1 after “startups,”. */
 }
 @media (max-width: 768px) {
   /* Stacked on phones: number and headline, then the detail; no hairline. */
+  .lp-about-points {
+    display: block;
+    font-size: 16px;
+    line-height: 1.6;
+  }
   .lp-about-point {
     grid-template-columns: 32px minmax(0, 1fr);
     align-items: start;
     row-gap: 6px;
     padding: 20px 0;
-    font-size: 16px;
-    line-height: 1.6;
   }
   .lp-about-point-rule {
     display: none;
   }
   .lp-about-point-body {
     grid-column: 2;
-    margin: 0;
-    justify-self: stretch;
-    max-width: none;
   }
 }
 @keyframes lpPageFadeUp {
