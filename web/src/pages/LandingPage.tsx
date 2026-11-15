@@ -15,6 +15,7 @@ import MarketingGrain from '../components/MarketingGrain.tsx';
 import { goToDashboard } from '../utils/goToDashboard.ts';
 import { MARKETING_PLANS } from '../constants/pricing.ts';
 import PlanCards from '../components/PlanCards.tsx';
+import ScrollLitStatement from '../components/ScrollLitStatement.tsx';
 
 type Timer = ReturnType<typeof setTimeout>;
 
@@ -517,51 +518,6 @@ const LIT_PRICING =
   'Cherrytree does both.';
 const LIT_WHAT_YOU_GET =
   'In 1976, Steve Jobs and Steve Wozniak signed a partnership agreement in a garage. Apple came after.';
-
-function ScrollLitStatement({ text }: { text: string }) {
-  const words = text.split(' ');
-  const ref = useRef<HTMLHeadingElement>(null);
-  // With reduced motion the whole statement is lit from the start and never animates.
-  const [reducedMotion] = useState(
-    () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false,
-  );
-  const [progress, setProgress] = useState(reducedMotion ? 1 : 0);
-  const lit = Math.round(progress * words.length);
-  useEffect(() => {
-    if (reducedMotion) return;
-    let frame = 0;
-    const update = () => {
-      frame = 0;
-      const el = ref.current;
-      if (!el) return;
-      const vh = window.innerHeight;
-      // Starts lighting as the text's top passes 80% down the screen; done by 30%.
-      const progress = (vh * 0.8 - el.getBoundingClientRect().top) / (vh * 0.5);
-      setProgress(Math.min(1, Math.max(0, progress)));
-    };
-    const onScroll = () => {
-      if (!frame) frame = requestAnimationFrame(update);
-    };
-    update();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
-      cancelAnimationFrame(frame);
-    };
-  }, [reducedMotion]);
-
-  return (
-    <h2 className="lp-lit-text" ref={ref}>
-      {words.map((word, i) => (
-        <span key={i} className={i < lit ? 'on' : undefined}>
-          {word}{' '}
-        </span>
-      ))}
-    </h2>
-  );
-}
 
 // ── Main component ─────────────────────────────────────────────────────────────
 
