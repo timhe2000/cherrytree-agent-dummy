@@ -155,7 +155,11 @@ describe('DashboardPage', () => {
       fireEvent.click(screen.getByRole('button', { name: 'Newsletter' }));
       expect(open).toHaveBeenCalledWith('https://cherrytree.beehiiv.com/', '_blank');
       fireEvent.click(screen.getByRole('button', { name: 'Contact' }));
-      expect(openPopup).toHaveBeenCalledWith('2EEB99', { layout: 'modal', width: 700 });
+      expect(openPopup).toHaveBeenCalledWith('2EEB99', {
+        layout: 'modal',
+        width: 700,
+        hideTitle: true,
+      });
       Reflect.deleteProperty(window, 'Tally');
     });
   });

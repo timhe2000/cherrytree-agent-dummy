@@ -56,9 +56,16 @@ describe('AboutPage', () => {
     expect(screen.getByTestId('path')).toHaveTextContent('/dashboard');
   });
 
-  it('sends Contact us to the contact page', () => {
+  it('opens the contact form in place from Contact us', () => {
+    const openPopup = vi.fn();
+    window.Tally = { openPopup };
     renderPage();
     fireEvent.click(screen.getByRole('button', { name: 'Contact us' }));
-    expect(screen.getByTestId('path')).toHaveTextContent('/contact');
+    expect(openPopup).toHaveBeenCalledWith('2EEB99', {
+      layout: 'modal',
+      width: 700,
+      hideTitle: true,
+    });
+    expect(screen.getByTestId('path')).toHaveTextContent('/about');
   });
 });

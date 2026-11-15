@@ -8,7 +8,10 @@ declare global {
     google?: typeof google;
     /** Tally embed (index.html): opens the feedback form. */
     Tally?: {
-      openPopup(formId: string, options?: { layout?: 'default' | 'modal'; width?: number }): void;
+      openPopup(
+        formId: string,
+        options?: { layout?: 'default' | 'modal'; width?: number; hideTitle?: boolean },
+      ): void;
     };
   }
 

@@ -1,9 +1,7 @@
 import type { CSSProperties } from 'react';
 
 import type { MarketingPlan } from '../constants/pricing.ts';
-
-/** Opens the Tally contact form (Contact sales). */
-const openContactForm = () => window.Tally?.openPopup('2EEB99', { layout: 'modal', width: 700 });
+import { openContactForm } from '../utils/openContactForm.ts';
 
 /**
  * The marketing plan cards (landing and pricing pages): every plan on one white card, each with a

@@ -7,6 +7,7 @@ import MarketingGrain from '../components/MarketingGrain.tsx';
 import ScrollLitStatement from '../components/ScrollLitStatement.tsx';
 import ProtectCta from '../components/ProtectCta.tsx';
 import { goToDashboard } from '../utils/goToDashboard.ts';
+import { openContactForm } from '../utils/openContactForm.ts';
 
 const LIT_CHERRIES =
   'Cherries rarely grow alone. They come in twos, in threes, and in bunches, just like cofounders.';
@@ -54,7 +55,7 @@ function AboutPage() {
         <section className="lp-about-hero">
           <h1>We&rsquo;re in good company.</h1>
           <div className="lp-about-hero-actions">
-            <button className="lp-btn-primary" onClick={() => navigate('/contact')}>
+            <button className="lp-btn-primary" onClick={openContactForm}>
               Contact us
             </button>
           </div>

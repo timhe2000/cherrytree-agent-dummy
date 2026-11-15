@@ -8,6 +8,7 @@ import PaymentModal from '../components/PaymentModal.tsx';
 import { useProjects } from '../hooks/useProjects.ts';
 import { calculateProjectProgress, countCompletedSections } from '../utils/progressCalculation.ts';
 import { formatDeadline, formatTimeAgo } from '../utils/dateUtils.ts';
+import { openContactForm } from '../utils/openContactForm.ts';
 
 function DashboardPage() {
   const navigate = useNavigate();
@@ -200,7 +201,7 @@ function DashboardPage() {
               },
               {
                 label: 'Contact',
-                action: () => window.Tally?.openPopup('2EEB99', { layout: 'modal', width: 700 }),
+                action: openContactForm,
               },
             ].map(({ label, action }) => (
               <li key={label}>

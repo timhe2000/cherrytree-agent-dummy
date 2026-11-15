@@ -123,7 +123,11 @@ describe('PricingPage', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Contact sales' }));
     expect(openPopup).toHaveBeenCalledTimes(1);
-    expect(openPopup).toHaveBeenCalledWith('2EEB99', { layout: 'modal', width: 700 });
+    expect(openPopup).toHaveBeenCalledWith('2EEB99', {
+      layout: 'modal',
+      width: 700,
+      hideTitle: true,
+    });
     expect(path()).toBe('/dashboard');
   });
 
