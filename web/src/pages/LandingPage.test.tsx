@@ -264,8 +264,8 @@ describe('LandingPage', () => {
     expect(heroMark()).not.toHaveClass('in');
     expect(protectMark()).not.toHaveClass('in');
 
-    const [headlines] = observersFor(0.2);
-    act(() => headlines!.intersect());
+    // The hero's observer and the closing CTA's own.
+    act(() => observersFor(0.2).forEach((observer) => observer.intersect()));
     expect(heroMark()).toHaveClass('in');
     expect(protectMark()).toHaveClass('in');
   });

@@ -16,6 +16,7 @@ import { goToDashboard } from '../utils/goToDashboard.ts';
 import { MARKETING_PLANS } from '../constants/pricing.ts';
 import PlanCards from '../components/PlanCards.tsx';
 import ScrollLitStatement from '../components/ScrollLitStatement.tsx';
+import ProtectCta from '../components/ProtectCta.tsx';
 
 type Timer = ReturnType<typeof setTimeout>;
 
@@ -579,9 +580,6 @@ function LandingPage() {
       behavior: 'smooth',
     });
   };
-  // Protect CTA: the green highlight behind "peace of mind." sweeps in once, when scrolled into view.
-  const protectHeadlineRef = useRef<HTMLHeadingElement>(null);
-  const [protectInView, setProtectInView] = useState(false);
 
   const { hash } = useLocation();
 
@@ -600,7 +598,6 @@ function LandingPage() {
   useEffect(() => {
     const targets: [HTMLElement | null, (v: boolean) => void][] = [
       [heroHeadlineRef.current, setHeroInView],
-      [protectHeadlineRef.current, setProtectInView],
     ];
     const obs = new IntersectionObserver(
       (entries) => {
@@ -751,24 +748,7 @@ function LandingPage() {
         </section>
 
         {/* ── Protect CTA ── */}
-        <section className="lp-protect-cta">
-          <h2 ref={protectHeadlineRef}>
-            <span className="lp-hl-line">
-              <span className="lp-hl-inner">Protect your piece of the pie</span>
-            </span>{' '}
-            <span className="lp-hl-line">
-              <span className="lp-hl-inner">
-                and your{' '}
-                <span className={`lp-hl-mark${protectInView ? ' in' : ''}`}>peace of mind.</span>
-              </span>
-            </span>
-          </h2>
-          <div className="lp-protect-cta-actions lp-rv lp-d1">
-            <button className="lp-btn-primary" onClick={goDash}>
-              Get started
-            </button>
-          </div>
-        </section>
+        <ProtectCta onStart={goDash} reveal />
       </div>
 
       <MarketingFooter />

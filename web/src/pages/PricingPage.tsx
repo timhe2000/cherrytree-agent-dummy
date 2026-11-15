@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { usePageMeta } from '../hooks/usePageMeta.ts';
@@ -6,6 +6,7 @@ import MarketingNav from '../components/MarketingNav.tsx';
 import MarketingFooter from '../components/MarketingFooter.tsx';
 import MarketingGrain from '../components/MarketingGrain.tsx';
 import PlanCards from '../components/PlanCards.tsx';
+import ProtectCta from '../components/ProtectCta.tsx';
 import FaqList, { type Faq } from '../components/FaqList.tsx';
 import { goToDashboard } from '../utils/goToDashboard.ts';
 import { MARKETING_PLANS } from '../constants/pricing.ts';
@@ -57,9 +58,6 @@ function Check({ on }: { on: boolean }) {
 
 function PricingPage() {
   const navigate = useNavigate();
-  // Protect CTA: the green highlight behind "peace of mind." sweeps in once, when scrolled into view.
-  const protectHeadlineRef = useRef<HTMLHeadingElement>(null);
-  const [protectInView, setProtectInView] = useState(false);
 
   usePageMeta({
     title: 'Pricing — Cherrytree',
@@ -87,25 +85,6 @@ function PricingPage() {
       const el = document.getElementById('faq-schema');
       if (el) document.head.removeChild(el);
     };
-  }, []);
-
-  // Trigger the highlight once, the first time the headline scrolls into view.
-  useEffect(() => {
-    const el = protectHeadlineRef.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            obs.unobserve(entry.target);
-            setProtectInView(true);
-          }
-        });
-      },
-      { threshold: 0.2 },
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
   }, []);
 
   const goDash = () => goToDashboard(navigate);
@@ -170,25 +149,7 @@ function PricingPage() {
           </div>
         </section>
 
-        {/* Bottom CTA */}
-        <section className="lp-protect-cta">
-          <h2 ref={protectHeadlineRef}>
-            <span className="lp-hl-line">
-              <span className="lp-hl-inner">Protect your piece of the pie</span>
-            </span>
-            <span className="lp-hl-line">
-              <span className="lp-hl-inner">
-                and your{' '}
-                <span className={`lp-hl-mark${protectInView ? ' in' : ''}`}>peace of mind.</span>
-              </span>
-            </span>
-          </h2>
-          <div className="lp-protect-cta-actions">
-            <button className="lp-btn-primary" onClick={goDash}>
-              Get started
-            </button>
-          </div>
-        </section>
+        <ProtectCta onStart={goDash} />
       </div>
 
       <MarketingFooter />
