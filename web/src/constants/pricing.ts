@@ -35,8 +35,13 @@ export const PRICING_PLANS: readonly PricingPlan[] = [
     key: 'pro',
     price: "Let's Talk",
     priceValue: null,
-    description: 'Everything in Standard, plus',
-    features: ['Attorney review', 'Cofounder coaching', 'Priority support'],
+    description: 'For accelerators, VCs and universities',
+    features: [
+      'Volume pricing for every team',
+      'Portfolio dashboard',
+      'Branded experience',
+      'Dedicated account support',
+    ],
   },
   {
     name: 'Enterprise',
@@ -54,15 +59,13 @@ export const PRICING_PLANS: readonly PricingPlan[] = [
  */
 export interface MarketingPlan {
   tier: string;
-  /** `$…`, or `Let's talk` for the quote-based Enterprise tier. */
+  /** `$…`, or `Let's Talk` for the quote-based Custom tier. */
   price: string;
   period: string;
   desc: string;
   features: readonly string[];
   cta: string;
   featured?: boolean;
-  /** The volume tier; left off the landing page. */
-  enterprise?: boolean;
   /** The CTA opens the Tally contact form instead of the dashboard. */
   contactSales?: boolean;
 }
@@ -86,31 +89,16 @@ export const MARKETING_PLANS: readonly MarketingPlan[] = [
     tier: 'Custom',
     price: "Let's Talk",
     period: 'Contact for pricing',
-    desc: 'For funded teams that want more detail and expert backing.',
+    desc: 'For accelerators, VCs and universities that want agreements for every team they back.',
     features: [
       'Everything in Standard',
-      'Final attorney review',
-      'Personalized onboarding',
-      'Cofounder coaching',
-      'Priority support',
-    ],
-    cta: 'Contact sales',
-    featured: true,
-    contactSales: true,
-  },
-  {
-    tier: 'Enterprise',
-    price: "Let's talk",
-    period: 'Contact for volume pricing',
-    desc: "Running a fund or accelerator and want to deploy in bulk? We'll set you up.",
-    features: [
-      'Everything in Custom, for your cohort',
-      'Cohort dashboard and progress tracking',
+      'Volume pricing for your cohort or portfolio',
+      'Dashboard to track each team’s progress',
       'Branded experience for your program',
       'Dedicated account support',
     ],
     cta: 'Contact sales',
-    enterprise: true,
+    featured: true,
     contactSales: true,
   },
 ];

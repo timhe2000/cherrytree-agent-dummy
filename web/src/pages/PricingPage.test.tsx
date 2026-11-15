@@ -77,21 +77,21 @@ describe('PricingPage', () => {
     expect(faq.mainEntity.map((q) => q.name)).toEqual([
       'Which plan is right for me?',
       'Is the price per agreement or per person?',
-      'Can we upgrade anytime?',
+      'Can we buy for a whole cohort or portfolio?',
       'Do we pay again to edit later?',
     ]);
-    expect(faq.mainEntity[2]?.acceptedAnswer.text).toMatch(/upgrade to Custom/);
+    expect(faq.mainEntity[2]?.acceptedAnswer.text).toMatch(/volume pricing for every team/);
 
     unmount();
     expect(document.getElementById('faq-schema')).toBeNull();
   });
 
-  it('renders the three plans with their prices, features and calls to action', () => {
+  it('renders the two plans with their prices, features and calls to action', () => {
     renderPage();
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Pricing');
 
-    const [bootstrapped, scale, enterprise] = cards();
-    expect(cards()).toHaveLength(3);
+    const [bootstrapped, scale] = cards();
+    expect(cards()).toHaveLength(2);
     expect(bootstrapped?.querySelector('.lp-pw-tier')).toHaveTextContent('Standard');
     expect(bootstrapped?.querySelector('.lp-pw-price')).toHaveTextContent('$49one-time');
     expect(bootstrapped?.querySelectorAll('.lp-pw-features li')).toHaveLength(5);
@@ -101,10 +101,9 @@ describe('PricingPage', () => {
       'Everything in Standard, plus',
     );
 
-    expect(enterprise?.querySelector('.lp-pw-tier')).toHaveTextContent('Enterprise');
-    expect(enterprise?.querySelector('.lp-pw-price')).toHaveTextContent("Let's talk");
-    expect(enterprise?.querySelector('.lp-pw-price > span')).toBeNull();
-    expect(enterprise?.querySelector('button')).toHaveTextContent('Contact sales');
+    expect(scale?.querySelector('.lp-pw-tier')).toHaveTextContent('Custom');
+    expect(scale?.querySelector('.lp-pw-price > span')).toBeNull();
+    expect(scale?.querySelector('button')).toHaveTextContent('Contact sales');
 
     expect(screen.getByTestId('grain')).toBeInTheDocument();
     expect(screen.getByTestId('nav')).toBeInTheDocument();
@@ -122,10 +121,8 @@ describe('PricingPage', () => {
     expect(path()).toBe('/dashboard');
     expect(openPopup).not.toHaveBeenCalled();
 
-    const contactButtons = screen.getAllByRole('button', { name: 'Contact sales' });
-    expect(contactButtons).toHaveLength(2); // Custom and Enterprise
-    for (const button of contactButtons) fireEvent.click(button);
-    expect(openPopup).toHaveBeenCalledTimes(2);
+    fireEvent.click(screen.getByRole('button', { name: 'Contact sales' }));
+    expect(openPopup).toHaveBeenCalledTimes(1);
     expect(openPopup).toHaveBeenCalledWith('2EEB99', { layout: 'modal', width: 700 });
     expect(path()).toBe('/dashboard');
   });
@@ -133,7 +130,7 @@ describe('PricingPage', () => {
   it('does nothing on Contact sales when the Tally embed has not loaded', () => {
     renderPage();
     expect(() =>
-      fireEvent.click(screen.getAllByRole('button', { name: 'Contact sales' })[0]!),
+      fireEvent.click(screen.getByRole('button', { name: 'Contact sales' })),
     ).not.toThrow();
     expect(path()).toBe('/pricing');
   });
@@ -141,18 +138,17 @@ describe('PricingPage', () => {
   it('marks the compare table per plan', () => {
     renderPage();
     const rows = screen.getAllByRole('row').slice(1); // skip the header
-    expect(rows).toHaveLength(8);
+    expect(rows).toHaveLength(7);
     const marks = (column: number) =>
       rows.filter((row) => row.querySelectorAll('td')[column]?.textContent === '✓').length;
-    expect(marks(1)).toBe(2); // Standard
-    expect(marks(2)).toBe(5); // Custom
-    expect(marks(3)).toBe(8); // Enterprise
-    expect(rows[2]?.querySelectorAll('td')[1]).toHaveTextContent('Not included');
+    expect(marks(1)).toBe(3); // Standard
+    expect(marks(2)).toBe(7); // Custom
+    expect(rows[3]?.querySelectorAll('td')[1]).toHaveTextContent('Not included');
   });
 
   it('opens an FAQ on click and closes it again', () => {
     renderPage();
-    const question = 'Can we upgrade anytime?';
+    const question = 'Can we buy for a whole cohort or portfolio?';
     expect(faqBody(question)).not.toHaveClass('open');
 
     fireEvent.click(screen.getByRole('button', { name: question }));

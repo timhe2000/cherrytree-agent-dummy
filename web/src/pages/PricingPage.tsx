@@ -12,35 +12,33 @@ import { MARKETING_PLANS } from '../constants/pricing.ts';
 
 interface CompareRow {
   label: string;
-  /** Standard / Custom / Enterprise */
+  /** Standard / Custom */
   b: boolean;
   s: boolean;
-  e: boolean;
 }
 
 const COMPARE_ROWS: readonly CompareRow[] = [
-  { label: 'Complete 10-section agreement', b: true, s: true, e: true },
-  { label: 'Email support', b: true, s: true, e: true },
-  { label: 'Priority support', b: false, s: true, e: true },
-  { label: 'Attorney review', b: false, s: true, e: true },
-  { label: 'Cofounder coaching', b: false, s: true, e: true },
-  { label: 'Cohort dashboard', b: false, s: false, e: true },
-  { label: 'Branded experience', b: false, s: false, e: true },
-  { label: 'Dedicated account manager', b: false, s: false, e: true },
+  { label: 'Complete 10-section agreement', b: true, s: true },
+  { label: 'Covers all your cofounders', b: true, s: true },
+  { label: 'Email support', b: true, s: true },
+  { label: 'Volume pricing', b: false, s: true },
+  { label: 'Portfolio dashboard', b: false, s: true },
+  { label: 'Branded experience', b: false, s: true },
+  { label: 'Dedicated account support', b: false, s: true },
 ];
 
 const FAQS: readonly Faq[] = [
   {
     q: 'Which plan is right for me?',
-    a: "If your cofoundership is fairly simple, get the Standard plan. You tell us about your company in your own words and receive a ready-to-use cofounder agreement. If your cofoundership is more complex, or if you want extra peace of mind, get Custom — you'll get an attorney review and a cofounder coach.",
+    a: "If you're a founding team, get Standard. You tell us about your company in your own words and receive a ready-to-use cofounder agreement. If you're an accelerator, VC or university that wants agreements for the teams you back, talk to us about Custom.",
   },
   {
     q: 'Is the price per agreement or per person?',
     a: 'The price covers one agreement. You can add as many cofounders as you want, even on the Standard plan. Only one person pays and answers the questions; your cofounders review the draft before signing. A new company later needs a separate purchase.',
   },
   {
-    q: 'Can we upgrade anytime?',
-    a: 'Yes. If you start with Standard but realize you want an attorney review, you can upgrade to Custom at any time.',
+    q: 'Can we buy for a whole cohort or portfolio?',
+    a: "Yes. Custom gives accelerators, VCs and universities volume pricing for every team, a dashboard to track each team's progress and a branded experience. Contact sales and we'll set you up.",
   },
   {
     q: 'Do we pay again to edit later?',
@@ -66,7 +64,7 @@ function PricingPage() {
   usePageMeta({
     title: 'Pricing — Cherrytree',
     description:
-      'Affordable cofounder agreement pricing. Standard at $49, Custom and Enterprise priced on request.',
+      'Affordable cofounder agreement pricing. Standard at $49, Custom priced on request.',
     breadcrumbs: [{ name: 'Home', url: '/' }, { name: 'Pricing' }],
   });
 
@@ -140,7 +138,6 @@ function PricingPage() {
                 <th className="lp-ppt-feature-col">Compare plans</th>
                 <th>Standard</th>
                 <th>Custom</th>
-                <th>Enterprise</th>
               </tr>
             </thead>
             <tbody>
@@ -152,9 +149,6 @@ function PricingPage() {
                   </td>
                   <td>
                     <Check on={row.s} />
-                  </td>
-                  <td>
-                    <Check on={row.e} />
                   </td>
                 </tr>
               ))}

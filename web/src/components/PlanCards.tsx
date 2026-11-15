@@ -2,7 +2,7 @@ import type { CSSProperties } from 'react';
 
 import type { MarketingPlan } from '../constants/pricing.ts';
 
-/** Opens the Tally contact form (Enterprise's Contact sales). */
+/** Opens the Tally contact form (Contact sales). */
 const openContactForm = () => window.Tally?.openPopup('2EEB99', { layout: 'modal', width: 700 });
 
 /**
@@ -15,7 +15,7 @@ function PlanCards({
   onStart,
 }: {
   plans: readonly MarketingPlan[];
-  /** Get started (every plan but Enterprise, which opens the contact form). */
+  /** Get started (plans without `contactSales`, which open the contact form). */
   onStart: () => void;
 }) {
   return (

@@ -508,9 +508,6 @@ const FEATURES = [
   },
 ];
 
-// The self-serve plans shown on the landing page (Enterprise lives on the pricing page).
-const LANDING_PLANS = MARKETING_PLANS.filter((p) => !p.enterprise);
-
 // Section titles whose words light up one by one as they scroll up the screen.
 const LIT_HOW_IT_WORKS =
   "You don't need to speak legalese to protect what you're building. You just tell your " +
@@ -793,7 +790,7 @@ function LandingPage() {
             <div className="lp-feat-header lp-lit-header">
               <ScrollLitStatement text={LIT_PRICING} />
             </div>
-            <PlanCards plans={LANDING_PLANS} onStart={goDash} />
+            <PlanCards plans={MARKETING_PLANS} onStart={goDash} />
           </div>
         </section>
 
