@@ -14,11 +14,11 @@ const LIT_CHERRIES =
 /** Why Cherrytree exists: numbered points under the cherry statement. */
 const POINTS: readonly { title: string; body: string }[] = [
   {
-    title: 'Startups don’t die from competition',
+    title: 'Most startups self-destruct',
     body: 'Cofounder conflict kills 65% of startups, per HBS professor Noam Wasserman.',
   },
   {
-    title: 'The hard conversations get skipped',
+    title: 'Handshakes feel easier',
     body: 'Cofounders avoid the awkward talks, so they shake hands and hope for the best.',
   },
   {
@@ -26,11 +26,11 @@ const POINTS: readonly { title: string; body: string }[] = [
     body: 'Generic templates miss the details and lawyers price out early-stage teams.',
   },
   {
-    title: 'We’ve seen it up close',
+    title: 'We’ve been there, done that',
     body: 'Having founded companies and coached hundreds, we saw the same patterns.',
   },
   {
-    title: 'So we built the conversation in',
+    title: 'So we built Cherrytree',
     body: 'Great companies start with great company. Get it right from the beginning.',
   },
 ];
