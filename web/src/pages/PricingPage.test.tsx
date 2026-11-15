@@ -80,7 +80,7 @@ describe('PricingPage', () => {
       'Can we upgrade anytime?',
       'Do we pay again to edit later?',
     ]);
-    expect(faq.mainEntity[2]?.acceptedAnswer.text).toMatch(/upgrade to Plus/);
+    expect(faq.mainEntity[2]?.acceptedAnswer.text).toMatch(/upgrade to Custom/);
 
     unmount();
     expect(document.getElementById('faq-schema')).toBeNull();
@@ -92,13 +92,13 @@ describe('PricingPage', () => {
 
     const [bootstrapped, scale, enterprise] = cards();
     expect(cards()).toHaveLength(3);
-    expect(bootstrapped?.querySelector('.lp-pw-tier')).toHaveTextContent('Essential');
-    expect(bootstrapped?.querySelector('.lp-pw-price')).toHaveTextContent('$20one-time');
+    expect(bootstrapped?.querySelector('.lp-pw-tier')).toHaveTextContent('Standard');
+    expect(bootstrapped?.querySelector('.lp-pw-price')).toHaveTextContent('$49one-time');
     expect(bootstrapped?.querySelectorAll('.lp-pw-features li')).toHaveLength(5);
 
-    expect(scale?.querySelector('.lp-pw-price')).toHaveTextContent('$2,000one-time');
+    expect(scale?.querySelector('.lp-pw-price')).toHaveTextContent("Let's Talk");
     expect(scale?.querySelector('.lp-pw-includes')).toHaveTextContent(
-      'Everything in Essential, plus',
+      'Everything in Standard, plus',
     );
 
     expect(enterprise?.querySelector('.lp-pw-tier')).toHaveTextContent('Enterprise');
@@ -116,23 +116,24 @@ describe('PricingPage', () => {
     window.Tally = { openPopup };
     renderPage();
 
-    const [getStarted, scaleStarted, bottomStarted] = screen.getAllByRole('button', {
-      name: 'Get started',
-    });
+    const [getStarted, bottomStarted] = screen.getAllByRole('button', { name: 'Get started' });
     expect(bottomStarted).toBeDefined();
     fireEvent.click(getStarted!);
     expect(path()).toBe('/dashboard');
     expect(openPopup).not.toHaveBeenCalled();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Contact sales' }));
+    const contactButtons = screen.getAllByRole('button', { name: 'Contact sales' });
+    expect(contactButtons).toHaveLength(2); // Custom and Enterprise
+    for (const button of contactButtons) fireEvent.click(button);
+    expect(openPopup).toHaveBeenCalledTimes(2);
     expect(openPopup).toHaveBeenCalledWith('2EEB99', { layout: 'modal', width: 700 });
-    expect(scaleStarted).toBeInTheDocument();
+    expect(path()).toBe('/dashboard');
   });
 
   it('does nothing on Contact sales when the Tally embed has not loaded', () => {
     renderPage();
     expect(() =>
-      fireEvent.click(screen.getByRole('button', { name: 'Contact sales' })),
+      fireEvent.click(screen.getAllByRole('button', { name: 'Contact sales' })[0]!),
     ).not.toThrow();
     expect(path()).toBe('/pricing');
   });
@@ -143,8 +144,8 @@ describe('PricingPage', () => {
     expect(rows).toHaveLength(8);
     const marks = (column: number) =>
       rows.filter((row) => row.querySelectorAll('td')[column]?.textContent === '✓').length;
-    expect(marks(1)).toBe(2); // Essential
-    expect(marks(2)).toBe(5); // Plus
+    expect(marks(1)).toBe(2); // Standard
+    expect(marks(2)).toBe(5); // Custom
     expect(marks(3)).toBe(8); // Enterprise
     expect(rows[2]?.querySelectorAll('td')[1]).toHaveTextContent('Not included');
   });

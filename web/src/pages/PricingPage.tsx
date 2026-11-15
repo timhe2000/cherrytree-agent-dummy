@@ -12,7 +12,7 @@ import { MARKETING_PLANS } from '../constants/pricing.ts';
 
 interface CompareRow {
   label: string;
-  /** Essential / Plus / Enterprise */
+  /** Standard / Custom / Enterprise */
   b: boolean;
   s: boolean;
   e: boolean;
@@ -32,15 +32,15 @@ const COMPARE_ROWS: readonly CompareRow[] = [
 const FAQS: readonly Faq[] = [
   {
     q: 'Which plan is right for me?',
-    a: "If your cofoundership is fairly simple, get the Essential plan. You tell us about your company in your own words and receive a ready-to-use cofounder agreement. If your cofoundership is more complex, or if you want extra peace of mind, get Plus — you'll get an attorney review and a cofounder coach.",
+    a: "If your cofoundership is fairly simple, get the Standard plan. You tell us about your company in your own words and receive a ready-to-use cofounder agreement. If your cofoundership is more complex, or if you want extra peace of mind, get Custom — you'll get an attorney review and a cofounder coach.",
   },
   {
     q: 'Is the price per agreement or per person?',
-    a: 'The price covers one agreement. You can add as many cofounders as you want, even on the Essential plan. Only one person pays and answers the questions; your cofounders review the draft before signing. A new company later needs a separate purchase.',
+    a: 'The price covers one agreement. You can add as many cofounders as you want, even on the Standard plan. Only one person pays and answers the questions; your cofounders review the draft before signing. A new company later needs a separate purchase.',
   },
   {
     q: 'Can we upgrade anytime?',
-    a: 'Yes. If you start with Essential but realize you want an attorney review, you can upgrade to Plus at any time.',
+    a: 'Yes. If you start with Standard but realize you want an attorney review, you can upgrade to Custom at any time.',
   },
   {
     q: 'Do we pay again to edit later?',
@@ -66,7 +66,7 @@ function PricingPage() {
   usePageMeta({
     title: 'Pricing — Cherrytree',
     description:
-      'Affordable cofounder agreement pricing. Essential at $20, Plus at $2,000, Enterprise custom.',
+      'Affordable cofounder agreement pricing. Standard at $49, Custom and Enterprise priced on request.',
     breadcrumbs: [{ name: 'Home', url: '/' }, { name: 'Pricing' }],
   });
 
@@ -138,8 +138,8 @@ function PricingPage() {
             <thead>
               <tr>
                 <th className="lp-ppt-feature-col">Compare plans</th>
-                <th>Essential</th>
-                <th>Plus</th>
+                <th>Standard</th>
+                <th>Custom</th>
                 <th>Enterprise</th>
               </tr>
             </thead>

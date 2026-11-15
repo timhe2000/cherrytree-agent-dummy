@@ -34,7 +34,7 @@ function PlanCards({
             </div>
             <button
               className="lp-btn-primary lp-plan-cta"
-              onClick={plan.enterprise ? openContactForm : onStart}
+              onClick={plan.contactSales ? openContactForm : onStart}
             >
               {plan.cta}
             </button>

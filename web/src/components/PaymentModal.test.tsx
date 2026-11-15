@@ -42,13 +42,13 @@ afterEach(() => {
 });
 
 describe('PaymentModal', () => {
-  it('offers Essential (selected) and a disabled Plus card with the waitlist form', () => {
+  it('offers Standard (selected) and a disabled Custom card with the waitlist form', () => {
     renderModal();
-    expect(screen.getByRole('heading', { name: 'Essential' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'Plus' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Standard' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Custom' })).toBeInTheDocument();
     expect(screen.getByText('Coming Soon')).toBeInTheDocument();
     expect(screen.getByText('waitlist:payment_modal')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Essential/ })).toHaveClass('border-black');
+    expect(screen.getByRole('button', { name: /Standard/ })).toHaveClass('border-black');
   });
 
   it('wiggles instead of submitting an empty name', () => {

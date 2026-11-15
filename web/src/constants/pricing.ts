@@ -16,10 +16,10 @@ export interface PricingPlan {
 
 export const PRICING_PLANS: readonly PricingPlan[] = [
   {
-    name: 'Essential',
+    name: 'Standard',
     key: 'starter',
-    price: '$20',
-    priceValue: 20,
+    price: '$49',
+    priceValue: 49,
     description: 'For individuals to get started',
     features: [
       'Expert-designed guided survey',
@@ -31,11 +31,11 @@ export const PRICING_PLANS: readonly PricingPlan[] = [
     featured: true,
   },
   {
-    name: 'Plus',
+    name: 'Custom',
     key: 'pro',
-    price: '$2000',
-    priceValue: 2000,
-    description: 'Everything in Essential, plus',
+    price: "Let's Talk",
+    priceValue: null,
+    description: 'Everything in Standard, plus',
     features: ['Attorney review', 'Cofounder coaching', 'Priority support'],
   },
   {
@@ -61,14 +61,16 @@ export interface MarketingPlan {
   features: readonly string[];
   cta: string;
   featured?: boolean;
-  /** Contact sales opens the Tally form instead of the dashboard. */
+  /** The volume tier; left off the landing page. */
   enterprise?: boolean;
+  /** The CTA opens the Tally contact form instead of the dashboard. */
+  contactSales?: boolean;
 }
 
 export const MARKETING_PLANS: readonly MarketingPlan[] = [
   {
-    tier: 'Essential',
-    price: '$20',
+    tier: 'Standard',
+    price: '$49',
     period: 'One-time payment',
     desc: 'For early-stage teams that want to move fast and start building.',
     features: [
@@ -81,19 +83,20 @@ export const MARKETING_PLANS: readonly MarketingPlan[] = [
     cta: 'Get started',
   },
   {
-    tier: 'Plus',
-    price: '$2,000',
-    period: 'One-time payment',
+    tier: 'Custom',
+    price: "Let's Talk",
+    period: 'Contact for pricing',
     desc: 'For funded teams that want more detail and expert backing.',
     features: [
-      'Everything in Essential',
+      'Everything in Standard',
       'Final attorney review',
       'Personalized onboarding',
       'Cofounder coaching',
       'Priority support',
     ],
-    cta: 'Get started',
+    cta: 'Contact sales',
     featured: true,
+    contactSales: true,
   },
   {
     tier: 'Enterprise',
@@ -101,12 +104,13 @@ export const MARKETING_PLANS: readonly MarketingPlan[] = [
     period: 'Contact for volume pricing',
     desc: "Running a fund or accelerator and want to deploy in bulk? We'll set you up.",
     features: [
-      'Everything in Plus, for your cohort',
+      'Everything in Custom, for your cohort',
       'Cohort dashboard and progress tracking',
       'Branded experience for your program',
       'Dedicated account support',
     ],
     cta: 'Contact sales',
     enterprise: true,
+    contactSales: true,
   },
 ];
