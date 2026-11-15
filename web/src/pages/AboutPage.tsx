@@ -5,21 +5,34 @@ import MarketingNav from '../components/MarketingNav.tsx';
 import MarketingFooter from '../components/MarketingFooter.tsx';
 import MarketingGrain from '../components/MarketingGrain.tsx';
 import ScrollLitStatement from '../components/ScrollLitStatement.tsx';
+import ProtectCta from '../components/ProtectCta.tsx';
+import { goToDashboard } from '../utils/goToDashboard.ts';
 
 const LIT_CHERRIES =
   'Cherries rarely grow alone. They come in twos, in threes, and in bunches, just like cofounders.';
 
-/** Numbered points under the cherry statement. Placeholder copy, to be replaced. */
+/** Why Cherrytree exists: numbered points under the cherry statement. */
 const POINTS: readonly { title: string; body: string }[] = [
-  { title: 'Point one headline', body: 'One or two sentences that expand on point one go here.' },
-  { title: 'Point two headline', body: 'One or two sentences that expand on point two go here.' },
   {
-    title: 'Point three headline',
-    body: 'One or two sentences that expand on point three go here.',
+    title: 'Startups don’t die from competition',
+    body: 'Cofounder conflict kills 65% of startups, per HBS professor Noam Wasserman.',
   },
-  { title: 'Point four headline', body: 'One or two sentences that expand on point four go here.' },
-  { title: 'Point five headline', body: 'One or two sentences that expand on point five go here.' },
-  { title: 'Point six headline', body: 'One or two sentences that expand on point six go here.' },
+  {
+    title: 'The hard conversations get skipped',
+    body: 'Cofounders avoid the awkward talks, so they shake hands and hope for the best.',
+  },
+  {
+    title: 'The options are broken',
+    body: 'Generic templates miss the details and lawyers price out early-stage teams.',
+  },
+  {
+    title: 'We’ve seen it up close',
+    body: 'Having founded companies and coached hundreds, we saw the same patterns.',
+  },
+  {
+    title: 'So we built the conversation in',
+    body: 'Great companies start with great company. Get it right from the beginning.',
+  },
 ];
 
 function AboutPage() {
@@ -76,6 +89,8 @@ function AboutPage() {
             ))}
           </ol>
         </section>
+
+        <ProtectCta onStart={() => goToDashboard(navigate)} />
       </div>
 
       <MarketingFooter />

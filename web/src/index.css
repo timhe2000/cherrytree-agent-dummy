@@ -3103,23 +3103,6 @@ body:has(.lp-has-curtain) {
   .lp-about-hero {
     padding: 96px 24px 64px;
   }
-  /* Stacked on phones: number and headline, then the detail; no hairline. */
-  .lp-about-point {
-    grid-template-columns: 32px minmax(0, 1fr);
-    align-items: start;
-    row-gap: 6px;
-    column-gap: 12px;
-    padding: 20px 0;
-    font-size: 16px;
-    line-height: 1.6;
-  }
-  .lp-about-point-rule {
-    display: none;
-  }
-  .lp-about-point-body {
-    grid-column: 2;
-    margin: 0;
-  }
   .lp-hero-headline {
     font-size: clamp(36px, 10vw, 72px);
     letter-spacing: -0.5px;
@@ -3514,9 +3497,9 @@ input.lp-eq-modal-input[type='text'] {
 }
 .lp-about-point {
   display: grid;
-  grid-template-columns: 48px minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.95fr);
+  /* Number column is just wide enough that the headline sits close to it. */
+  grid-template-columns: 32px minmax(0, 1fr) minmax(0, 0.6fr) minmax(0, 1.4fr);
   align-items: center;
-  column-gap: 32px;
   padding: 28px 0;
   font-family: var(--lp-sans);
   font-size: 17px;
@@ -3533,11 +3516,36 @@ input.lp-eq-modal-input[type='text'] {
 }
 .lp-about-point-rule {
   height: 1px;
+  margin: 0 32px;
   background: rgba(0, 0, 0, 0.08);
 }
 .lp-about-point-body {
-  margin: 0 0 0 clamp(0px, 4vw, 64px);
+  margin: 0;
   color: var(--lp-muted);
+  /* A fixed-width, left-aligned column against the right edge; rows share one left edge. */
+  justify-self: end;
+  width: 100%;
+  max-width: 19.5em; /* Breaks point 1 after “startups,”. */
+}
+@media (max-width: 768px) {
+  /* Stacked on phones: number and headline, then the detail; no hairline. */
+  .lp-about-point {
+    grid-template-columns: 32px minmax(0, 1fr);
+    align-items: start;
+    row-gap: 6px;
+    padding: 20px 0;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .lp-about-point-rule {
+    display: none;
+  }
+  .lp-about-point-body {
+    grid-column: 2;
+    margin: 0;
+    justify-self: stretch;
+    max-width: none;
+  }
 }
 @keyframes lpPageFadeUp {
   from {

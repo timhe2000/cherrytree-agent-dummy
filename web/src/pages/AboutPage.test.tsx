@@ -10,6 +10,10 @@ vi.mock('../components/MarketingFooter', () => ({
   default: () => <footer data-testid="footer" />,
 }));
 vi.mock('../components/MarketingGrain', () => ({ default: () => <svg data-testid="grain" /> }));
+// The closing CTA has its own coverage in the landing and pricing tests.
+vi.mock('../components/ProtectCta', () => ({
+  default: ({ onStart }: { onStart: () => void }) => <button onClick={onStart}>Get started</button>,
+}));
 
 function Location() {
   const { pathname } = useLocation();
@@ -44,6 +48,12 @@ describe('AboutPage', () => {
     expect(screen.getByTestId('grain')).toBeInTheDocument();
     expect(screen.getByTestId('nav')).toBeInTheDocument();
     expect(screen.getByTestId('footer')).toBeInTheDocument();
+  });
+
+  it('ends with the Get started CTA, which goes to the dashboard', () => {
+    renderPage();
+    fireEvent.click(screen.getByRole('button', { name: 'Get started' }));
+    expect(screen.getByTestId('path')).toHaveTextContent('/dashboard');
   });
 
   it('sends Contact us to the contact page', () => {
