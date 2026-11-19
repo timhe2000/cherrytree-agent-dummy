@@ -40,7 +40,7 @@ describe('AboutPage', () => {
 
   it('renders the hero and painting inside the marketing chrome', () => {
     renderPage();
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('We’re in good company.');
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('You’re in good company.');
     expect(
       screen.getByRole('img', { name: 'Painting of a cherry tree in a blossoming valley' }),
     ).toBeInTheDocument();

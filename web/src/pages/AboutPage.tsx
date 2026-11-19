@@ -53,7 +53,7 @@ function AboutPage() {
       {/* Raised page layer with a rounded bottom that scrolls up to reveal the footer. */}
       <div className="lp-curtain">
         <section className="lp-about-hero">
-          <h1>We&rsquo;re in good company.</h1>
+          <h1>You&rsquo;re in good company.</h1>
           <div className="lp-about-hero-actions">
             <button className="lp-btn-primary" onClick={openContactForm}>
               Contact us
