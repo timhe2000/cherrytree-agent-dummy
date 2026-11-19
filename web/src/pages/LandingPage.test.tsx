@@ -121,8 +121,8 @@ describe('LandingPage', () => {
       'Custom',
     ]);
     expect(plans[0]!.querySelector('.lp-pw-price')).toHaveTextContent('$49one-time');
-    expect(plans[1]!.querySelector('.lp-pw-includes')).toHaveTextContent(
-      'Everything in Standard, plus',
+    expect(plans[1]!.querySelector('.lp-pw-features li')).toHaveTextContent(
+      'Everything included in Standard',
     );
   });
 

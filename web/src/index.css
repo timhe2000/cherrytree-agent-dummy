@@ -2814,9 +2814,6 @@ select:disabled {
   font-weight: 300;
   color: var(--lp-ink);
 }
-.lp-pw-features li.lp-pw-includes {
-  color: var(--lp-muted);
-}
 .lp-pw-tick {
   font-size: 13px;
 }

@@ -91,7 +91,7 @@ export const MARKETING_PLANS: readonly MarketingPlan[] = [
     period: 'Contact for pricing',
     desc: 'For accelerators, VCs and universities that want agreements for every team they back.',
     features: [
-      'Everything in Standard',
+      'Everything included in Standard',
       'Volume pricing for your cohort or portfolio',
       'Dashboard to track each team’s progress',
       'Branded experience for your program',

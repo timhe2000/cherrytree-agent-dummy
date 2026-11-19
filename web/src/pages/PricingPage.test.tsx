@@ -97,8 +97,8 @@ describe('PricingPage', () => {
     expect(bootstrapped?.querySelectorAll('.lp-pw-features li')).toHaveLength(5);
 
     expect(scale?.querySelector('.lp-pw-price')).toHaveTextContent("Let's Talk");
-    expect(scale?.querySelector('.lp-pw-includes')).toHaveTextContent(
-      'Everything in Standard, plus',
+    expect(scale?.querySelector('.lp-pw-features li')).toHaveTextContent(
+      'Everything included in Standard',
     );
 
     expect(scale?.querySelector('.lp-pw-tier')).toHaveTextContent('Custom');
