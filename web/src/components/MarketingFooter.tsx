@@ -15,11 +15,6 @@ function MarketingFooter() {
             <button onClick={() => navigate('/terms')}>Terms</button>
           </li>
           <li>
-            <a href="https://app.hubble.social/timhe" target="_blank" rel="noopener noreferrer">
-              Coaching
-            </a>
-          </li>
-          <li>
             <button onClick={() => navigate('/contact')}>Contact</button>
           </li>
         </ul>

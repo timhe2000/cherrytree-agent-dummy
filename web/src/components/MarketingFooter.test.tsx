@@ -25,10 +25,7 @@ describe('MarketingFooter', () => {
     expectRoute('Privacy', '/privacy');
     expectRoute('Terms', '/terms');
     expectRoute('Contact', '/contact');
-    expect(screen.getByRole('link', { name: 'Coaching' })).toHaveAttribute(
-      'href',
-      'https://app.hubble.social/timhe',
-    );
+    expect(screen.queryByRole('link', { name: 'Coaching' })).toBeNull();
     expect(screen.getByText('© 2026 Cherrytree')).toBeInTheDocument();
   });
 });
