@@ -30,7 +30,7 @@ function PlanCards({
             className="lp-btn-primary lp-plan-cta"
             onClick={plan.contactSales ? openContactForm : onStart}
           >
-            {plan.cta}
+            <span className="lp-btn-label">{plan.cta}</span>
           </button>
           <ul className="lp-pw-features">
             {plan.features.map((f) => (

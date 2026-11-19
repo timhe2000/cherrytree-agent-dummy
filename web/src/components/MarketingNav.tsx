@@ -68,7 +68,7 @@ function MarketingNav() {
           Sign in
         </button>
         <button className="lp-nav-cta" onClick={goDash}>
-          Get started
+          <span className="lp-btn-label">Get started</span>
         </button>
         <button
           type="button"

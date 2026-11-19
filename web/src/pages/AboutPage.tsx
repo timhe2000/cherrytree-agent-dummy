@@ -56,7 +56,7 @@ function AboutPage() {
           <h1>You&rsquo;re in good company.</h1>
           <div className="lp-about-hero-actions">
             <button className="lp-btn-primary" onClick={openContactForm}>
-              Contact us
+              <span className="lp-btn-label">Contact us</span>
             </button>
           </div>
         </section>

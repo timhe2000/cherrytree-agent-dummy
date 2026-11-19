@@ -49,7 +49,7 @@ function ProtectCta({
       </h2>
       <div className={`lp-protect-cta-actions${reveal ? ' lp-rv lp-d1' : ''}`}>
         <button className="lp-btn-primary" onClick={onStart}>
-          Get started
+          <span className="lp-btn-label">Get started</span>
         </button>
       </div>
     </section>

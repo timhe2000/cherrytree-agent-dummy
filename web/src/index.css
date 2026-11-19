@@ -1071,10 +1071,6 @@ select:disabled {
   letter-spacing: 0.04em;
   cursor: pointer;
   font-family: var(--lp-sans);
-  transition: background 0.15s;
-}
-.lp-nav-cta:hover {
-  background: #000000;
 }
 /* Phone-only: the menu toggle and the menu's own Sign in link. */
 .lp-nav-toggle,
@@ -1123,27 +1119,83 @@ select:disabled {
   cursor: pointer;
   text-decoration: none;
   display: inline-block;
-  transition:
-    background 0.15s,
-    transform 0.15s,
-    box-shadow 0.15s;
 }
-.lp-btn-primary:hover {
-  background: #000000;
+/* Dark buttons: on hover a darker fill rises from below while the label slides up and back in from
+   underneath; pressing shrinks the button a touch. Label goes in a .lp-btn-label span. */
+.lp-btn-primary,
+.lp-nav-cta {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.lp-btn-ghost {
-  color: var(--lp-muted);
-  font-size: 14px;
-  font-weight: 300;
-  text-decoration: none;
-  transition: color 0.15s;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-family: var(--lp-sans);
+.lp-btn-primary::before,
+.lp-nav-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: #000;
+  transform: translateY(102%);
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.lp-btn-ghost:hover {
-  color: var(--lp-ink);
+.lp-btn-label {
+  position: relative;
+  display: block;
+}
+.lp-btn-primary:hover::before,
+.lp-btn-primary:focus-visible::before,
+.lp-nav-cta:hover::before,
+.lp-nav-cta:focus-visible::before {
+  transform: translateY(0);
+}
+.lp-btn-primary:hover .lp-btn-label,
+.lp-btn-primary:focus-visible .lp-btn-label,
+.lp-nav-cta:hover .lp-btn-label,
+.lp-nav-cta:focus-visible .lp-btn-label {
+  animation: lpBtnLabelSwap 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.lp-btn-primary:active,
+.lp-nav-cta:active {
+  transform: scale(0.97);
+}
+@keyframes lpBtnLabelSwap {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  45% {
+    transform: translateY(-130%);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(130%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+/* Touch screens leave a tapped button in :hover, so skip the effect there. */
+@media (hover: none) {
+  .lp-btn-primary:hover::before,
+  .lp-nav-cta:hover::before {
+    transform: translateY(102%);
+  }
+  .lp-btn-primary:hover .lp-btn-label,
+  .lp-nav-cta:hover .lp-btn-label {
+    animation: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lp-btn-primary::before,
+  .lp-nav-cta::before,
+  .lp-btn-label {
+    transition: none;
+    animation: none !important;
+  }
 }
 
 /* ── Shared overline ── */
