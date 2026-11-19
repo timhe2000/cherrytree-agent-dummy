@@ -983,22 +983,21 @@ select:disabled {
   align-items: center;
   width: 100%;
   padding: 14px var(--lp-gutter);
-  background: #fff;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  background: var(--lp-bg);
   white-space: nowrap;
 }
 .lp-nav-logo {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
   background: none;
   border: none;
   cursor: pointer;
   padding: 0;
 }
-.lp-nav-logo img {
-  object-fit: contain;
+.lp-nav-logo-mark {
+  color: var(--lp-ink);
+  flex-shrink: 0;
 }
 .lp-nav-logo-text {
   font-family: 'Instrument Serif Wide', serif;
@@ -3082,7 +3081,7 @@ body:has(.lp-has-curtain) {
     left: 0;
     right: 0;
     padding: 8px 20px 16px;
-    background: #fff;
+    background: var(--lp-bg);
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
     box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.12);
   }

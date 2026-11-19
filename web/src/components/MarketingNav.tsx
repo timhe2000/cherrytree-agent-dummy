@@ -27,7 +27,23 @@ function MarketingNav() {
   return (
     <nav className={`lp-nav${menuOpen ? ' open' : ''}`}>
       <button className="lp-nav-logo" onClick={() => navigate('/')}>
-        <img src="/images/cherries.png" alt="Cherrytree" width={22} height={22} />
+        <svg
+          className="lp-nav-logo-mark"
+          viewBox="23 23 81 66"
+          width={30}
+          height={24}
+          aria-hidden="true"
+        >
+          <path
+            d="M44 62 Q46 38 62 28 M82 62 Q84 38 100 28"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={7}
+            strokeLinecap="round"
+          />
+          <circle cx={38} cy={74} r={14} fill="currentColor" />
+          <circle cx={76} cy={74} r={14} fill="currentColor" />
+        </svg>
         <span className="lp-nav-logo-text">Cherrytree</span>
       </button>
       <ul className="lp-nav-links" id="lp-nav-menu">
