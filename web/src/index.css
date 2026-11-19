@@ -1280,7 +1280,6 @@ select:disabled {
   border-radius: var(--lp-radius);
   z-index: 0;
   overflow: hidden;
-  animation: lpHeroStripIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.9s both;
 }
 @keyframes lpHeroStripIn {
   from {
@@ -1291,7 +1290,7 @@ select:disabled {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .lp-hero-strip {
+  .lp-hero-strip-placeholder {
     animation: none;
   }
 }
@@ -1305,6 +1304,8 @@ select:disabled {
   background: #fefefe;
   border-radius: var(--lp-radius-inner) var(--lp-radius-inner) 0 0;
   z-index: 2;
+  /* Only the white card rises; the frame around it stays put and clips it at the bottom. */
+  animation: lpHeroStripIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.9s both;
 }
 .lp-hero-strip::after {
   content: '';
