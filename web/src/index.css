@@ -3852,7 +3852,7 @@ textarea.lp-form-input {
 
 /* ── Pricing Page specific ── */
 .lp-pricing-pg-hero {
-  padding: 170px var(--lp-gutter) 80px;
+  padding: 150px var(--lp-gutter) 40px;
   text-align: center;
   background-color: var(--lp-bg);
 }
@@ -3862,15 +3862,6 @@ textarea.lp-form-input {
   font-weight: 400;
   letter-spacing: 0px;
   line-height: 1;
-  margin-bottom: 28px;
-}
-.lp-pricing-pg-sub {
-  font-size: 19px;
-  font-weight: 300;
-  color: #47433f;
-  line-height: 1.5;
-  max-width: 620px;
-  margin: 0 auto;
 }
 .lp-pricing-pg-cards-wrap {
   padding: 20px var(--lp-gutter) 140px;

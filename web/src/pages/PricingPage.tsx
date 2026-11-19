@@ -99,9 +99,6 @@ function PricingPage() {
         {/* Hero */}
         <section className="lp-pricing-pg-hero">
           <h1 className="lp-pricing-pg-h1">Pricing</h1>
-          <p className="lp-pricing-pg-sub">
-            Choose the plan that's right for your team. No subscriptions, no surprises.
-          </p>
         </section>
 
         {/* Cards */}
