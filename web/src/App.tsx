@@ -4,8 +4,6 @@ import ProtectedRoute from './components/ProtectedRoute.tsx';
 import ResetPagePosition from './components/ResetPagePosition.tsx';
 import DashboardPage from './pages/DashboardPage.tsx';
 import LandingPage from './pages/LandingPage.tsx';
-import EquityCalculatorPage from './pages/EquityCalculatorPage.tsx';
-import AttorneyPage from './pages/AttorneyPage.tsx';
 import PricingPage from './pages/PricingPage.tsx';
 import AboutPage from './pages/AboutPage.tsx';
 import ContactPage from './pages/ContactPage.tsx';
@@ -25,8 +23,6 @@ function App() {
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<LandingPage />} />
-        <Route path="/equity-calculator" element={<EquityCalculatorPage />} />
-        <Route path="/attorney" element={<AttorneyPage />} />
         <Route path="/pricing" element={<PricingPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
