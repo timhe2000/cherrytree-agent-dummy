@@ -3167,14 +3167,26 @@ body:has(.lp-has-curtain) {
   .lp-pricing-pg-compare {
     padding: 80px 24px;
   }
+  .lp-ppt {
+    gap: 24px;
+  }
+  .lp-ppt-card {
+    padding: 24px 20px;
+  }
+  .lp-ppt-card-title {
+    margin-bottom: 28px;
+    font-size: 18px;
+  }
+  .lp-ppt-row td,
+  .lp-ppt-table th {
+    font-size: 14px;
+    padding-right: 10px;
+  }
   .lp-ppt-row td {
-    padding: 16px 0;
-    font-size: 14px;
+    padding-top: 16px;
+    padding-bottom: 16px;
   }
-  .lp-pricing-pg-table th {
-    font-size: 14px;
-  }
-  .lp-pricing-pg-table th.lp-ppt-feature-col {
+  .lp-ppt-table th.lp-ppt-feature-col {
     width: 40%;
   }
 }
@@ -3871,37 +3883,63 @@ textarea.lp-form-input {
 .lp-pricing-pg-compare {
   padding: 140px var(--lp-gutter) 140px;
 }
-.lp-pricing-pg-table {
+/* One bordered white card per group: title, plan names in grey, then rows split by hairlines. */
+.lp-ppt {
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+.lp-ppt-title {
+  font-family: 'Instrument Serif Wide', serif;
+  font-size: clamp(26px, calc(3.4vw - 2px), 42px); /* same as the section titles */
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  color: var(--lp-ink);
+}
+.lp-ppt-card {
+  padding: 40px;
+  border: 1px solid #dcd8d2;
+  border-radius: 12px;
+}
+.lp-ppt-card-title {
+  margin-bottom: 48px;
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--lp-ink);
+}
+.lp-ppt-table {
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
 }
-/* Header: the section title on the left, the plan names over their columns. */
-.lp-pricing-pg-table th {
-  padding: 0 0 28px;
-  font-size: 19px;
+.lp-ppt-table th {
+  padding: 0 16px 24px 0;
+  font-size: 15px;
   font-weight: 400;
-  color: var(--lp-ink);
+  color: var(--lp-muted);
   text-align: left;
   vertical-align: bottom;
 }
-.lp-pricing-pg-table th.lp-ppt-feature-col {
+.lp-ppt-table th.lp-ppt-feature-col {
   width: 46%;
-  font-family: 'Instrument Serif Wide', serif;
-  font-size: clamp(26px, calc(3.4vw - 2px), 42px); /* same as the section titles */
-  line-height: 1.1;
-  letter-spacing: 0.02em;
 }
 .lp-ppt-row td {
-  padding: 24px 0;
-  font-size: 16px;
-  font-weight: 300;
+  padding: 24px 16px 24px 0;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.5;
   color: var(--lp-ink);
   text-align: left;
-  border-top: 1px solid #eeebe6;
+  vertical-align: top;
 }
-.lp-ppt-row td.lp-ppt-label {
-  font-weight: 400;
+.lp-ppt-row + .lp-ppt-row td {
+  border-top: 1px solid #dcd8d2;
+}
+.lp-ppt-none {
+  color: var(--lp-muted);
 }
 .lp-ppt-check {
   width: 24px;

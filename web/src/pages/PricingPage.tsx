@@ -11,21 +11,47 @@ import FaqList, { type Faq } from '../components/FaqList.tsx';
 import { goToDashboard } from '../utils/goToDashboard.ts';
 import { MARKETING_PLANS } from '../constants/pricing.ts';
 
+/** A cell is a tick (`true`), "not included" (`false`) or a short value such as a price. */
+type CompareCell = boolean | string;
+
 interface CompareRow {
   label: string;
-  /** Standard / Custom */
-  b: boolean;
-  s: boolean;
+  standard: CompareCell;
+  custom: CompareCell;
 }
 
-const COMPARE_ROWS: readonly CompareRow[] = [
-  { label: 'Complete 10-section agreement', b: true, s: true },
-  { label: 'Covers all your cofounders', b: true, s: true },
-  { label: 'Email support', b: true, s: true },
-  { label: 'Volume pricing', b: false, s: true },
-  { label: 'Portfolio dashboard', b: false, s: true },
-  { label: 'Branded experience', b: false, s: true },
-  { label: 'Dedicated account support', b: false, s: true },
+interface CompareGroup {
+  /** Heading at the top of the group's card. */
+  title: string;
+  rows: readonly CompareRow[];
+}
+
+const COMPARE_GROUPS: readonly CompareGroup[] = [
+  {
+    title: 'Overview',
+    rows: [
+      { label: 'Price', standard: '$49, one-time', custom: 'Volume pricing' },
+      {
+        label: 'Who it’s for',
+        standard: 'One founding team',
+        custom: 'Accelerators, VCs, universities',
+      },
+      { label: 'Agreements included', standard: 'One company', custom: 'One per team you back' },
+    ],
+  },
+  {
+    title: 'What’s included',
+    rows: [
+      { label: 'Answer in your own words', standard: true, custom: true },
+      { label: 'Smart follow-up questions', standard: true, custom: true },
+      { label: 'Equity split guidance', standard: true, custom: true },
+      { label: 'Complete cofounder agreement', standard: true, custom: true },
+      { label: 'Downloadable PDF agreement', standard: true, custom: true },
+      { label: 'Dedicated account manager', standard: false, custom: true },
+      { label: 'Track every team’s progress', standard: false, custom: true },
+      { label: 'Branded for your program', standard: false, custom: true },
+    ],
+  },
 ];
 
 const FAQS: readonly Faq[] = [
@@ -47,12 +73,54 @@ const FAQS: readonly Faq[] = [
   },
 ];
 
-function Check({ on }: { on: boolean }) {
-  if (!on) return <span className="lp-sr-only">Not included</span>;
+function Cell({ value }: { value: CompareCell }) {
+  if (typeof value === 'string') return <>{value}</>;
+  if (!value)
+    return (
+      <>
+        <span className="lp-ppt-none" aria-hidden="true">
+          —
+        </span>
+        <span className="lp-sr-only">Not included</span>
+      </>
+    );
   return (
     <span className="lp-ppt-check" aria-label="Included">
       ✓
     </span>
+  );
+}
+
+/** One group of the compare table on its own bordered card. */
+function CompareCard({ group }: { group: CompareGroup }) {
+  return (
+    <div className="lp-ppt-card">
+      <h3 className="lp-ppt-card-title">{group.title}</h3>
+      <table className="lp-ppt-table">
+        <thead>
+          <tr>
+            <th className="lp-ppt-feature-col">
+              <span className="lp-sr-only">Feature</span>
+            </th>
+            <th>Standard</th>
+            <th>Custom</th>
+          </tr>
+        </thead>
+        <tbody>
+          {group.rows.map((row) => (
+            <tr key={row.label} className="lp-ppt-row">
+              <td className="lp-ppt-label">{row.label}</td>
+              <td>
+                <Cell value={row.standard} />
+              </td>
+              <td>
+                <Cell value={row.custom} />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
@@ -108,28 +176,12 @@ function PricingPage() {
 
         {/* Compare table */}
         <section className="lp-pricing-pg-compare">
-          <table className="lp-pricing-pg-table">
-            <thead>
-              <tr>
-                <th className="lp-ppt-feature-col">Compare plans</th>
-                <th>Standard</th>
-                <th>Custom</th>
-              </tr>
-            </thead>
-            <tbody>
-              {COMPARE_ROWS.map((row, ri) => (
-                <tr key={ri} className="lp-ppt-row">
-                  <td className="lp-ppt-label">{row.label}</td>
-                  <td>
-                    <Check on={row.b} />
-                  </td>
-                  <td>
-                    <Check on={row.s} />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="lp-ppt">
+            <h2 className="lp-ppt-title">Compare plans</h2>
+            {COMPARE_GROUPS.map((group) => (
+              <CompareCard key={group.title} group={group} />
+            ))}
+          </div>
         </section>
 
         {/* FAQ */}

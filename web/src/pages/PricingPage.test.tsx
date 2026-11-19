@@ -141,13 +141,23 @@ describe('PricingPage', () => {
 
   it('marks the compare table per plan', () => {
     renderPage();
-    const rows = screen.getAllByRole('row').slice(1); // skip the header
-    expect(rows).toHaveLength(7);
+    const rows = Array.from(document.querySelectorAll('.lp-ppt-row'));
+    expect(rows).toHaveLength(11);
+    expect(document.querySelectorAll('.lp-ppt-card')).toHaveLength(2);
     const marks = (column: number) =>
       rows.filter((row) => row.querySelectorAll('td')[column]?.textContent === '✓').length;
-    expect(marks(1)).toBe(3); // Standard
-    expect(marks(2)).toBe(7); // Custom
-    expect(rows[3]?.querySelectorAll('td')[1]).toHaveTextContent('Not included');
+    expect(marks(1)).toBe(5); // Standard
+    expect(marks(2)).toBe(8); // Custom
+
+    const cells = (label: string) =>
+      Array.from(
+        rows
+          .find((row) => row.querySelector('.lp-ppt-label')?.textContent === label)!
+          .querySelectorAll('td'),
+        (td) => td.textContent,
+      );
+    expect(cells('Price')).toEqual(['Price', '$49, one-time', 'Volume pricing']);
+    expect(cells('Branded for your program')[1]).toContain('Not included');
   });
 
   it('opens an FAQ on click and closes it again', () => {
