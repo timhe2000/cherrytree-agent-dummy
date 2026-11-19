@@ -16,6 +16,7 @@ import { goToDashboard } from '../utils/goToDashboard.ts';
 import { MARKETING_PLANS } from '../constants/pricing.ts';
 import PlanCards from '../components/PlanCards.tsx';
 import ScrollLitStatement from '../components/ScrollLitStatement.tsx';
+import ScenarioArc from '../components/ScenarioArc.tsx';
 import ProtectCta from '../components/ProtectCta.tsx';
 
 type Timer = ReturnType<typeof setTimeout>;
@@ -517,6 +518,8 @@ const LIT_HOW_IT_WORKS =
 const LIT_PRICING =
   "Templates can't ask the right questions and lawyers can't answer them for lunch money. " +
   'Cherrytree does both.';
+const LIT_SCENARIOS =
+  'Every partnership runs into the same hard questions. Yours will have the answers in writing.';
 const LIT_WHAT_YOU_GET =
   'In 1976, Steve Jobs and Steve Wozniak signed a partnership agreement in a garage. Apple came after.';
 
@@ -669,7 +672,7 @@ function LandingPage() {
           </p>
           <div className="lp-hero-actions">
             <button className="lp-btn-primary" onClick={goDash}>
-              Get started
+              <span className="lp-btn-label">Get started</span>
             </button>
           </div>
 
@@ -735,6 +738,14 @@ function LandingPage() {
               ))}
             </div>
           </div>
+        </section>
+
+        {/* ── Scenarios: founder questions on an arc of cards (trial) ── */}
+        <section className="lp-features" id="scenarios">
+          <div className="lp-feat-header lp-lit-header">
+            <ScrollLitStatement text={LIT_SCENARIOS} />
+          </div>
+          <ScenarioArc />
         </section>
 
         {/* ── Pricing: the two self-serve plans on one white card ── */}
