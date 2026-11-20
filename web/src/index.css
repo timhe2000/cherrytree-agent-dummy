@@ -2914,7 +2914,7 @@ select:disabled {
 .lp-pw-card {
   display: flex;
   flex-direction: column;
-  padding: var(--pw-space) 0 32px;
+  padding: var(--pw-space) 0 20px;
 }
 .lp-pw-panel {
   display: flex;
@@ -2977,7 +2977,7 @@ select:disabled {
 .lp-pw-features {
   list-style: none;
   padding: 0 4px;
-  margin: 56px 0 0;
+  margin: 32px 0 0;
 }
 .lp-pw-features li {
   display: flex;
