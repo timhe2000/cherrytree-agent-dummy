@@ -983,8 +983,24 @@ select:disabled {
   align-items: center;
   width: 100%;
   padding: 14px var(--lp-gutter);
-  background: var(--lp-bg);
+  /* Frosted glass: the page shows through, softly blurred, as it scrolls under the bar. */
+  background: rgba(255, 255, 255, 0.72);
+  -webkit-backdrop-filter: saturate(180%) blur(16px);
+  backdrop-filter: saturate(180%) blur(16px);
   white-space: nowrap;
+  /* On first load the whole bar rises a little into place as it fades in. */
+  animation: lpNavIn 1.7s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
+}
+@keyframes lpNavIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lp-nav {
+    animation: none;
+  }
 }
 .lp-nav-logo {
   display: flex;
@@ -998,11 +1014,6 @@ select:disabled {
 .lp-nav-logo-mark {
   color: var(--lp-ink);
   flex-shrink: 0;
-}
-.lp-nav-logo-text {
-  font-family: 'Instrument Serif Wide', serif;
-  font-size: 22px;
-  color: var(--lp-ink);
 }
 .lp-nav-links {
   display: flex;

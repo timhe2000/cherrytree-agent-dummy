@@ -27,7 +27,7 @@ function MarketingNav() {
 
   return (
     <nav className={`lp-nav${menuOpen ? ' open' : ''}`}>
-      <button className="lp-nav-logo" onClick={() => navigate('/')}>
+      <button className="lp-nav-logo" aria-label="Cherrytree home" onClick={() => navigate('/')}>
         <svg
           className="lp-nav-logo-mark"
           viewBox="23 23 81 66"
@@ -45,7 +45,6 @@ function MarketingNav() {
           <circle cx={38} cy={74} r={14} fill="currentColor" />
           <circle cx={76} cy={74} r={14} fill="currentColor" />
         </svg>
-        <span className="lp-nav-logo-text">Cherrytree</span>
       </button>
       <ul className="lp-nav-links" id="lp-nav-menu">
         <li>
