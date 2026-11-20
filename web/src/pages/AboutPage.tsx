@@ -8,6 +8,7 @@ import ScrollLitStatement from '../components/ScrollLitStatement.tsx';
 import ProtectCta from '../components/ProtectCta.tsx';
 import { goToDashboard } from '../utils/goToDashboard.ts';
 import { openContactForm } from '../utils/openContactForm.ts';
+import ButtonArrow from '../components/ButtonArrow.tsx';
 
 const LIT_CHERRIES =
   'Cherries rarely grow alone. They come in twos, in threes, and in bunches, just like cofounders.';
@@ -57,6 +58,7 @@ function AboutPage() {
           <div className="lp-about-hero-actions">
             <button className="lp-btn-primary" onClick={openContactForm}>
               <span className="lp-btn-label">Contact us</span>
+              <ButtonArrow />
             </button>
           </div>
         </section>

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { goToDashboard } from '../utils/goToDashboard.ts';
+import ButtonArrow from './ButtonArrow.tsx';
 
 /** The landing-page section the nav's "How it works" link scrolls to. */
 export const HOW_IT_WORKS_ID = 'features-v2';
@@ -69,6 +70,7 @@ function MarketingNav() {
         </button>
         <button className="lp-nav-cta" onClick={goDash}>
           <span className="lp-btn-label">Get started</span>
+          <ButtonArrow />
         </button>
         <button
           type="button"

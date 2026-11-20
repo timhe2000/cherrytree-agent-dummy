@@ -1111,7 +1111,7 @@ select:disabled {
   color: #fff;
   border: none;
   border-radius: 7px;
-  padding: 11px 36px;
+  padding: 11px 14px;
   font-size: 16px;
   font-weight: 100;
   letter-spacing: 0.04em;
@@ -1120,81 +1120,88 @@ select:disabled {
   text-decoration: none;
   display: inline-block;
 }
-/* Dark buttons: on hover a darker fill rises from below while the label slides up and back in from
-   underneath; pressing shrinks the button a touch. Label goes in a .lp-btn-label span. */
+/* Dark buttons: on hover the button lengthens as an arrow slides in from just past its right edge
+   (the arrow's slot grows from nothing, so the button grows with it) and dims a touch; pressing
+   shrinks it slightly. The label goes in .lp-btn-label, followed by <ButtonArrow />. The big buttons
+   are the nav button scaled up to their 16px text, so both grow by about the same share (~28%). */
 .lp-btn-primary,
 .lp-nav-cta {
-  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* Clips the arrow while it waits past the right edge. */
   overflow: hidden;
-  isolation: isolate;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.lp-btn-primary::before,
-.lp-nav-cta::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: inherit;
-  background: #000;
-  transform: translateY(102%);
-  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  transition:
+    opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .lp-btn-label {
-  position: relative;
   display: block;
 }
-.lp-btn-primary:hover::before,
-.lp-btn-primary:focus-visible::before,
-.lp-nav-cta:hover::before,
-.lp-nav-cta:focus-visible::before {
-  transform: translateY(0);
+.lp-btn-arrow {
+  display: flex;
+  flex-shrink: 0;
+  width: 0;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.lp-btn-primary:hover .lp-btn-label,
-.lp-btn-primary:focus-visible .lp-btn-label,
-.lp-nav-cta:hover .lp-btn-label,
-.lp-nav-cta:focus-visible .lp-btn-label {
-  animation: lpBtnLabelSwap 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+.lp-btn-arrow svg {
+  flex-shrink: 0;
+  width: 20px;
+  height: 16px;
+  margin-left: 8px;
+  transform: translateX(24px);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.lp-btn-primary .lp-btn-arrow svg {
+  width: 23px;
+  height: 18px;
+  margin-left: 9px;
+  transform: translateX(26px);
+}
+.lp-btn-primary:hover,
+.lp-nav-cta:hover {
+  opacity: 0.9;
+}
+/* On hover the slot opens and the arrow settles centred in the space after the label, measured from
+   the drawn arrow (which sits a couple of px in from each end of its box): 12px either side on the
+   nav button, about 14px on the big ones. */
+.lp-nav-cta:hover .lp-btn-arrow,
+.lp-nav-cta:focus-visible .lp-btn-arrow {
+  width: 28px;
+}
+.lp-nav-cta:hover .lp-btn-arrow svg,
+.lp-nav-cta:focus-visible .lp-btn-arrow svg {
+  transform: translateX(2px);
+}
+.lp-btn-primary:hover .lp-btn-arrow,
+.lp-btn-primary:focus-visible .lp-btn-arrow {
+  width: 32px;
+}
+.lp-btn-primary:hover .lp-btn-arrow svg,
+.lp-btn-primary:focus-visible .lp-btn-arrow svg {
+  transform: translateX(2.5px);
 }
 .lp-btn-primary:active,
 .lp-nav-cta:active {
-  transform: scale(0.97);
+  transform: scale(0.98);
 }
-@keyframes lpBtnLabelSwap {
-  0% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  45% {
-    transform: translateY(-130%);
-    opacity: 0;
-  }
-  50% {
-    transform: translateY(130%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-/* Touch screens leave a tapped button in :hover, so skip the effect there. */
-@media (hover: none) {
-  .lp-btn-primary:hover::before,
-  .lp-nav-cta:hover::before {
-    transform: translateY(102%);
-  }
-  .lp-btn-primary:hover .lp-btn-label,
-  .lp-nav-cta:hover .lp-btn-label {
-    animation: none;
-  }
-}
+/* With reduced motion the arrow just stays out. */
 @media (prefers-reduced-motion: reduce) {
-  .lp-btn-primary::before,
-  .lp-nav-cta::before,
-  .lp-btn-label {
+  .lp-btn-arrow,
+  .lp-btn-arrow svg {
     transition: none;
-    animation: none !important;
+  }
+  .lp-nav-cta .lp-btn-arrow {
+    width: 28px;
+  }
+  .lp-nav-cta .lp-btn-arrow svg {
+    transform: translateX(2px);
+  }
+  .lp-btn-primary .lp-btn-arrow {
+    width: 32px;
+  }
+  .lp-btn-primary .lp-btn-arrow svg {
+    transform: translateX(2.5px);
   }
 }
 
@@ -3487,10 +3494,6 @@ body:has(.lp-has-curtain) {
   align-items: center;
   gap: 16px;
   justify-content: center;
-}
-/* Same width as the landing hero's Get started, whatever the label. */
-.lp-about-hero .lp-btn-primary {
-  min-width: 160px;
 }
 /* Numbered points: number, headline, a hairline running across, then the detail on the right. */
 .lp-about-points {
