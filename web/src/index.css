@@ -882,7 +882,7 @@ select:disabled {
 
 /* ── Tokens ── */
 .lp {
-  --lp-bg: #f7f6f2;
+  --lp-bg: #ffffff;
   --lp-bg2: #f0ede8;
   --lp-bg3: #e3dfd8;
   --lp-ink: #222222;
@@ -2162,6 +2162,11 @@ select:disabled {
   background: #fff;
   border-radius: var(--lp-radius);
   min-width: 0;
+  /* On the white page, a hairline border and a soft shadow lift the card off it. */
+  border: 1px solid #f0eeeb;
+  box-shadow:
+    0 1px 2px rgba(34, 30, 25, 0.04),
+    0 8px 24px rgba(34, 30, 25, 0.06);
 }
 .lp-bento-wide {
   grid-column: span 2;
@@ -2893,6 +2898,11 @@ select:disabled {
   padding: 0 var(--pw-space);
   background: #fff;
   border-radius: var(--lp-radius);
+  /* On the white page, a hairline border and a soft shadow lift the card off it. */
+  border: 1px solid #f0eeeb;
+  box-shadow:
+    0 1px 2px rgba(34, 30, 25, 0.04),
+    0 8px 24px rgba(34, 30, 25, 0.06);
 }
 .lp-pw-card {
   display: flex;
@@ -3802,7 +3812,10 @@ textarea.lp-form-input {
 }
 .lp-ppt-card {
   padding: 40px;
-  border: 1px solid #dcd8d2;
+  border: 1px solid #f0eeeb;
+  box-shadow:
+    0 1px 2px rgba(34, 30, 25, 0.04),
+    0 8px 24px rgba(34, 30, 25, 0.06);
   border-radius: 12px;
 }
 .lp-ppt-card-title {
