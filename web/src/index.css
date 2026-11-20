@@ -2917,7 +2917,7 @@ select:disabled {
   aspect-ratio: 4 / 3; /* a near-square panel, like the reference */
   padding: 28px;
   margin-bottom: 24px;
-  background: var(--lp-bg3); /* same as the hero frame */
+  background: #e4e4e2; /* a soft, nearly neutral grey; the pastel mesh fades in on hover */
   border-radius: var(--lp-radius-inner);
 }
 /* Hovering anywhere on a plan fades in a soft mesh of the five painting tints, laid out like the
