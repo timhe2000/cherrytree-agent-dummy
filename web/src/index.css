@@ -2878,9 +2878,16 @@ select:disabled {
 }
 
 /* ── Landing pricing ── */
+/* A full-width bar under the price panel. No arrow here; on hover it just deepens to black. */
 .lp-plan-cta {
   width: 100%;
-  text-align: center;
+  transition:
+    background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.lp-plan-cta:hover {
+  opacity: 1;
+  background-color: #000;
 }
 /* ── Landing pricing: both plans on one white card; each has a beige price panel, the button, then its list ── */
 /* Both plans share one wide white card, with a wide gap between them. */

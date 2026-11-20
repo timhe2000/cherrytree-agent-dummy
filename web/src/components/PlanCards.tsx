@@ -2,7 +2,6 @@ import type { CSSProperties } from 'react';
 
 import type { MarketingPlan } from '../constants/pricing.ts';
 import { openContactForm } from '../utils/openContactForm.ts';
-import ButtonArrow from './ButtonArrow.tsx';
 
 /**
  * The marketing plan cards (landing and pricing pages): every plan on one white card, each with a
@@ -32,7 +31,6 @@ function PlanCards({
             onClick={plan.contactSales ? openContactForm : onStart}
           >
             <span className="lp-btn-label">{plan.cta}</span>
-            <ButtonArrow />
           </button>
           <ul className="lp-pw-features">
             {plan.features.map((f) => (
