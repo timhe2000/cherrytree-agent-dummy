@@ -18,6 +18,7 @@ import PlanCards from '../components/PlanCards.tsx';
 import ScrollLitStatement from '../components/ScrollLitStatement.tsx';
 import ScenarioArc from '../components/ScenarioArc.tsx';
 import ProtectCta from '../components/ProtectCta.tsx';
+import ButtonArrow from '../components/ButtonArrow.tsx';
 
 type Timer = ReturnType<typeof setTimeout>;
 
@@ -512,15 +513,13 @@ const FEATURES = [
 ];
 
 // Section titles whose words light up one by one as they scroll up the screen.
-const LIT_HOW_IT_WORKS =
-  "You don't need to speak legalese to protect what you're building. You just tell your " +
-  "story and we'll handle the rest.";
 const LIT_PRICING =
   "Templates can't ask the right questions and lawyers can't answer them for lunch money. " +
   'Cherrytree does both.';
-const LIT_SCENARIOS =
-  'Every partnership runs into the same hard questions. Yours will have the answers in writing.';
-const LIT_WHAT_YOU_GET =
+const LIT_LEGALESE =
+  "You don't need to speak legalese to protect what you're building. You just tell your " +
+  "story and we'll handle the rest.";
+const LIT_APPLE =
   'In 1976, Steve Jobs and Steve Wozniak signed a partnership agreement in a garage. Apple came after.';
 
 // ── Main component ─────────────────────────────────────────────────────────────
@@ -582,6 +581,9 @@ function LandingPage() {
   };
 
   const { hash } = useLocation();
+  // Arriving at a section link (the nav's "How it works" from another page) skips the painting's slow
+  // entrance, which is for opening the page at the top; otherwise it would sit blank for a moment.
+  const [arrivedAtSection] = useState(() => hash !== '');
 
   const goDash = () => goToDashboard(navigate);
 
@@ -648,93 +650,92 @@ function LandingPage() {
           <div className="lp-hero-actions">
             <button className="lp-btn-primary" onClick={goDash}>
               <span className="lp-btn-label">Get started</span>
+              <ButtonArrow />
             </button>
-          </div>
-
-          <div className="lp-hero-strip">
-            <div className="lp-hero-strip-placeholder" />
           </div>
         </section>
 
         {/* ── Features v2 (draft — for comparison with the section above) ── */}
-        <section className="lp-features" id="features-v2">
-          <div className="lp-feat-header lp-lit-header">
-            <ScrollLitStatement text={LIT_HOW_IT_WORKS} />
-          </div>
-          <div className="lp-feat-scroll lp-feat-v2-track" ref={v2TrackRef}>
-            <div className="lp-feat-v2-sticky" ref={v2StickyRef}>
-              <div className="lp-feat-v2-scene lp-rv lp-d2">
-                <div className="lp-feat-v2-grain" aria-hidden="true" />
-                <V2Panel key={v2Feature} />
+        {/* Everything after the hero rides on one sheet that slides up over the hero text. */}
+        <div className="lp-sheet">
+          {/* The painting with its step demos sits right under the hero's button, where the product
+            visual goes. */}
+          <section className="lp-features lp-features-under-hero" id="features-v2">
+            <div className="lp-feat-scroll lp-feat-v2-track" ref={v2TrackRef}>
+              <div className="lp-feat-v2-sticky" ref={v2StickyRef}>
+                <div className={`lp-feat-v2-scene${arrivedAtSection ? '' : ' lp-rv lp-d2'}`}>
+                  <div className="lp-feat-v2-grain" aria-hidden="true" />
+                  <V2Panel key={v2Feature} />
+                </div>
+                <div className="lp-feat-v2-tabs" role="tablist">
+                  {FEATURES.map((f, i) => (
+                    <button
+                      key={f.num}
+                      type="button"
+                      role="tab"
+                      aria-selected={v2Feature === i}
+                      className={`lp-feat-v2-tab${v2Feature === i ? ' active' : ''}`}
+                      onClick={() => scrollToV2Step(i)}
+                    >
+                      <span className="lp-feat-v2-tab-title">{f.title}</span>
+                      {v2Feature === i && <span className="lp-feat-v2-tab-desc">{f.short}</span>}
+                    </button>
+                  ))}
+                </div>
               </div>
-              <div className="lp-feat-v2-tabs" role="tablist">
-                {FEATURES.map((f, i) => (
-                  <button
-                    key={f.num}
-                    type="button"
-                    role="tab"
-                    aria-selected={v2Feature === i}
-                    className={`lp-feat-v2-tab${v2Feature === i ? ' active' : ''}`}
-                    onClick={() => scrollToV2Step(i)}
+            </div>
+          </section>
+
+          {/* ── What's in your agreement ── */}
+          <section className="lp-features" id="agreement">
+            <div className="lp-feat-scroll">
+              <div className="lp-feat-header lp-lit-header">
+                <ScrollLitStatement text={LIT_LEGALESE} />
+              </div>
+              <div className="lp-bento">
+                {AGREEMENT_SECTIONS.map((item, i) => (
+                  <article
+                    key={item.tab}
+                    className={`lp-bento-tile lp-rv${'wide' in item ? ' lp-bento-wide' : ''}`}
                   >
-                    <span className="lp-feat-v2-tab-title">{f.title}</span>
-                    {v2Feature === i && <span className="lp-feat-v2-tab-desc">{f.short}</span>}
-                  </button>
+                    <div
+                      className="lp-bento-vis"
+                      style={{ '--ag-tint': AG_TINTS[i] } as CSSProperties}
+                    >
+                      <div className="lp-feat-v2-grain" aria-hidden="true" />
+                      <div className="lp-bento-mini">{AG_VISUALS[i]}</div>
+                    </div>
+                    <div className="lp-bento-copy">
+                      <h3>{item.title}</h3>
+                      <p>{item.desc}</p>
+                    </div>
+                  </article>
                 ))}
               </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        {/* ── What's in your agreement ── */}
-        <section className="lp-features" id="agreement">
-          <div className="lp-feat-scroll">
+          {/* ── Scenarios: founder questions on an arc of cards (trial) ── */}
+          <section className="lp-features" id="scenarios">
             <div className="lp-feat-header lp-lit-header">
-              <ScrollLitStatement text={LIT_WHAT_YOU_GET} />
+              <ScrollLitStatement text={LIT_APPLE} />
             </div>
-            <div className="lp-bento">
-              {AGREEMENT_SECTIONS.map((item, i) => (
-                <article
-                  key={item.tab}
-                  className={`lp-bento-tile lp-rv${'wide' in item ? ' lp-bento-wide' : ''}`}
-                >
-                  <div
-                    className="lp-bento-vis"
-                    style={{ '--ag-tint': AG_TINTS[i] } as CSSProperties}
-                  >
-                    <div className="lp-feat-v2-grain" aria-hidden="true" />
-                    <div className="lp-bento-mini">{AG_VISUALS[i]}</div>
-                  </div>
-                  <div className="lp-bento-copy">
-                    <h3>{item.title}</h3>
-                    <p>{item.desc}</p>
-                  </div>
-                </article>
-              ))}
+            <ScenarioArc />
+          </section>
+
+          {/* ── Pricing: the two self-serve plans on one white card ── */}
+          <section className="lp-features" id="pricing">
+            <div className="lp-feat-scroll">
+              <div className="lp-feat-header lp-lit-header">
+                <ScrollLitStatement text={LIT_PRICING} />
+              </div>
+              <PlanCards plans={MARKETING_PLANS} onStart={goDash} />
             </div>
-          </div>
-        </section>
+          </section>
 
-        {/* ── Scenarios: founder questions on an arc of cards (trial) ── */}
-        <section className="lp-features" id="scenarios">
-          <div className="lp-feat-header lp-lit-header">
-            <ScrollLitStatement text={LIT_SCENARIOS} />
-          </div>
-          <ScenarioArc />
-        </section>
-
-        {/* ── Pricing: the two self-serve plans on one white card ── */}
-        <section className="lp-features" id="pricing">
-          <div className="lp-feat-scroll">
-            <div className="lp-feat-header lp-lit-header">
-              <ScrollLitStatement text={LIT_PRICING} />
-            </div>
-            <PlanCards plans={MARKETING_PLANS} onStart={goDash} />
-          </div>
-        </section>
-
-        {/* ── Protect CTA ── */}
-        <ProtectCta onStart={goDash} reveal />
+          {/* ── Protect CTA ── */}
+          <ProtectCta onStart={goDash} reveal />
+        </div>
       </div>
 
       <MarketingFooter />

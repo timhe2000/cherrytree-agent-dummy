@@ -53,7 +53,8 @@ function AboutPage() {
 
       {/* Raised page layer with a rounded bottom that scrolls up to reveal the footer. */}
       <div className="lp-curtain">
-        <section className="lp-about-hero">
+        {/* The hero stays put; the sheet below, led by the painting, slides up over it. */}
+        <section className="lp-about-hero lp-hero-pinned">
           <h1>You&rsquo;re in good company.</h1>
           <div className="lp-about-hero-actions">
             <button className="lp-btn-primary" onClick={openContactForm}>
@@ -63,37 +64,40 @@ function AboutPage() {
           </div>
         </section>
 
-        {/* Sections reuse the landing's section classes so the spacing matches it exactly. */}
-        {/* The blossom valley painting on its own (same panel as the landing's). */}
-        <section className="lp-features">
-          <div className="lp-feat-scroll">
-            <div
-              className="lp-feat-v2-scene"
-              role="img"
-              aria-label="Painting of a cherry tree in a blossoming valley"
-            >
-              <div className="lp-feat-v2-grain" aria-hidden="true" />
+        <div className="lp-sheet">
+          {/* Sections reuse the landing's section classes so the spacing matches it exactly. */}
+          {/* The blossom valley painting on its own (same panel as the landing's), right at the
+              top of the sheet so it's what covers the hero. */}
+          <section className="lp-features lp-features-under-hero">
+            <div className="lp-feat-scroll">
+              <div
+                className="lp-feat-v2-scene"
+                role="img"
+                aria-label="Painting of a cherry tree in a blossoming valley"
+              >
+                <div className="lp-feat-v2-grain" aria-hidden="true" />
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        <section className="lp-features">
-          <div className="lp-feat-header lp-lit-header">
-            <ScrollLitStatement text={LIT_CHERRIES} />
-          </div>
-          <ol className="lp-feat-scroll lp-about-points">
-            {POINTS.map((point, i) => (
-              <li key={point.title} className="lp-about-point">
-                <span className="lp-about-point-num">{i + 1}</span>
-                <h3 className="lp-about-point-title">{point.title}</h3>
-                <span className="lp-about-point-rule" aria-hidden="true" />
-                <p className="lp-about-point-body">{point.body}</p>
-              </li>
-            ))}
-          </ol>
-        </section>
+          <section className="lp-features">
+            <div className="lp-feat-header lp-lit-header">
+              <ScrollLitStatement text={LIT_CHERRIES} />
+            </div>
+            <ol className="lp-feat-scroll lp-about-points">
+              {POINTS.map((point, i) => (
+                <li key={point.title} className="lp-about-point">
+                  <span className="lp-about-point-num">{i + 1}</span>
+                  <h3 className="lp-about-point-title">{point.title}</h3>
+                  <span className="lp-about-point-rule" aria-hidden="true" />
+                  <p className="lp-about-point-body">{point.body}</p>
+                </li>
+              ))}
+            </ol>
+          </section>
 
-        <ProtectCta onStart={() => goToDashboard(navigate)} />
+          <ProtectCta onStart={() => goToDashboard(navigate)} />
+        </div>
       </div>
 
       <MarketingFooter />

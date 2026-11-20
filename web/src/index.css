@@ -931,6 +931,11 @@ select:disabled {
   opacity: 1;
   transform: translateY(0) scale(1);
 }
+/* The How it works painting under the hero comes in a beat later and more slowly than other reveals. */
+.lp-feat-v2-scene.lp-rv {
+  transition-duration: 1.9s;
+  transition-delay: 0.6s;
+}
 .lp-rv-l {
   opacity: 0;
   transform: translateX(-32px);
@@ -1264,8 +1269,7 @@ select:disabled {
 
 /* ── Hero ── */
 .lp-hero {
-  min-height: 100vh;
-  padding: 170px var(--lp-gutter) 100px;
+  padding: 200px var(--lp-gutter) 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1302,63 +1306,16 @@ select:disabled {
   color: #47433f;
   max-width: 620px;
   line-height: 1.5;
-  margin-bottom: 28px;
+  margin-bottom: 40px;
   text-wrap: balance;
 }
 .lp-hero-actions {
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-bottom: 70px;
+  margin-bottom: 110px;
 }
 
-/* Product mockup */
-.lp-hero-strip {
-  position: relative;
-  align-self: stretch;
-  margin: 0 8px 0;
-  aspect-ratio: 16 / 9;
-  background: var(--lp-bg3);
-  border-radius: var(--lp-radius);
-  z-index: 0;
-  overflow: hidden;
-}
-@keyframes lpHeroStripIn {
-  from {
-    transform: translateY(32px);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .lp-hero-strip-placeholder {
-    animation: none;
-  }
-}
-/* The white app card runs off the bottom edge of the strip, so only its top corners round. */
-.lp-hero-strip-placeholder {
-  position: absolute;
-  top: 6%;
-  bottom: 0;
-  left: 3%;
-  width: 94%;
-  background: #fefefe;
-  border-radius: var(--lp-radius-inner) var(--lp-radius-inner) 0 0;
-  z-index: 2;
-  /* Only the white card rises; the frame around it stays put and clips it at the bottom. */
-  animation: lpHeroStripIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.9s both;
-}
-.lp-hero-strip::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0.5;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='3.5' intercept='-1'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
 .lp-hero-visual {
   position: relative;
   z-index: 1;
@@ -1747,6 +1704,27 @@ select:disabled {
 }
 
 /* ── Features v2 (draft) ── */
+/* The hero pins at the top and the rest of the page, on one sheet, slides up over it (landing and
+   About). */
+.lp-hero-pinned {
+  position: sticky;
+  top: 0;
+  /* Transparent so that, scrolled right to the end where the curtain's bottom meets the pinned
+     hero, its square background doesn't show through the curtain's rounded corners. The page
+     behind it is the same white anyway. */
+  background: transparent;
+}
+.lp-sheet {
+  position: relative;
+  z-index: 10;
+  /* Same colour as the page and no edge of its own, so only the painting reads as sliding over. */
+  background: var(--lp-bg);
+  border-radius: 0 0 var(--curtain-radius) var(--curtain-radius);
+}
+/* Right under the hero, the painting takes the product visual's place, so no section gap above. */
+.lp-features.lp-features-under-hero {
+  padding-top: 0;
+}
 /* The heading scrolls away; the scene and titles then pin under the nav while the page scrolls
    through the track's extra height, each step getting an equal slice of it. */
 /* A spacer, not padding: a sticky element can't travel into its parent's padding. */
@@ -1767,7 +1745,12 @@ select:disabled {
   width: 100%;
   border-radius: var(--lp-radius);
   overflow: hidden;
-  background: url('/images/blossom-valley-cropped.webp') center / cover no-repeat;
+  background: var(--lp-bg3);
+  /* A soft drop shadow lifts the painting off the page. */
+  box-shadow:
+    0 2px 4px rgba(34, 30, 25, 0.06),
+    0 12px 28px rgba(34, 30, 25, 0.1),
+    0 32px 64px -16px rgba(34, 30, 25, 0.18);
 }
 /* Canvas-weave grain so the image reads as a painted surface. */
 .lp-feat-v2-grain {
@@ -1779,6 +1762,14 @@ select:disabled {
 }
 
 /* The section-above step animation, centered as a card on the painting. */
+/* The painting sits on its own layer so it can be brightened without touching the cards on top. */
+.lp-feat-v2-scene::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('/images/blossom-valley-cropped.webp') center / cover no-repeat;
+  filter: brightness(1.12) saturate(1.04);
+}
 .lp-feat-v2-scene .lp-fp {
   position: absolute;
   inset: 0;
@@ -3261,7 +3252,7 @@ body:has(.lp-has-curtain) {
     color: var(--lp-ink);
   }
   .lp-hero {
-    padding: 130px 24px 80px;
+    padding: 150px 24px 80px;
   }
   .lp-about-hero {
     padding: 96px 24px 64px;
