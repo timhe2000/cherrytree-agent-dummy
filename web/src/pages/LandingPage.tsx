@@ -19,6 +19,7 @@ import ScrollLitStatement from '../components/ScrollLitStatement.tsx';
 import ScenarioArc from '../components/ScenarioArc.tsx';
 import ProtectCta from '../components/ProtectCta.tsx';
 import ButtonArrow from '../components/ButtonArrow.tsx';
+import { smoothScrollTo } from '../hooks/useSmoothScroll.ts';
 
 type Timer = ReturnType<typeof setTimeout>;
 
@@ -592,7 +593,8 @@ function LandingPage() {
   useEffect(() => {
     const id = hash.replace('#', '');
     if (!id) return;
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    const target = document.getElementById(id);
+    if (target) smoothScrollTo(target);
     navigate({ hash: '' }, { replace: true });
   }, [hash, navigate]);
 

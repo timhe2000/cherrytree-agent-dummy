@@ -3,11 +3,14 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { goToDashboard } from '../utils/goToDashboard.ts';
 import ButtonArrow from './ButtonArrow.tsx';
+import { useSmoothScroll } from '../hooks/useSmoothScroll.ts';
 
 /** The landing-page section the nav's "How it works" link scrolls to. */
 export const HOW_IT_WORKS_ID = 'features-v2';
 
 function MarketingNav() {
+  // Every marketing page renders the nav, so it switches on smooth scrolling for all of them.
+  useSmoothScroll();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const goDash = () => goToDashboard(navigate);
