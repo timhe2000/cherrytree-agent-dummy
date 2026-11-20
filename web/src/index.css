@@ -3097,7 +3097,7 @@ select:disabled {
 
 /* ── Protect CTA ── */
 .lp-protect-cta {
-  padding: 110px var(--lp-gutter) 240px;
+  padding: 110px var(--lp-gutter) 320px;
   text-align: center;
 }
 .lp-protect-cta h2 {
@@ -3304,7 +3304,7 @@ body:has(.lp-has-curtain) {
     gap: 28px;
   }
   .lp-protect-cta {
-    padding: 56px 24px 96px;
+    padding: 56px 24px 140px;
   }
   /* The two headline lines are too long for a phone; let them flow as one balanced paragraph. */
   .lp-protect-cta h2 {
