@@ -21,7 +21,7 @@ function FaqList({ faqs, reveal = false }: FaqListProps) {
         const expanded = openFaq === i;
         const revealClass = reveal ? ` lp-rv lp-d${Math.min(i, 4)}` : '';
         return (
-          <div key={i} className={`lp-faq-item${revealClass}`}>
+          <div key={i} className={`lp-faq-item${expanded ? ' open' : ''}${revealClass}`}>
             <button className="lp-faq-btn" onClick={() => setOpenFaq(openFaq === i ? null : i)}>
               <span className="lp-faq-q">{f.q}</span>
               <span className={`lp-faq-icon${expanded ? ' open' : ''}`} aria-hidden="true" />

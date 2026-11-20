@@ -3034,10 +3034,14 @@ select:disabled {
   gap: 12px;
   width: 100%;
 }
-/* Each question sits in its own white box. */
+/* Each question sits in its own box, which eases to a soft blossom pink while its answer is open. */
 .lp-faq-item {
   background: #fff;
   border-radius: var(--lp-radius);
+  transition: background-color 0.35s ease;
+}
+.lp-faq-item.open {
+  background: #f7efed;
 }
 .lp-faq-btn {
   display: flex;
@@ -3076,10 +3080,13 @@ select:disabled {
   border-right: 1.4px solid var(--lp-ink);
   border-bottom: 1.4px solid var(--lp-ink);
   transform: translate(-50%, -70%) rotate(45deg);
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.35s ease;
 }
 .lp-faq-icon.open::before {
   transform: translate(-50%, -30%) rotate(-135deg);
+  border-color: #a8747d;
 }
 .lp-faq-body {
   display: grid;
