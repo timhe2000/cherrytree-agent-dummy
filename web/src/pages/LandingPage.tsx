@@ -533,9 +533,6 @@ function LandingPage() {
       'Answer guided questions and get a complete Cofounder Agreement. No sketchy templates or overpriced lawyers.',
   });
 
-  // Hero headline — the green highlight sweeps in once, when scrolled into view
-  const heroHeadlineRef = useRef<HTMLHeadingElement>(null);
-  const [heroInView, setHeroInView] = useState(false);
   const [v2Feature, setV2Feature] = useState(0);
   // How it works: the scene and titles stay pinned while the page scrolls through a tall track;
   // how far through the pinned stretch you are picks the step.
@@ -597,27 +594,6 @@ function LandingPage() {
     navigate({ hash: '' }, { replace: true });
   }, [hash, navigate]);
 
-  // Trigger each typewriter once, the first time its headline scrolls into view.
-  useEffect(() => {
-    const targets: [HTMLElement | null, (v: boolean) => void][] = [
-      [heroHeadlineRef.current, setHeroInView],
-    ];
-    const obs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const hit = targets.find(([el]) => el === entry.target);
-          if (entry.isIntersecting && hit) {
-            obs.unobserve(entry.target);
-            hit[1](true);
-          }
-        });
-      },
-      { threshold: 0.2 },
-    );
-    targets.forEach(([el]) => el && obs.observe(el));
-    return () => obs.disconnect();
-  }, []);
-
   // Scroll reveal — fades/slides in each .lp-rv/.lp-rv-l/.lp-rv-r element once as it enters view.
   // Elements already in the viewport at observe() time can have their IntersectionObserver
   // callback fire before the browser has committed a style pass with the base (opacity:0)
@@ -655,15 +631,14 @@ function LandingPage() {
           footer pinned behind it. */}
       <div className="lp-curtain">
         {/* ── Hero ── */}
-        <section className="lp-hero">
-          <h1 className="lp-hero-headline" ref={heroHeadlineRef}>
+        {/* The hero text stays put; the sheet below slides up over it. */}
+        <section className="lp-hero lp-hero-pinned">
+          <h1 className="lp-hero-headline">
             <span className="lp-hl-line">
               <span className="lp-hl-inner">Great companies start</span>
             </span>
-            <span className="lp-hl-line lp-d1">
-              <span className="lp-hl-inner">
-                <span className={`lp-hl-mark${heroInView ? ' in' : ''}`}>with great company.</span>
-              </span>
+            <span className="lp-hl-line">
+              <span className="lp-hl-inner">with great company.</span>
             </span>
           </h1>
           <p className="lp-hero-sub">

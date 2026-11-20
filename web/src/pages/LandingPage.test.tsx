@@ -59,8 +59,6 @@ function renderPage() {
 
 const path = () => screen.getByTestId('path').textContent;
 const advance = (ms: number) => act(() => vi.advanceTimersByTime(ms));
-const heroMark = () => document.querySelector('.lp-hero-headline .lp-hl-mark');
-const protectMark = () => document.querySelector('.lp-protect-cta .lp-hl-mark');
 const observersFor = (threshold: number) =>
   FakeIntersectionObserver.instances.filter((o) => o.options?.threshold === threshold);
 
@@ -257,16 +255,11 @@ describe('LandingPage', () => {
     expect(first).toHaveClass('lp-rv-in');
   });
 
-  it('sweeps the hero and closing highlights in once they scroll into view', () => {
+  it('shows the hero and closing headlines without highlights', () => {
     renderPage();
-    expect(heroMark()).toHaveTextContent('with great company.');
-    expect(protectMark()).toHaveTextContent('peace of mind.');
-    expect(heroMark()).not.toHaveClass('in');
-    expect(protectMark()).not.toHaveClass('in');
-
-    // The hero's observer and the closing CTA's own.
-    act(() => observersFor(0.2).forEach((observer) => observer.intersect()));
-    expect(heroMark()).toHaveClass('in');
-    expect(protectMark()).toHaveClass('in');
+    expect(document.querySelector('.lp-hl-mark')).toBeNull();
+    expect(document.querySelector('.lp-protect-cta h2')).toHaveTextContent(
+      'Protect your piece of the pie and your peace of mind.',
+    );
   });
 });

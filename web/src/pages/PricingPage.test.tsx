@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 
 import { breadcrumbs } from '../test/pageMeta.ts';
@@ -51,7 +51,6 @@ const path = () => screen.getByTestId('path').textContent;
 const cards = () => Array.from(document.querySelectorAll<HTMLElement>('.lp-pw-card'));
 const faqBody = (question: string) =>
   screen.getByRole('button', { name: question }).parentElement?.querySelector('.lp-faq-body');
-const protectMark = () => document.querySelector('.lp-protect-cta .lp-hl-mark');
 
 beforeEach(() => {
   vi.stubGlobal('IntersectionObserver', FakeIntersectionObserver);
@@ -171,14 +170,11 @@ describe('PricingPage', () => {
     expect(faqBody(question)).not.toHaveClass('open');
   });
 
-  it('sweeps the closing headline highlight in once it scrolls into view', () => {
+  it('shows the closing headline without a highlight', () => {
     renderPage();
-    expect(protectMark()).toHaveTextContent('peace of mind.');
-    expect(protectMark()).not.toHaveClass('in');
-
-    const observer = FakeIntersectionObserver.instances[0];
-    expect(observer).toBeDefined();
-    act(() => observer!.intersect());
-    expect(protectMark()).toHaveClass('in');
+    expect(document.querySelector('.lp-protect-cta .lp-hl-mark')).toBeNull();
+    expect(document.querySelector('.lp-protect-cta h2')).toHaveTextContent(
+      'Protect your piece of the pie and your peace of mind.',
+    );
   });
 });
