@@ -1704,8 +1704,8 @@ select:disabled {
 }
 
 /* ── Features v2 (draft) ── */
-/* The hero pins at the top and the rest of the page, on one sheet, slides up over it (landing and
-   About). */
+/* The hero pins at the top and the rest of the page, on one sheet, slides up over it (landing,
+   About and pricing). */
 .lp-hero-pinned {
   position: sticky;
   top: 0;
@@ -3789,9 +3789,8 @@ textarea.lp-form-input {
 
 /* ── Pricing Page specific ── */
 .lp-pricing-pg-hero {
-  padding: 150px var(--lp-gutter) 40px;
+  padding: 150px var(--lp-gutter) 60px;
   text-align: center;
-  background-color: var(--lp-bg);
 }
 .lp-pricing-pg-h1 {
   font-family: 'Instrument Serif Wide', serif;
@@ -3800,8 +3799,9 @@ textarea.lp-form-input {
   letter-spacing: 0px;
   line-height: 1;
 }
+/* The plan cards sit right at the top of the sheet, so they're what covers the title. */
 .lp-pricing-pg-cards-wrap {
-  padding: 20px var(--lp-gutter) 140px;
+  padding: 0 var(--lp-gutter) 140px;
 }
 
 /* Compare table */

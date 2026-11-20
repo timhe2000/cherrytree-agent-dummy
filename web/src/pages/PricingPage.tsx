@@ -164,41 +164,43 @@ function PricingPage() {
 
       {/* Raised page layer with a rounded bottom that scrolls up to reveal the footer. */}
       <div className="lp-curtain">
-        {/* Hero */}
-        <section className="lp-pricing-pg-hero">
-          <h1 className="lp-pricing-pg-h1">Pricing</h1>
+        {/* Hero: the title stays put while the sheet below, led by the plan cards, slides up over it. */}
+        <section className="lp-pricing-pg-hero lp-hero-pinned">
+          <h1 className="lp-pricing-pg-h1">Vest assured.</h1>
         </section>
 
-        {/* Cards */}
-        <section className="lp-pricing-pg-cards-wrap">
-          <PlanCards plans={MARKETING_PLANS} onStart={goDash} />
-        </section>
+        <div className="lp-sheet">
+          {/* Cards */}
+          <section className="lp-pricing-pg-cards-wrap">
+            <PlanCards plans={MARKETING_PLANS} onStart={goDash} />
+          </section>
 
-        {/* Compare table */}
-        <section className="lp-pricing-pg-compare">
-          <div className="lp-ppt">
-            <h2 className="lp-ppt-title">Compare plans</h2>
-            {COMPARE_GROUPS.map((group) => (
-              <CompareCard key={group.title} group={group} />
-            ))}
-          </div>
-        </section>
+          {/* Compare table */}
+          <section className="lp-pricing-pg-compare">
+            <div className="lp-ppt">
+              <h2 className="lp-ppt-title">Compare plans</h2>
+              {COMPARE_GROUPS.map((group) => (
+                <CompareCard key={group.title} group={group} />
+              ))}
+            </div>
+          </section>
 
-        {/* FAQ */}
-        <section className="lp-faq">
-          <div className="lp-faq-inner">
-            <div className="lp-faq-card">
-              <div className="lp-faq-visual">
-                <h2>Frequently asked questions.</h2>
-              </div>
-              <div className="lp-faq-panel">
-                <FaqList faqs={FAQS} />
+          {/* FAQ */}
+          <section className="lp-faq">
+            <div className="lp-faq-inner">
+              <div className="lp-faq-card">
+                <div className="lp-faq-visual">
+                  <h2>Frequently asked questions.</h2>
+                </div>
+                <div className="lp-faq-panel">
+                  <FaqList faqs={FAQS} />
+                </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        <ProtectCta onStart={goDash} />
+          <ProtectCta onStart={goDash} />
+        </div>
       </div>
 
       <MarketingFooter />

@@ -87,7 +87,7 @@ describe('PricingPage', () => {
 
   it('renders the two plans with their prices, features and calls to action', () => {
     renderPage();
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Pricing');
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Vest assured.');
 
     const [bootstrapped, scale] = cards();
     expect(cards()).toHaveLength(2);
