@@ -91,10 +91,21 @@
          means it's ready whichever page you open first. -->
     <link rel="preload" as="image" href="/images/blossom-valley-cropped.webp" type="image/webp" />
     <link rel="manifest" href="/manifest.json" />
+    <!-- The headline serif is fetched up front so it's in before the first paint; otherwise the
+         page shows a fallback serif that jumps size when the real one arrives. -->
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/instrument-serif-wide-regular.woff2"
+      crossorigin
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- All Google fonts in one request, linked here rather than @imported from the CSS bundle, so
+         the browser finds them without waiting for the bundle first. -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Inter:wght@400;500;600;700&family=Outfit:wght@200;300;400;500;600&display=swap"
       rel="stylesheet"
     />
     <script src="https://tally.so/widgets/embed.js"></script>

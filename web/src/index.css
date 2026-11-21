@@ -1,20 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600&family=Geist:wght@300;400;500;600&family=Manrope:wght@500&display=swap');
-
 /* Instrument Serif widened 10% (outlines and advances, not letter-spacing). Self-hosted modified
-   copy under the OFL; see public/fonts/instrument-serif-wide-OFL.txt. */
+   copy under the OFL; see public/fonts/instrument-serif-wide-OFL.txt. font-display: block holds
+   the text back until the font is in (preloaded in index.html, so usually a few ms) instead of
+   flashing a narrower fallback serif that then jumps size. */
 @font-face {
   font-family: 'Instrument Serif Wide';
   src: url('/fonts/instrument-serif-wide-regular.woff2') format('woff2');
   font-style: normal;
   font-weight: 400;
-  font-display: swap;
+  font-display: block;
 }
 @font-face {
   font-family: 'Instrument Serif Wide';
   src: url('/fonts/instrument-serif-wide-italic.woff2') format('woff2');
   font-style: italic;
   font-weight: 400;
-  font-display: swap;
+  font-display: block;
 }
 
 @tailwind base;
