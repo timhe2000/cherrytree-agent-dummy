@@ -25,35 +25,16 @@ type Timer = ReturnType<typeof setTimeout>;
 
 // ── Panel sub-components ───────────────────────────────────────────────────────
 
-const S1_DUMP =
-  "Bill and I started Acme last spring. I'm CEO, Bill runs product as CTO. " +
-  "We're thinking 60/40 since I put in the first $20k. Both full-time, and anything over $10k needs both of us.";
-// Phrases Cherrytree "picks up" as they're typed: highlighted in the text, filled in below.
-const S1_PICKS = [
-  { phrase: "I'm CEO, Bill runs product as CTO", label: 'Roles', value: 'CEO · CTO' },
-  { phrase: '60/40', label: 'Equity', value: '60 / 40' },
-  { phrase: '$20k', label: 'Cash invested', value: '$20k' },
-  { phrase: 'full-time', label: 'Commitment', value: 'Full-time' },
-  { phrase: 'anything over $10k needs both of us', label: 'Big decisions', value: 'Both sign off' },
-].map((p) => {
-  const start = S1_DUMP.indexOf(p.phrase);
-  return { ...p, start, end: start + p.phrase.length };
-});
-// The text split into plain runs and picked phrases, in order.
-const S1_SEGMENTS = S1_PICKS.reduce<{ text: string; start: number; pick: boolean }[]>(
-  (segs, p, i) => {
-    const from = i === 0 ? 0 : S1_PICKS[i - 1]!.end;
-    segs.push({ text: S1_DUMP.slice(from, p.start), start: from, pick: false });
-    segs.push({ text: p.phrase, start: p.start, pick: true });
-    if (i === S1_PICKS.length - 1) {
-      segs.push({ text: S1_DUMP.slice(p.end), start: p.end, pick: false });
-    }
-    return segs;
-  },
-  [],
-);
+const S1_QUESTION = 'What are you building?';
+const S1_ANSWER =
+  "We're building Cherrytree, an app that helps founders write their cofounder agreements. " +
+  "Avery and I started it last spring. I'm CEO, Avery runs product as CTO, and we're both " +
+  "full-time. We're thinking 60/40 since I put in the first $20k.";
+const S1_ANSWER_MS = 900;
 const S1_CHAR_MS = 28;
+const S1_HOLD_MS = 2800;
 
+// The question, then the founder's answer typing itself out on the right, line by line like a doc.
 function PanelBrainDump() {
   const [typed, setTyped] = useState(0);
   useEffect(() => {
@@ -63,10 +44,12 @@ function PanelBrainDump() {
     };
     const run = () => {
       setTyped(0);
-      for (let i = 1; i <= S1_DUMP.length; i++) t(() => setTyped(i), i * S1_CHAR_MS);
-      t(run, S1_DUMP.length * S1_CHAR_MS + 2800);
+      for (let i = 1; i <= S1_ANSWER.length; i++) {
+        t(() => setTyped(i), S1_ANSWER_MS + i * S1_CHAR_MS);
+      }
+      t(run, S1_ANSWER_MS + S1_ANSWER.length * S1_CHAR_MS + S1_HOLD_MS);
     };
-    t(run, 600);
+    run();
     return () => timers.forEach(clearTimeout);
   }, []);
 
@@ -75,29 +58,18 @@ function PanelBrainDump() {
       <div className="lp-fp-overlay" />
       <div className="lp-fp-white">
         <div className="lp-fp-content lp-fp-center">
-          <div className="lp-s1-card">
-            <div className="lp-s1-dump">
-              {S1_SEGMENTS.map((seg) => {
-                const shown = seg.text.slice(0, Math.max(0, typed - seg.start));
-                if (!shown) return null;
-                const hit = seg.pick && typed >= seg.start + seg.text.length;
-                return (
-                  <span key={seg.start} className={hit ? 'lp-s1-hit' : undefined}>
-                    {shown}
-                  </span>
-                );
-              })}
-              <span className="lp-icursor lp-dark" />
-            </div>
-            <div className="lp-s1-label">Cherrytree picked up</div>
-            <div className="lp-s1-picks">
-              {S1_PICKS.map((p) => (
-                <div key={p.label} className="lp-s1-pick">
-                  <span>{p.label}</span>
-                  {typed >= p.end && <b>{p.value}</b>}
-                </div>
-              ))}
-            </div>
+          <div className="lp-s1-chat">
+            <p className="lp-s1-q">{S1_QUESTION}</p>
+            {/* The full answer, hidden, holds the space so the question stays put as it types. */}
+            <p className="lp-s1-answer">
+              <span className="lp-s1-ghost" aria-hidden="true">
+                {S1_ANSWER}
+              </span>
+              <span className="lp-s1-typed">
+                {S1_ANSWER.slice(0, typed)}
+                <span className="lp-icursor lp-dark" />
+              </span>
+            </p>
           </div>
         </div>
       </div>
@@ -184,22 +156,21 @@ function PanelFollowUps() {
   );
 }
 
-// The agreement reads the answers, then types itself out: preamble, background, then two sections.
+// The agreement types itself out: preamble, background, then two sections.
 const S3_BLOCKS = [
-  { kind: 'meta', text: 'Effective November 8, 2026' },
   {
     kind: 'p',
-    text: 'This Agreement is made between Steve Bobs and Bill Dates (the "Cofounders") of Acme Labs, Inc. (the "Company").',
+    text: 'This Agreement is made between Steve Bobs and Avery Dates (the "Cofounders") of Cherrytree, Inc. (the "Company").',
   },
   { kind: 'h', text: 'Background' },
   {
     kind: 'p',
-    text: 'Acme Labs, Inc. is a Delaware corporation that helps startup founders create cofounder agreements. The Cofounders want to record how ownership and decisions are shared between them.',
+    text: 'Cherrytree, Inc. is a Delaware corporation that helps startup founders create cofounder agreements. The Cofounders want to record how ownership and decisions are shared between them.',
   },
   { kind: 'h', text: '1. Equity' },
   {
     kind: 'p',
-    text: "The Company's shares are allocated 60% to Steve Bobs and 40% to Bill Dates.",
+    text: "The Company's shares are allocated 60% to Steve Bobs and 40% to Avery Dates.",
   },
   { kind: 'h', text: '2. Vesting' },
   {
@@ -213,8 +184,8 @@ const S3_BLOCKS = [
 }, []);
 const S3_TOTAL = S3_BLOCKS.reduce((n, b) => n + b.text.length, 0);
 const S3_CHAR_MS = 14;
-const S3_READ_MS = 1400; // "Reading your answers…" before the first character
-const S3_CLASS: Record<string, string> = { h: 'lp-dr-h', p: 'lp-dr-p', meta: 'lp-dr-meta' };
+const S3_START_MS = 600; // pause on the title before the first character
+const S3_CLASS: Record<string, string> = { h: 'lp-dr-h', p: 'lp-dr-p' };
 
 function PanelDraft() {
   const [typed, setTyped] = useState(0);
@@ -227,8 +198,8 @@ function PanelDraft() {
     const run = () => {
       setTyped(0);
       setCycle((c) => c + 1);
-      for (let i = 1; i <= S3_TOTAL; i++) t(() => setTyped(i), S3_READ_MS + i * S3_CHAR_MS);
-      t(run, S3_READ_MS + S3_TOTAL * S3_CHAR_MS + 2600);
+      for (let i = 1; i <= S3_TOTAL; i++) t(() => setTyped(i), S3_START_MS + i * S3_CHAR_MS);
+      t(run, S3_START_MS + S3_TOTAL * S3_CHAR_MS + 2600);
     };
     run();
     return () => timers.forEach(clearTimeout);
@@ -242,12 +213,9 @@ function PanelDraft() {
       <div className="lp-fp-white">
         <div className="lp-fp-content">
           <div className="lp-dr-paper">
-            <span className={`lp-dr-status${ready ? ' ready' : ''}`}>
-              {ready ? 'Draft ready' : typed === 0 ? 'Reading your answers…' : 'Drafting…'}
-            </span>
             <div key={cycle} className="lp-dr-head">
               <div className="lp-dr-doc-title">Cofounder Agreement</div>
-              <div className="lp-dr-doc-sub">Acme Labs, Inc.</div>
+              <div className="lp-dr-doc-sub">Cherrytree, Inc.</div>
             </div>
             {visible.map((b, i) => {
               const Tag = b.kind === 'h' ? 'h4' : 'p';
@@ -265,7 +233,7 @@ function PanelDraft() {
   );
 }
 
-const S4_SIGNERS = ['Steve Bobs', 'Bill Dates'];
+const S4_SIGNERS = ['Steve Bobs', 'Avery Dates'];
 // Abstract agreement: each group is a heading bar followed by text lines (widths in %).
 const S4_DOC = [
   [92, 100, 84, 60],
@@ -274,6 +242,7 @@ const S4_DOC = [
 ];
 const S4_EDITED = '1-1'; // group-line that gets edited before signing
 
+// The agreement is reviewed (one line edited), then each cofounder's signature writes itself in.
 function PanelSign() {
   // 0 draft, 1 edited, 2 first signature, 3 second signature
   const [phase, setPhase] = useState(0);
@@ -284,7 +253,7 @@ function PanelSign() {
     };
     const run = () => {
       setPhase(0);
-      [700, 1900, 2900].forEach((ms, i) => t(() => setPhase(i + 1), ms));
+      [700, 1900, 3000].forEach((ms, i) => t(() => setPhase(i + 1), ms));
       t(run, 6200);
     };
     run();
@@ -297,6 +266,7 @@ function PanelSign() {
       <div className="lp-fp-white">
         <div className="lp-fp-content">
           <div className="lp-sg-card">
+            <div className="lp-sg-title">Cofounder Agreement</div>
             <div className="lp-sg-doc" aria-hidden="true">
               {S4_DOC.map((lines, g) => (
                 <div key={g} className="lp-sg-group">
@@ -312,11 +282,14 @@ function PanelSign() {
               ))}
             </div>
             <div className="lp-sg-sigs">
-              {S4_SIGNERS.map((name, i) => (
-                <div key={name} className={`lp-sg-sig${phase >= i + 2 ? ' signed' : ''}`}>
-                  <div className="lp-sg-ink">{phase >= i + 2 ? name : ''}</div>
-                </div>
-              ))}
+              {S4_SIGNERS.map((name, i) => {
+                const signed = phase >= i + 2;
+                return (
+                  <div key={name} className={`lp-sg-sig${signed ? ' signed' : ''}`}>
+                    {signed && <span className="lp-sg-ink">{name}</span>}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -428,7 +401,7 @@ const AG_VISUALS: readonly ReactNode[] = [
         <b>60%</b>
       </div>
       <div className="lp-agv-seg light" style={{ flex: 40 }}>
-        <span>Bill Dates</span>
+        <span>Avery Dates</span>
         <b>40%</b>
       </div>
     </div>

@@ -1804,7 +1804,7 @@ select:disabled {
   position: relative;
   inset: auto;
   width: min(520px, 86%);
-  height: min(420px, 86%);
+  height: min(378px, 77.4%);
 }
 @media (max-width: 700px) {
   .lp-feat-v2-scene {
@@ -2358,59 +2358,40 @@ select:disabled {
   justify-content: center;
 }
 
-/* step 1 */
-.lp-s1-card {
-  border-radius: var(--lp-radius-inner);
-}
-.lp-s1-label {
-  font-size: 9px;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  color: var(--lp-faint);
-  margin-bottom: 10px;
-}
-.lp-s1-dump {
-  background: var(--lp-bg2);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 7px;
-  padding: 12px 14px;
-  margin-bottom: 18px;
-  min-height: 112px;
-  font-size: 12.5px;
-  line-height: 1.65;
-  font-weight: 300;
-  color: var(--lp-ink);
-}
-.lp-s1-hit {
-  background: rgba(75, 114, 99, 0.16);
-  color: var(--lp-green-text);
-  border-radius: 3px;
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
-  transition: background 0.3s;
-}
-.lp-s1-picks {
+/* step 1: the question, then the founder's answer typing out below it on the right, line by
+   line from that block's left edge like a doc */
+.lp-s1-chat {
   display: flex;
   flex-direction: column;
+  gap: 64px;
+  padding: 0 20px;
 }
-.lp-s1-pick {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 12px;
-  padding: 6px 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-  font-size: 11.5px;
-  font-weight: 300;
-  color: var(--lp-muted);
-}
-.lp-s1-pick:last-child {
-  border-bottom: 0;
-}
-.lp-s1-pick b {
+.lp-s1-q {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.2;
   font-weight: 400;
   color: var(--lp-ink);
-  animation: lpFadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.lp-s1-answer {
+  position: relative;
+  /* indented from the question */
+  margin: 0 20px 0 52px;
+  /* the same size as the step descriptions beside the panel */
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.5;
+  color: var(--lp-ink);
+}
+.lp-s1-ghost {
+  visibility: hidden;
+}
+.lp-s1-typed {
+  position: absolute;
+  inset: 0;
+}
+.lp-s1-typed .lp-icursor {
+  height: 16px;
 }
 @keyframes lpFadeUp {
   from {
@@ -2529,26 +2510,8 @@ select:disabled {
   -webkit-mask-image: linear-gradient(to bottom, #000 85%, transparent);
   mask-image: linear-gradient(to bottom, #000 85%, transparent);
 }
-.lp-dr-status {
-  position: absolute;
-  top: 10px;
-  right: 12px;
-  font-family: var(--lp-sans);
-  font-size: 9.5px;
-  color: var(--lp-faint);
-}
-.lp-dr-status.ready {
-  color: var(--lp-green-text);
-}
 .lp-dr-head {
   animation: lpFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-.lp-dr-meta {
-  font-size: 11px;
-  font-style: italic;
-  color: var(--lp-muted);
-  text-align: right;
-  margin: 0 0 8px;
 }
 .lp-dr-doc-title {
   text-align: center;
@@ -2577,25 +2540,30 @@ select:disabled {
   margin: 0;
 }
 
-/* step 4: review and sign */
+/* step 4: review and sign. White and quiet: a title and faint lines for the document (one turns
+   green as it's edited), then two signature lines side by side, each signature writing itself in. */
 .lp-sg-card {
   flex: 1;
   min-height: 0;
   display: flex;
   flex-direction: column;
+  gap: 18px;
+  padding: 4px 8px;
+}
+.lp-sg-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--lp-ink);
 }
 .lp-sg-doc {
-  background: var(--lp-bg2);
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  border-radius: 7px;
-  padding: 14px;
-  margin: 0 0 18px;
   display: flex;
   flex-direction: column;
   gap: 14px;
   flex: 1;
   min-height: 0;
   overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent);
+  mask-image: linear-gradient(to bottom, #000 70%, transparent);
 }
 .lp-sg-group {
   display: flex;
@@ -2603,16 +2571,16 @@ select:disabled {
   gap: 6px;
 }
 .lp-sg-line {
-  height: 6px;
+  height: 5px;
   border-radius: 3px;
-  background: rgba(0, 0, 0, 0.08);
+  background: rgba(0, 0, 0, 0.06);
   transition: background 0.35s;
 }
 .lp-sg-line.h {
-  width: 34%;
-  height: 8px;
+  width: 30%;
+  height: 6px;
   margin-bottom: 2px;
-  background: rgba(0, 0, 0, 0.16);
+  background: rgba(0, 0, 0, 0.14);
 }
 .lp-sg-line.edited {
   background: rgba(75, 114, 99, 0.45);
@@ -2620,26 +2588,24 @@ select:disabled {
 .lp-sg-sigs {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 24px;
+}
+.lp-sg-sig {
+  height: 34px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.18);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
 }
 .lp-sg-ink {
-  display: inline-block;
-  vertical-align: bottom;
-  height: 30px;
   font-family: 'Instrument Serif Wide', serif;
   font-style: italic;
   font-size: 22px;
-  line-height: 30px;
+  line-height: 1.4;
   color: var(--lp-ink);
   white-space: nowrap;
-  overflow: hidden;
-}
-.lp-sg-sig {
-  text-align: center;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.18);
-}
-.lp-sg-sig.signed .lp-sg-ink {
-  animation: lpSgWrite 0.8s cubic-bezier(0.45, 0.1, 0.25, 1) both;
+  animation: lpSgWrite 0.9s cubic-bezier(0.45, 0.1, 0.25, 1) both;
 }
 @keyframes lpSgWrite {
   from {

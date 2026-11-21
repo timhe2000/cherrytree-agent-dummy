@@ -157,7 +157,7 @@ describe('LandingPage', () => {
         expect.stringContaining('Review and sign'),
       ]);
       expect(tabs()[0]).toHaveAttribute('aria-selected', 'true');
-      expect(document.querySelector('.lp-s1-dump')).toBeInTheDocument(); // brain dump demo
+      expect(document.querySelector('.lp-s1-chat')).toBeInTheDocument(); // brain dump demo
     });
 
     it('picks the step from how far the page has scrolled through the pinned stretch', () => {
@@ -181,20 +181,15 @@ describe('LandingPage', () => {
       expect(scrollTo).toHaveBeenCalledWith({ top: stepScrollY(1), behavior: 'smooth' });
     });
 
-    it("brain dump demo: types the founder's notes and lists what Cherrytree picks up", () => {
+    it("brain dump demo: asks what they're building, then types the founder's answer", () => {
       renderPage();
-      const picks = () =>
-        Array.from(document.querySelectorAll('.lp-s1-pick b')).map((el) => el.textContent);
-      expect(picks()).toEqual([]);
-      advance(
-        600 + 28 * "Bill and I started Acme last spring. I'm CEO, Bill runs product as CTO".length,
-      );
-      expect(picks()).toEqual(['CEO · CTO']);
-      expect(document.querySelector('.lp-s1-hit')?.textContent).toBe(
-        "I'm CEO, Bill runs product as CTO",
-      );
-      advance(28 * 200);
-      expect(picks()).toEqual(['CEO · CTO', '60 / 40', '$20k', 'Full-time', 'Both sign off']);
+      const answer = () => document.querySelector('.lp-s1-typed')?.textContent;
+      expect(document.querySelector('.lp-s1-q')?.textContent).toBe('What are you building?');
+      expect(answer()).toBe('');
+      advance(900 + 28 * "We're building Cherrytree".length);
+      expect(answer()).toBe("We're building Cherrytree");
+      advance(28 * 300);
+      expect(answer()).toContain('since I put in the first $20k.');
     });
 
     it('follow-up demo: Cherrytree asks, the founder answers', () => {
@@ -211,35 +206,33 @@ describe('LandingPage', () => {
       expect(msgs()[1]).toHaveClass('user');
     });
 
-    it('draft demo: types the agreement out until the draft is ready', () => {
+    it('draft demo: types the agreement out', () => {
       renderPage();
       scrollToStep(2);
       const paper = () => document.querySelector('.lp-dr-paper')!;
-      expect(paper().querySelector('.lp-dr-status')?.textContent).toBe('Reading your answers…');
-      expect(paper().querySelector('.lp-dr-meta')).toBeNull();
-      advance(1400 + 14 * 9);
-      expect(paper().querySelector('.lp-dr-meta')?.textContent).toBe('Effective');
-      expect(paper().querySelector('.lp-dr-status')?.textContent).toBe('Drafting…');
+      expect(paper().querySelector('.lp-dr-p')).toBeNull();
+      advance(600 + 14 * 9);
+      expect(paper().querySelector('.lp-dr-p')?.textContent).toBe('This Agre');
       advance(14 * 600); // finished typing, before it loops
       expect(Array.from(paper().querySelectorAll('.lp-dr-h')).map((h) => h.textContent)).toEqual([
         'Background',
         '1. Equity',
         '2. Vesting',
       ]);
-      expect(paper().querySelector('.lp-dr-status')?.textContent).toBe('Draft ready');
     });
 
-    it('sign demo: edits a line, then both cofounders sign', () => {
+    it('sign demo: edits a line, then both cofounders sign in turn', () => {
       renderPage();
       scrollToStep(3);
-      const sigs = () => Array.from(document.querySelectorAll('.lp-sg-sig'));
+      const ink = () => Array.from(document.querySelectorAll('.lp-sg-ink'), (el) => el.textContent);
+      expect(document.querySelectorAll('.lp-sg-sig')).toHaveLength(2);
       advance(700);
       expect(document.querySelectorAll('.lp-sg-line.edited')).toHaveLength(1);
+      expect(ink()).toEqual([]);
       advance(1200);
-      expect(sigs()[0]).toHaveClass('signed');
-      expect(sigs()[1]).not.toHaveClass('signed');
-      advance(1000);
-      expect(sigs()[1]).toHaveClass('signed');
+      expect(ink()).toEqual(['Steve Bobs']);
+      advance(1100);
+      expect(ink()).toEqual(['Steve Bobs', 'Avery Dates']);
     });
   });
 
