@@ -2393,6 +2393,24 @@ select:disabled {
 .lp-s1-typed .lp-icursor {
   height: 16px;
 }
+/* On phones the card is under 300px wide, so the desktop indents squeezed the answer into a
+   narrow column that ran out of the card: drop the side padding, indent less and size down. */
+@media (max-width: 700px) {
+  .lp-s1-chat {
+    gap: 28px;
+    padding: 0;
+  }
+  .lp-s1-q {
+    font-size: 19px;
+  }
+  .lp-s1-answer {
+    margin: 0 0 0 20px;
+    font-size: 14px;
+  }
+  .lp-s1-typed .lp-icursor {
+    height: 15px;
+  }
+}
 @keyframes lpFadeUp {
   from {
     opacity: 0;
