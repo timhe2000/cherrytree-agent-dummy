@@ -1804,7 +1804,7 @@ select:disabled {
   position: relative;
   inset: auto;
   width: min(520px, 86%);
-  height: min(378px, 77.4%);
+  height: min(340px, 69.7%);
 }
 @media (max-width: 700px) {
   .lp-feat-v2-scene {
