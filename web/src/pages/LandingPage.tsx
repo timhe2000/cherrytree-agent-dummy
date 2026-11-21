@@ -519,7 +519,7 @@ const LIT_PRICING =
   'Cherrytree does both.';
 const LIT_LEGALESE =
   "You don't need to speak legalese to protect what you're building. You just tell your " +
-  "story and we'll handle the rest.";
+  'story and we handle the rest.';
 const LIT_APPLE =
   'In 1976, Steve Jobs and Steve Wozniak signed a partnership agreement in a garage. Apple came after.';
 
