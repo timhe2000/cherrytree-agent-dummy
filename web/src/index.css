@@ -3034,14 +3034,14 @@ select:disabled {
   gap: 12px;
   width: 100%;
 }
-/* Each question sits in its own box, which eases to a soft blossom pink while its answer is open. */
+/* Each question sits on its own bordered white card. */
 .lp-faq-item {
   background: #fff;
+  border: 1px solid #f0eeeb;
+  box-shadow:
+    0 1px 2px rgba(34, 30, 25, 0.04),
+    0 8px 24px rgba(34, 30, 25, 0.06);
   border-radius: var(--lp-radius);
-  transition: background-color 0.35s ease;
-}
-.lp-faq-item.open {
-  background: #f7efed;
 }
 .lp-faq-btn {
   display: flex;
