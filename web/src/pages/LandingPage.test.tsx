@@ -29,7 +29,12 @@ class FakeIntersectionObserver {
   disconnect() {}
   intersect(targets: Element[] = this.observed) {
     this.callback(
-      targets.map((target) => ({ isIntersecting: true, intersectionRatio: 1, target })),
+      targets.map((target) => ({
+        isIntersecting: true,
+        intersectionRatio: 1,
+        target,
+        boundingClientRect: target.getBoundingClientRect(),
+      })),
     );
   }
   /** Reports the targets as fully out of view. */
@@ -235,16 +240,19 @@ describe('LandingPage', () => {
     });
   });
 
-  it('reveals scroll sections a tick after they intersect', () => {
+  it('reveals scroll sections a tick after they intersect, staggering ones that come in together', () => {
     renderPage();
-    const [reveal] = observersFor(0.06);
-    expect(reveal?.options).toEqual({ threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
-    const first = reveal!.observed[0]!;
+    const [reveal] = observersFor(0);
+    expect(reveal?.options).toEqual({ threshold: 0, rootMargin: '0px 0px -15% 0px' });
+    const [first, second] = reveal!.observed as HTMLElement[];
     expect(first).toHaveClass('lp-rv');
-    act(() => reveal!.intersect([first]));
+    act(() => reveal!.intersect([first!, second!]));
     expect(first).not.toHaveClass('lp-rv-in');
     advance(0);
     expect(first).toHaveClass('lp-rv-in');
+    expect(second).not.toHaveClass('lp-rv-in');
+    advance(80);
+    expect(second).toHaveClass('lp-rv-in');
   });
 
   it('shows the hero and closing headlines without highlights', () => {

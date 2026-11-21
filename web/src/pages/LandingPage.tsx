@@ -576,23 +576,32 @@ function LandingPage() {
   // "from" state happens first, regardless of the element's positioning scheme.
   useEffect(() => {
     const els = document.querySelectorAll<HTMLElement>('.lp-rv, .lp-rv-l, .lp-rv-r');
+    const timers: number[] = [];
     const obs = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          const target = entry.target;
-          if (entry.isIntersecting && target instanceof HTMLElement) {
+        // Blocks that come into view together (a row of cards) go in one after another, in
+        // reading order, 80ms apart.
+        entries
+          .filter((entry) => entry.isIntersecting && entry.target instanceof HTMLElement)
+          .sort(
+            (a, b) =>
+              a.boundingClientRect.top - b.boundingClientRect.top ||
+              a.boundingClientRect.left - b.boundingClientRect.left,
+          )
+          .forEach((entry, i) => {
+            const target = entry.target as HTMLElement;
             obs.unobserve(target);
             void target.offsetHeight;
-            setTimeout(() => target.classList.add('lp-rv-in'), 0);
-          }
-        });
+            timers.push(window.setTimeout(() => target.classList.add('lp-rv-in'), i * 80));
+          });
       },
-      { threshold: 0.06, rootMargin: '0px 0px -40px 0px' },
+      // Fires once a block's top is 15% of the screen up from the bottom, so it plays where the
+      // reader is looking rather than finishing while only its edge peeks in.
+      { threshold: 0, rootMargin: '0px 0px -15% 0px' },
     );
     // The painting under the hero is the page's opening visual, so its entrance plays on load
     // rather than on scroll: on phones it starts at the bottom edge of the screen, too little of it
     // showing to pass the threshold, and it would stay blank until the reader scrolled.
-    const timers: number[] = [];
     els.forEach((el) => {
       if (el.classList.contains('lp-feat-v2-scene')) {
         timers.push(window.setTimeout(() => el.classList.add('lp-rv-in'), 0));
@@ -704,7 +713,9 @@ function LandingPage() {
               <div className="lp-feat-header lp-lit-header">
                 <ScrollLitStatement text={LIT_PRICING} />
               </div>
-              <PlanCards plans={MARKETING_PLANS} onStart={goDash} />
+              <div className="lp-rv">
+                <PlanCards plans={MARKETING_PLANS} onStart={goDash} />
+              </div>
             </div>
           </section>
 

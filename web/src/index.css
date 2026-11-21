@@ -909,16 +909,24 @@ select:disabled {
 }
 
 /* Scroll reveal system — fades/slides in once as each element crosses into view */
+/* Scroll reveal, as on causal.so: a block fades in as it rises 24px into place. */
 .lp-rv {
   opacity: 0;
-  transform: translateY(28px) scale(0.99);
+  transform: translateY(24px);
   transition:
-    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .lp-rv.lp-rv-in {
   opacity: 1;
-  transform: translateY(0) scale(1);
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .lp-rv {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 /* The How it works painting under the hero comes in a beat later and more slowly than other reveals. */
 .lp-feat-v2-scene.lp-rv {
