@@ -1,7 +1,7 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 
-import MarketingNav, { HOW_IT_WORKS_ID } from './MarketingNav.tsx';
+import MarketingNav, { HOW_IT_WORKS_ID, MENU_CLOSE_MS } from './MarketingNav.tsx';
 
 function Location() {
   const { pathname, hash } = useLocation();
@@ -36,30 +36,62 @@ describe('MarketingNav', () => {
     expect(screen.getByTestId('path')).toHaveTextContent('/');
   });
 
-  it('closes the phone menu and goes to the dashboard from its Get started button', () => {
-    const { container } = renderNav('/pricing');
-    const nav = container.querySelector('nav')!;
-    fireEvent.click(screen.getByRole('button', { name: 'Open menu' }));
-    const menuCta = container.querySelector('#lp-nav-menu .lp-nav-cta')!;
-    fireEvent.click(menuCta);
-    expect(nav).not.toHaveClass('open');
-    expect(screen.getByTestId('path')).toHaveTextContent('/dashboard');
-  });
+  describe('phone menu', () => {
+    beforeEach(() => vi.useFakeTimers());
+    afterEach(() => vi.useRealTimers());
 
-  it('opens and closes the phone menu, and closes it after "How it works"', () => {
-    const { container } = renderNav('/pricing');
-    const nav = container.querySelector('nav')!;
-    expect(nav).not.toHaveClass('open');
+    // Closing animates out first: the menu stays up, marked closing, then goes.
+    const expectClosesAnimated = (nav: HTMLElement) => {
+      expect(nav).toHaveClass('open', 'closing');
+      act(() => vi.advanceTimersByTime(MENU_CLOSE_MS));
+      expect(nav).not.toHaveClass('open');
+      expect(nav).not.toHaveClass('closing');
+    };
 
-    fireEvent.click(screen.getByRole('button', { name: 'Open menu' }));
-    expect(nav).toHaveClass('open');
-    expect(screen.getByRole('button', { name: 'Close menu' })).toHaveAttribute(
-      'aria-expanded',
-      'true',
-    );
+    it('closes and goes to the dashboard from its Get started button', () => {
+      const { container } = renderNav('/pricing');
+      const nav = container.querySelector('nav')!;
+      fireEvent.click(screen.getByRole('button', { name: 'Open menu' }));
+      fireEvent.click(container.querySelector('#lp-nav-menu .lp-nav-cta')!);
+      expect(screen.getByTestId('path')).toHaveTextContent('/dashboard');
+      expectClosesAnimated(nav);
+    });
 
-    fireEvent.click(screen.getByRole('button', { name: 'How it works' }));
-    expect(nav).not.toHaveClass('open');
+    it('opens, and closes with its animation from the toggle and after "How it works"', () => {
+      const { container } = renderNav('/pricing');
+      const nav = container.querySelector('nav')!;
+      expect(nav).not.toHaveClass('open');
+
+      fireEvent.click(screen.getByRole('button', { name: 'Open menu' }));
+      expect(nav).toHaveClass('open');
+      expect(nav).not.toHaveClass('closing');
+      expect(screen.getByRole('button', { name: 'Close menu' })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+      );
+
+      fireEvent.click(screen.getByRole('button', { name: 'Close menu' }));
+      expect(screen.getByRole('button', { name: 'Open menu' })).toHaveAttribute(
+        'aria-expanded',
+        'false',
+      );
+      expectClosesAnimated(nav);
+
+      fireEvent.click(screen.getByRole('button', { name: 'Open menu' }));
+      fireEvent.click(screen.getByRole('button', { name: 'How it works' }));
+      expectClosesAnimated(nav);
+    });
+
+    it('reopens straight away when tapped again mid-close', () => {
+      const { container } = renderNav('/pricing');
+      const nav = container.querySelector('nav')!;
+      fireEvent.click(screen.getByRole('button', { name: 'Open menu' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Close menu' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Open menu' }));
+      act(() => vi.advanceTimersByTime(MENU_CLOSE_MS));
+      expect(nav).toHaveClass('open');
+      expect(nav).not.toHaveClass('closing');
+    });
   });
 
   describe('How it works', () => {

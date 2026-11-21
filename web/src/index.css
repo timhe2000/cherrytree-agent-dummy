@@ -1120,6 +1120,14 @@ select:disabled {
   translate: 0 -3.75px;
   rotate: -45deg;
 }
+/* Closing (the menu is still up while it animates out): the cross turns back into two lines. */
+.lp-nav.open.closing .lp-nav-toggle span {
+  translate: 0 0;
+  rotate: 0deg;
+  transition:
+    translate 0.15s cubic-bezier(0.22, 1, 0.36, 1) 0.15s,
+    rotate 0.15s cubic-bezier(0.22, 1, 0.36, 1);
+}
 
 /* ── Shared buttons ── */
 .lp-btn-primary {
@@ -3207,6 +3215,32 @@ body:has(.lp-has-curtain) {
   }
   .lp-nav.open .lp-nav-links li:nth-child(6) {
     animation-delay: 0.45s;
+  }
+  /* Closing plays it all backwards, a little quicker: the items sink out from the last up, then
+     the circle shrinks back into the toggle. 0.5s in all (MENU_CLOSE_MS in MarketingNav). */
+  .lp-nav.open.closing .lp-nav-links {
+    animation: lpMenuReveal 0.4s cubic-bezier(0.33, 1, 0.68, 1) 0.1s reverse both;
+  }
+  .lp-nav.open.closing .lp-nav-links li {
+    animation: lpMenuItemIn 0.2s cubic-bezier(0.33, 1, 0.68, 1) reverse both;
+  }
+  .lp-nav.open.closing .lp-nav-links li:nth-child(6) {
+    animation-delay: 0s;
+  }
+  .lp-nav.open.closing .lp-nav-links li:nth-child(5) {
+    animation-delay: 0.04s;
+  }
+  .lp-nav.open.closing .lp-nav-links li:nth-child(4) {
+    animation-delay: 0.08s;
+  }
+  .lp-nav.open.closing .lp-nav-links li:nth-child(3) {
+    animation-delay: 0.12s;
+  }
+  .lp-nav.open.closing .lp-nav-links li:nth-child(2) {
+    animation-delay: 0.16s;
+  }
+  .lp-nav.open.closing .lp-nav-links li:nth-child(1) {
+    animation-delay: 0.2s;
   }
   .lp-nav.open .lp-nav-links .lp-nav-menu-only {
     display: block;

@@ -8,14 +8,21 @@ import { lockScroll, useSmoothScroll } from '../hooks/useSmoothScroll.ts';
 /** The landing-page section the nav's "How it works" link scrolls to. */
 export const HOW_IT_WORKS_ID = 'features-v2';
 
+/** How long the phone menu's closing animation runs (matches the CSS). */
+export const MENU_CLOSE_MS = 500;
+
 function MarketingNav() {
   // Every marketing page renders the nav, so it switches on smooth scrolling for all of them.
   useSmoothScroll();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const goDash = () => goToDashboard(navigate);
-  // On phones the links collapse into a menu under the bar.
-  const [menuOpen, setMenuOpen] = useState(false);
+  // On phones the links collapse into a full-screen menu. Closing plays its opening animation in
+  // reverse, so the menu stays on screen for MENU_CLOSE_MS in the "closing" state first.
+  const [menu, setMenu] = useState<'closed' | 'open' | 'closing'>('closed');
+  const menuOpen = menu === 'open';
+  const closeTimer = useRef(0);
+  useEffect(() => () => clearTimeout(closeTimer.current), []);
 
   // The open menu covers the screen, so the page behind it is frozen until it closes.
   const unlockRef = useRef<(() => void) | null>(null);
@@ -32,7 +39,23 @@ function MarketingNav() {
   const closeMenu = () => {
     unlockRef.current?.();
     unlockRef.current = null;
-    setMenuOpen(false);
+    if (menu !== 'open') return;
+    const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+    if (reducedMotion) {
+      setMenu('closed');
+      return;
+    }
+    setMenu('closing');
+    closeTimer.current = window.setTimeout(() => setMenu('closed'), MENU_CLOSE_MS);
+  };
+  const toggleMenu = () => {
+    if (menuOpen) {
+      closeMenu();
+      return;
+    }
+    // Opening again mid-close picks the menu straight back up.
+    clearTimeout(closeTimer.current);
+    setMenu('open');
   };
 
   // "How it works" is a section of the landing page; from any other page, go there first and
@@ -47,7 +70,9 @@ function MarketingNav() {
   };
 
   return (
-    <nav className={`lp-nav${menuOpen ? ' open' : ''}`}>
+    <nav
+      className={`lp-nav${menu === 'closed' ? '' : ' open'}${menu === 'closing' ? ' closing' : ''}`}
+    >
       <button
         className="lp-nav-logo"
         aria-label="Cherrytree home"
@@ -127,7 +152,7 @@ function MarketingNav() {
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={menuOpen}
           aria-controls="lp-nav-menu"
-          onClick={() => setMenuOpen((o) => !o)}
+          onClick={toggleMenu}
         >
           <span />
           <span />
