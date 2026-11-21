@@ -3048,12 +3048,21 @@ body:has(.lp-has-curtain) {
 /* The footer tucks up under the curtain's rounded corners, so the corners show the footer itself
    (with its grain) rather than the flat wrapper behind it. */
 .lp-has-curtain .lp-footer {
-  position: sticky;
+  position: relative;
   bottom: 0;
   z-index: 0;
   margin-top: calc(-1 * var(--curtain-radius));
   padding-top: calc(var(--curtain-radius) + clamp(72px, 8vw, 110px));
   background: #121212;
+}
+/* Sticky only once the page's bottom edge is on screen (MarketingFooter sets the class), so Safari
+   doesn't color its bottom toolbar from a dark footer hidden behind the page. */
+.lp-has-curtain .lp-footer.lp-footer-pinned {
+  position: sticky;
+}
+/* Nor while the phone menu covers the page. */
+.lp-has-curtain:has(.lp-nav.open) .lp-footer {
+  position: relative;
 }
 /* The grain reads stronger on black, so it's softened here. */
 .lp-has-curtain .lp-footer::before {
