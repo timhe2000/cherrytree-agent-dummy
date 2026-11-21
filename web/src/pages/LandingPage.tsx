@@ -592,8 +592,21 @@ function LandingPage() {
       },
       { threshold: 0.06, rootMargin: '0px 0px -40px 0px' },
     );
-    els.forEach((el) => obs.observe(el));
-    return () => obs.disconnect();
+    // The painting under the hero is the page's opening visual, so its entrance plays on load
+    // rather than on scroll: on phones it starts at the bottom edge of the screen, too little of it
+    // showing to pass the threshold, and it would stay blank until the reader scrolled.
+    const timers: number[] = [];
+    els.forEach((el) => {
+      if (el.classList.contains('lp-feat-v2-scene')) {
+        timers.push(window.setTimeout(() => el.classList.add('lp-rv-in'), 0));
+      } else {
+        obs.observe(el);
+      }
+    });
+    return () => {
+      obs.disconnect();
+      timers.forEach(clearTimeout);
+    };
   }, []);
 
   const V2Panel = PANELS[FEATURES[v2Feature]!.panel]!;

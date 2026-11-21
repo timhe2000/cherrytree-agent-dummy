@@ -3217,7 +3217,11 @@ body:has(.lp-has-curtain) {
     transform: translateX(2px);
   }
   .lp-hero {
-    padding: 150px 24px 80px;
+    padding: 150px 24px 40px;
+  }
+  /* On phones the painting sits closer under the button, so it starts on screen. */
+  .lp-hero-actions {
+    margin-bottom: 56px;
   }
   .lp-about-hero {
     padding: 96px 24px 64px;
