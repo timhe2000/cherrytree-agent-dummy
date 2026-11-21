@@ -491,8 +491,6 @@ const LIT_PRICING =
 const LIT_LEGALESE =
   "You don't need to speak legalese to protect what you're building. You just tell your " +
   'story and we handle the rest.';
-const LIT_APPLE =
-  'In 1976, Steve Jobs and Steve Wozniak signed a partnership agreement in a garage. Apple came after.';
 
 // ── Main component ─────────────────────────────────────────────────────────────
 
@@ -697,13 +695,6 @@ function LandingPage() {
                   </article>
                 ))}
               </div>
-            </div>
-          </section>
-
-          {/* ── Scenarios statement ── */}
-          <section className="lp-features" id="scenarios">
-            <div className="lp-feat-header lp-lit-header">
-              <ScrollLitStatement text={LIT_APPLE} />
             </div>
           </section>
 
