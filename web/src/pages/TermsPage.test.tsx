@@ -8,7 +8,6 @@ vi.mock('../components/MarketingNav', () => ({ default: () => <nav data-testid="
 vi.mock('../components/MarketingFooter', () => ({
   default: () => <footer data-testid="footer" />,
 }));
-vi.mock('../components/MarketingGrain', () => ({ default: () => <svg data-testid="grain" /> }));
 
 describe('TermsPage', () => {
   it('sets the page meta', () => {
@@ -50,7 +49,6 @@ describe('TermsPage', () => {
     for (const link of mailLinks)
       expect(link).toHaveAttribute('href', 'mailto:hello@cherrytree.app');
 
-    expect(screen.getByTestId('grain')).toBeInTheDocument();
     expect(screen.getByTestId('nav')).toBeInTheDocument();
     expect(screen.getByTestId('footer')).toBeInTheDocument();
   });

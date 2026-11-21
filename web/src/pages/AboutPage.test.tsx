@@ -9,7 +9,6 @@ vi.mock('../components/MarketingNav', () => ({ default: () => <nav data-testid="
 vi.mock('../components/MarketingFooter', () => ({
   default: () => <footer data-testid="footer" />,
 }));
-vi.mock('../components/MarketingGrain', () => ({ default: () => <svg data-testid="grain" /> }));
 // The closing CTA has its own coverage in the landing and pricing tests.
 vi.mock('../components/ProtectCta', () => ({
   default: ({ onStart }: { onStart: () => void }) => <button onClick={onStart}>Get started</button>,
@@ -45,7 +44,6 @@ describe('AboutPage', () => {
       screen.getByRole('img', { name: 'Painting of a cherry tree in a blossoming valley' }),
     ).toBeInTheDocument();
 
-    expect(screen.getByTestId('grain')).toBeInTheDocument();
     expect(screen.getByTestId('nav')).toBeInTheDocument();
     expect(screen.getByTestId('footer')).toBeInTheDocument();
   });

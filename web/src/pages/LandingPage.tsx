@@ -11,7 +11,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { usePageMeta } from '../hooks/usePageMeta.ts';
 import MarketingNav from '../components/MarketingNav.tsx';
 import MarketingFooter from '../components/MarketingFooter.tsx';
-import MarketingGrain from '../components/MarketingGrain.tsx';
 import { goToDashboard } from '../utils/goToDashboard.ts';
 import { MARKETING_PLANS } from '../constants/pricing.ts';
 import PlanCards from '../components/PlanCards.tsx';
@@ -613,7 +612,6 @@ function LandingPage() {
 
   return (
     <div className="lp lp-has-curtain">
-      <MarketingGrain />
       <MarketingNav />
 
       {/* The page sits on a raised "curtain" with a rounded bottom that scrolls up to reveal the

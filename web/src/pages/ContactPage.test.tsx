@@ -12,7 +12,6 @@ vi.mock('../components/MarketingNav', () => ({ default: () => <nav data-testid="
 vi.mock('../components/MarketingFooter', () => ({
   default: () => <footer data-testid="footer" />,
 }));
-vi.mock('../components/MarketingGrain', () => ({ default: () => <svg data-testid="grain" /> }));
 
 const FALLBACK =
   'Something went wrong sending your message. Please try again or email us directly at hello@cherrytree.app.';
@@ -54,7 +53,6 @@ describe('ContactPage', () => {
     expect(message()).toHaveValue('');
     expect(sendButton()).toBeEnabled();
     expect(sendButton()).toHaveTextContent('Send message');
-    expect(screen.getByTestId('grain')).toBeInTheDocument();
     expect(screen.getByTestId('nav')).toBeInTheDocument();
     expect(screen.getByTestId('footer')).toBeInTheDocument();
   });

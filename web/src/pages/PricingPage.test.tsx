@@ -9,7 +9,6 @@ vi.mock('../components/MarketingNav', () => ({ default: () => <nav data-testid="
 vi.mock('../components/MarketingFooter', () => ({
   default: () => <footer data-testid="footer" />,
 }));
-vi.mock('../components/MarketingGrain', () => ({ default: () => <svg data-testid="grain" /> }));
 
 /** jsdom has no IntersectionObserver; this one reveals what it observes on demand. */
 class FakeIntersectionObserver {
@@ -104,7 +103,6 @@ describe('PricingPage', () => {
     expect(scale?.querySelector('.lp-pw-price > span')).toBeNull();
     expect(scale?.querySelector('button')).toHaveTextContent('Contact sales');
 
-    expect(screen.getByTestId('grain')).toBeInTheDocument();
     expect(screen.getByTestId('nav')).toBeInTheDocument();
     expect(screen.getByTestId('footer')).toBeInTheDocument();
   });

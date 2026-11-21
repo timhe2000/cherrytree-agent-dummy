@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { usePageMeta } from '../hooks/usePageMeta.ts';
 import MarketingNav from '../components/MarketingNav.tsx';
 import MarketingFooter from '../components/MarketingFooter.tsx';
-import MarketingGrain from '../components/MarketingGrain.tsx';
 import ScrollLitStatement from '../components/ScrollLitStatement.tsx';
 import ProtectCta from '../components/ProtectCta.tsx';
 import { goToDashboard } from '../utils/goToDashboard.ts';
@@ -48,7 +47,6 @@ function AboutPage() {
 
   return (
     <div className="lp lp-has-curtain lp-about-page">
-      <MarketingGrain />
       <MarketingNav />
 
       {/* Raised page layer with a rounded bottom that scrolls up to reveal the footer. */}

@@ -1,7 +1,6 @@
 import { usePageMeta } from '../hooks/usePageMeta.ts';
 import MarketingNav from '../components/MarketingNav.tsx';
 import MarketingFooter from '../components/MarketingFooter.tsx';
-import MarketingGrain from '../components/MarketingGrain.tsx';
 
 function PrivacyPage() {
   // SEO meta tags
@@ -14,7 +13,6 @@ function PrivacyPage() {
 
   return (
     <div className="lp lp-has-curtain" style={{ minHeight: '100vh' }}>
-      <MarketingGrain />
       <MarketingNav />
 
       {/* Raised page layer with a rounded bottom that scrolls up to reveal the footer. */}

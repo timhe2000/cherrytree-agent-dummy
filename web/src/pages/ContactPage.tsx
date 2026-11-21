@@ -5,7 +5,6 @@ import type { CallableRequest } from '@cherrytree/shared';
 import { usePageMeta } from '../hooks/usePageMeta.ts';
 import MarketingNav from '../components/MarketingNav.tsx';
 import MarketingFooter from '../components/MarketingFooter.tsx';
-import MarketingGrain from '../components/MarketingGrain.tsx';
 import { callFunction } from '../lib/functions.ts';
 
 type ContactForm = CallableRequest<'sendContactMessage'>;
@@ -59,7 +58,6 @@ function ContactPage() {
 
   return (
     <div className="lp lp-has-curtain" style={{ minHeight: '100vh' }}>
-      <MarketingGrain />
       <MarketingNav />
 
       {/* Raised page layer with a rounded bottom that scrolls up to reveal the footer. */}

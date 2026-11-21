@@ -903,17 +903,6 @@ select:disabled {
   position: relative;
 }
 
-/* ── Grain ── */
-.lp-grain {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 9999;
-  pointer-events: none;
-  opacity: 0.038;
-}
-
 /* Anchor targets sit clear of the fixed nav when scrolled to (e.g. the nav's "How it works"). */
 .lp-features[id] {
   scroll-margin-top: 90px;
