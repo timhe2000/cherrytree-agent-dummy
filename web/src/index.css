@@ -1112,13 +1112,24 @@ select:disabled {
   height: 1.5px;
   background: var(--lp-ink);
   border-radius: 1px;
-  transition: transform 0.2s ease;
+  /* Closing: the cross unrotates, then the lines part. */
+  transition:
+    translate 0.15s cubic-bezier(0.22, 1, 0.36, 1) 0.15s,
+    rotate 0.15s cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* Opening: the lines meet in the middle, then turn into a cross. */
+.lp-nav.open .lp-nav-toggle span {
+  transition:
+    translate 0.15s cubic-bezier(0.22, 1, 0.36, 1),
+    rotate 0.15s cubic-bezier(0.22, 1, 0.36, 1) 0.15s;
 }
 .lp-nav.open .lp-nav-toggle span:first-child {
-  transform: translateY(3.75px) rotate(45deg);
+  translate: 0 3.75px;
+  rotate: 45deg;
 }
 .lp-nav.open .lp-nav-toggle span:last-child {
-  transform: translateY(-3.75px) rotate(-45deg);
+  translate: 0 -3.75px;
+  rotate: -45deg;
 }
 
 /* ── Shared buttons ── */
@@ -3139,6 +3150,12 @@ html:has(.lp-has-curtain) {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='3.5' intercept='-1'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-blend-mode: overlay;
 }
+/* With the phone menu open the page is locked and the menu is all there is, so the root goes the
+   menu's white: Safari colors the area behind its toolbars from it, and the near-black above
+   showed there as a black bar. */
+html:has(.lp-nav.open) {
+  background: #ffffff;
+}
 /* Safari reads the root bounce from body, so turn it off there too. */
 body:has(.lp-has-curtain) {
   overscroll-behavior-y: none;
@@ -3230,19 +3247,61 @@ body:has(.lp-has-curtain) {
   .lp-nav-links {
     display: none;
   }
+  /* On phones Get started lives only in the menu. */
+  .lp-nav-right .lp-nav-cta {
+    display: none;
+  }
+  /* Open, the menu covers the whole screen, bar included, leaving only the logo and the close
+     button, with the links down to a Get started button at the bottom. */
   .lp-nav.open .lp-nav-links {
     display: flex;
     flex-direction: column;
     align-items: stretch;
+    /* The desktop centring would otherwise shrink the menu to its content width. */
+    justify-self: stretch;
     gap: 0;
+    /* Covers the whole screen, bar included: z-index -1 puts it over the bar's frosted background
+       but under the logo and toggle. The bar's backdrop-filter makes it the containing block, so
+       this can't be position: fixed; the bar sits at the top, so top: 0 is the top of the screen. */
     position: absolute;
-    top: 100%;
+    top: 0;
     left: 0;
     right: 0;
-    padding: 8px 20px 16px;
+    z-index: -1;
+    /* The largest viewport height, so it also runs under Safari's toolbars (at 100dvh the dark
+       footer pinned behind the page showed through below it); the bottom padding adds back the
+       toolbar's height so Get started stays above it. */
+    height: 100lvh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    /* The bar is 60px tall. */
+    padding: 108px 20px calc(24px + env(safe-area-inset-bottom) + 100lvh - 100dvh);
     background: var(--lp-bg);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-    box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.12);
+    /* It opens as a circle growing out of the toggle (44px wide, its right edge 10px into the
+       20px gutter, so centred 32px from the right). */
+    animation: lpMenuReveal 0.44s cubic-bezier(0.33, 1, 0.68, 1) both;
+  }
+  /* Then the items rise in one after another. */
+  .lp-nav.open .lp-nav-links li {
+    animation: lpMenuItemIn 0.3s cubic-bezier(0.33, 1, 0.68, 1) both;
+  }
+  .lp-nav.open .lp-nav-links li:nth-child(1) {
+    animation-delay: 0.15s;
+  }
+  .lp-nav.open .lp-nav-links li:nth-child(2) {
+    animation-delay: 0.21s;
+  }
+  .lp-nav.open .lp-nav-links li:nth-child(3) {
+    animation-delay: 0.27s;
+  }
+  .lp-nav.open .lp-nav-links li:nth-child(4) {
+    animation-delay: 0.33s;
+  }
+  .lp-nav.open .lp-nav-links li:nth-child(5) {
+    animation-delay: 0.39s;
+  }
+  .lp-nav.open .lp-nav-links li:nth-child(6) {
+    animation-delay: 0.45s;
   }
   .lp-nav.open .lp-nav-links .lp-nav-menu-only {
     display: block;
@@ -3250,10 +3309,36 @@ body:has(.lp-has-curtain) {
   .lp-nav.open .lp-nav-links li a,
   .lp-nav.open .lp-nav-links li button {
     width: 100%;
-    min-height: 48px;
+    min-height: 60px;
     padding: 0;
-    font-size: 17px;
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: var(--lp-muted);
+  }
+  .lp-nav.open .lp-nav-links li [aria-current='page'] {
     color: var(--lp-ink);
+  }
+  .lp-nav.open .lp-nav-links .lp-nav-menu-cta {
+    margin-top: auto;
+  }
+  .lp-nav.open .lp-nav-links .lp-nav-menu-cta button {
+    justify-content: center;
+    min-height: 48px;
+    padding: 0 16px;
+    border-radius: 999px;
+    background: #222222;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+  }
+  /* No hover on touch, so the menu button shows its arrow from the start. */
+  .lp-nav-menu-cta .lp-btn-arrow {
+    width: 28px;
+  }
+  .lp-nav-menu-cta .lp-btn-arrow svg {
+    transform: translateX(2px);
   }
   .lp-hero {
     padding: 150px 24px 80px;
@@ -3846,4 +3931,30 @@ textarea.lp-form-input {
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
+}
+
+/* The phone menu's opening (see the mobile nav rules). */
+@keyframes lpMenuReveal {
+  from {
+    clip-path: circle(0% at calc(100% - 32px) 30px);
+  }
+  to {
+    clip-path: circle(150% at calc(100% - 32px) 30px);
+  }
+}
+@keyframes lpMenuItemIn {
+  from {
+    opacity: 0;
+    translate: 0 12px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lp-nav.open .lp-nav-links,
+  .lp-nav.open .lp-nav-links li {
+    animation: none;
+  }
+  .lp-nav-toggle span,
+  .lp-nav.open .lp-nav-toggle span {
+    transition: none;
+  }
 }

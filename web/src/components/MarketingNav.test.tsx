@@ -29,10 +29,21 @@ describe('MarketingNav', () => {
     renderNav();
     fireEvent.click(screen.getByRole('button', { name: 'Sign in' }));
     expect(screen.getByTestId('path')).toHaveTextContent('/login');
-    fireEvent.click(screen.getByRole('button', { name: 'Get started' }));
+    // The bar's button; the menu's own copy comes first in the DOM.
+    fireEvent.click(screen.getAllByRole('button', { name: 'Get started' })[1]!);
     expect(screen.getByTestId('path')).toHaveTextContent('/dashboard');
     fireEvent.click(screen.getByRole('button', { name: /Cherrytree/ }));
     expect(screen.getByTestId('path')).toHaveTextContent('/');
+  });
+
+  it('closes the phone menu and goes to the dashboard from its Get started button', () => {
+    const { container } = renderNav('/pricing');
+    const nav = container.querySelector('nav')!;
+    fireEvent.click(screen.getByRole('button', { name: 'Open menu' }));
+    const menuCta = container.querySelector('#lp-nav-menu .lp-nav-cta')!;
+    fireEvent.click(menuCta);
+    expect(nav).not.toHaveClass('open');
+    expect(screen.getByTestId('path')).toHaveTextContent('/dashboard');
   });
 
   it('opens and closes the phone menu, and closes it after "How it works"', () => {

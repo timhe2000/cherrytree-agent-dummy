@@ -32,3 +32,19 @@ export function smoothScrollTo(el: HTMLElement) {
   if (active) active.scrollTo(el);
   else el.scrollIntoView({ behavior: 'smooth' });
 }
+
+/**
+ * Freezes the page where it is (for a full-screen overlay) and returns the function that releases
+ * it. The lock goes on <html>: on phones it has overflow-x: hidden, which makes it, not <body>, the
+ * element whose overflow the window scroll follows. The smooth scroller is paused too.
+ */
+export function lockScroll(): () => void {
+  const root = document.documentElement;
+  const prev = root.style.overflow;
+  root.style.overflow = 'hidden';
+  active?.stop();
+  return () => {
+    root.style.overflow = prev;
+    active?.start();
+  };
+}

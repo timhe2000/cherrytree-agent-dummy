@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { goToDashboard } from '../utils/goToDashboard.ts';
 import ButtonArrow from './ButtonArrow.tsx';
-import { useSmoothScroll } from '../hooks/useSmoothScroll.ts';
+import { lockScroll, useSmoothScroll } from '../hooks/useSmoothScroll.ts';
 
 /** The landing-page section the nav's "How it works" link scrolls to. */
 export const HOW_IT_WORKS_ID = 'features-v2';
@@ -17,10 +17,28 @@ function MarketingNav() {
   // On phones the links collapse into a menu under the bar.
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // The open menu covers the screen, so the page behind it is frozen until it closes.
+  const unlockRef = useRef<(() => void) | null>(null);
+  useEffect(() => {
+    if (!menuOpen) return;
+    unlockRef.current = lockScroll();
+    return () => {
+      unlockRef.current?.();
+      unlockRef.current = null;
+    };
+  }, [menuOpen]);
+  // Releases the page right away (not after the re-render), so a scroll or navigation that
+  // follows in the same handler works on the real page position.
+  const closeMenu = () => {
+    unlockRef.current?.();
+    unlockRef.current = null;
+    setMenuOpen(false);
+  };
+
   // "How it works" is a section of the landing page; from any other page, go there first and
   // let LandingPage scroll to the hash once it has mounted.
   const goHowItWorks = () => {
-    setMenuOpen(false);
+    closeMenu();
     if (pathname === '/') {
       document.getElementById(HOW_IT_WORKS_ID)?.scrollIntoView({ behavior: 'smooth' });
       return;
@@ -30,7 +48,14 @@ function MarketingNav() {
 
   return (
     <nav className={`lp-nav${menuOpen ? ' open' : ''}`}>
-      <button className="lp-nav-logo" aria-label="Cherrytree home" onClick={() => navigate('/')}>
+      <button
+        className="lp-nav-logo"
+        aria-label="Cherrytree home"
+        onClick={() => {
+          closeMenu();
+          navigate('/');
+        }}
+      >
         <svg
           className="lp-nav-logo-mark"
           viewBox="23 23 81 66"
@@ -50,20 +75,42 @@ function MarketingNav() {
         </svg>
       </button>
       <ul className="lp-nav-links" id="lp-nav-menu">
+        <li className="lp-nav-menu-only">
+          <a href="/" aria-current={pathname === '/' ? 'page' : undefined}>
+            Home
+          </a>
+        </li>
         <li>
           <button type="button" onClick={goHowItWorks}>
             How it works
           </button>
         </li>
         <li>
-          <a href="/pricing">Pricing</a>
+          <a href="/pricing" aria-current={pathname === '/pricing' ? 'page' : undefined}>
+            Pricing
+          </a>
         </li>
         <li>
-          <a href="/about">About</a>
+          <a href="/about" aria-current={pathname === '/about' ? 'page' : undefined}>
+            About
+          </a>
         </li>
         {/* Sign in moves into the menu on phones, where the bar has no room for it. */}
         <li className="lp-nav-menu-only">
           <a href="/login">Sign in</a>
+        </li>
+        <li className="lp-nav-menu-only lp-nav-menu-cta">
+          <button
+            type="button"
+            className="lp-nav-cta"
+            onClick={() => {
+              closeMenu();
+              goDash();
+            }}
+          >
+            <span className="lp-btn-label">Get started</span>
+            <ButtonArrow />
+          </button>
         </li>
       </ul>
       <div className="lp-nav-right">
