@@ -736,7 +736,7 @@ function LandingPage() {
           </section>
 
           {/* ── Protect CTA ── */}
-          <ProtectCta onStart={goDash} reveal />
+          <ProtectCta onStart={goDash} />
         </div>
       </div>
 

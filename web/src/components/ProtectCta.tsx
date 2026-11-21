@@ -6,12 +6,9 @@ import ButtonArrow from './ButtonArrow.tsx';
  */
 function ProtectCta({
   onStart,
-  reveal = false,
 }: {
   /** Get started. */
   onStart: () => void;
-  /** Fade the button in with the page's scroll reveal (`.lp-rv`); only the landing runs one. */
-  reveal?: boolean;
 }) {
   return (
     <section className="lp-protect-cta">
@@ -23,7 +20,7 @@ function ProtectCta({
           <span className="lp-hl-inner">and your peace of mind.</span>
         </span>
       </h2>
-      <div className={`lp-protect-cta-actions${reveal ? ' lp-rv lp-d1' : ''}`}>
+      <div className="lp-protect-cta-actions">
         <button className="lp-btn-primary" onClick={onStart}>
           <span className="lp-btn-label">Get started</span>
           <ButtonArrow />
