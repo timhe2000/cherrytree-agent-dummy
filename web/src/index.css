@@ -3138,7 +3138,7 @@ select:disabled {
    the bottom of the screen behind it and shows as the content scrolls away. The wrapper takes the
    footer's color (near-black) so the rounded corners show it too. */
 .lp.lp-has-curtain {
-  --curtain-radius: clamp(28px, 4.5vw, 64px);
+  --curtain-radius: clamp(20px, 2.75vw, 38px);
   background: #121212;
   /* On short pages the curtain stretches so the footer still sits at the bottom of the screen. */
   display: flex;
