@@ -16,7 +16,6 @@ import { goToDashboard } from '../utils/goToDashboard.ts';
 import { MARKETING_PLANS } from '../constants/pricing.ts';
 import PlanCards from '../components/PlanCards.tsx';
 import ScrollLitStatement from '../components/ScrollLitStatement.tsx';
-import ScenarioArc from '../components/ScenarioArc.tsx';
 import ProtectCta from '../components/ProtectCta.tsx';
 import ButtonArrow from '../components/ButtonArrow.tsx';
 import { smoothScrollTo } from '../hooks/useSmoothScroll.ts';
@@ -690,12 +689,11 @@ function LandingPage() {
             </div>
           </section>
 
-          {/* ── Scenarios: founder questions on an arc of cards (trial) ── */}
+          {/* ── Scenarios statement ── */}
           <section className="lp-features" id="scenarios">
             <div className="lp-feat-header lp-lit-header">
               <ScrollLitStatement text={LIT_APPLE} />
             </div>
-            <ScenarioArc />
           </section>
 
           {/* ── Pricing: the two self-serve plans on one white card ── */}
