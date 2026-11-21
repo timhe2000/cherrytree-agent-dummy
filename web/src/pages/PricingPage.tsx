@@ -20,38 +20,22 @@ interface CompareRow {
   custom: CompareCell;
 }
 
-interface CompareGroup {
-  /** Heading at the top of the group's card. */
-  title: string;
-  rows: readonly CompareRow[];
-}
-
-const COMPARE_GROUPS: readonly CompareGroup[] = [
+const COMPARE_ROWS: readonly CompareRow[] = [
+  { label: 'Price', standard: '$49, one-time', custom: 'Volume pricing' },
   {
-    title: 'Overview',
-    rows: [
-      { label: 'Price', standard: '$49, one-time', custom: 'Volume pricing' },
-      {
-        label: 'Who it’s for',
-        standard: 'One founding team',
-        custom: 'Accelerators, VCs, universities',
-      },
-      { label: 'Agreements included', standard: 'One company', custom: 'One per team you back' },
-    ],
+    label: 'Who it’s for',
+    standard: 'One founding team',
+    custom: 'Accelerators, VCs, universities',
   },
-  {
-    title: 'What’s included',
-    rows: [
-      { label: 'Answer in your own words', standard: true, custom: true },
-      { label: 'Smart follow-up questions', standard: true, custom: true },
-      { label: 'Equity split guidance', standard: true, custom: true },
-      { label: 'Complete cofounder agreement', standard: true, custom: true },
-      { label: 'Downloadable PDF agreement', standard: true, custom: true },
-      { label: 'Dedicated account manager', standard: false, custom: true },
-      { label: 'Track every team’s progress', standard: false, custom: true },
-      { label: 'Branded for your program', standard: false, custom: true },
-    ],
-  },
+  { label: 'Agreements included', standard: 'One company', custom: 'One per team you back' },
+  { label: 'Answer in your own words', standard: true, custom: true },
+  { label: 'Smart follow-up questions', standard: true, custom: true },
+  { label: 'Equity split guidance', standard: true, custom: true },
+  { label: 'Complete cofounder agreement', standard: true, custom: true },
+  { label: 'Downloadable PDF agreement', standard: true, custom: true },
+  { label: 'Dedicated account manager', standard: false, custom: true },
+  { label: 'Track every team’s progress', standard: false, custom: true },
+  { label: 'Branded for your program', standard: false, custom: true },
 ];
 
 const FAQS: readonly Faq[] = [
@@ -91,11 +75,10 @@ function Cell({ value }: { value: CompareCell }) {
   );
 }
 
-/** One group of the compare table on its own bordered card. */
-function CompareCard({ group }: { group: CompareGroup }) {
+/** Every row of the compare table in one list. */
+function CompareTable() {
   return (
     <div className="lp-ppt-card">
-      <h3 className="lp-ppt-card-title">{group.title}</h3>
       <table className="lp-ppt-table">
         <thead>
           <tr>
@@ -107,7 +90,7 @@ function CompareCard({ group }: { group: CompareGroup }) {
           </tr>
         </thead>
         <tbody>
-          {group.rows.map((row) => (
+          {COMPARE_ROWS.map((row) => (
             <tr key={row.label} className="lp-ppt-row">
               <td className="lp-ppt-label">{row.label}</td>
               <td>
@@ -179,9 +162,7 @@ function PricingPage() {
           <section className="lp-pricing-pg-compare">
             <div className="lp-ppt">
               <h2 className="lp-ppt-title">Compare plans</h2>
-              {COMPARE_GROUPS.map((group) => (
-                <CompareCard key={group.title} group={group} />
-              ))}
+              <CompareTable />
             </div>
           </section>
 

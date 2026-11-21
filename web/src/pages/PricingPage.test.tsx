@@ -142,7 +142,7 @@ describe('PricingPage', () => {
     renderPage();
     const rows = Array.from(document.querySelectorAll('.lp-ppt-row'));
     expect(rows).toHaveLength(11);
-    expect(document.querySelectorAll('.lp-ppt-card')).toHaveLength(2);
+    expect(document.querySelectorAll('.lp-ppt-card')).toHaveLength(1);
     const marks = (column: number) =>
       rows.filter((row) => row.querySelectorAll('td')[column]?.textContent === '✓').length;
     expect(marks(1)).toBe(5); // Standard

@@ -3365,13 +3365,6 @@ body:has(.lp-has-curtain) {
   .lp-ppt {
     gap: 24px;
   }
-  .lp-ppt-card {
-    padding: 24px 20px;
-  }
-  .lp-ppt-card-title {
-    margin-bottom: 28px;
-    font-size: 18px;
-  }
   .lp-ppt-row td,
   .lp-ppt-table th {
     font-size: 14px;
@@ -3822,7 +3815,7 @@ textarea.lp-form-input {
 .lp-pricing-pg-compare {
   padding: 140px var(--lp-gutter) 140px;
 }
-/* One bordered white card per group: title, plan names in grey, then rows split by hairlines. */
+/* Laid flat on the page: plan names in grey, then rows split by hairlines. */
 .lp-ppt {
   max-width: 960px;
   margin: 0 auto;
@@ -3836,20 +3829,6 @@ textarea.lp-form-input {
   font-weight: 400;
   line-height: 1.1;
   letter-spacing: 0.02em;
-  color: var(--lp-ink);
-}
-.lp-ppt-card {
-  padding: 40px;
-  border: 1px solid #f0eeeb;
-  box-shadow:
-    0 1px 2px rgba(34, 30, 25, 0.04),
-    0 8px 24px rgba(34, 30, 25, 0.06);
-  border-radius: 12px;
-}
-.lp-ppt-card-title {
-  margin-bottom: 48px;
-  font-size: 20px;
-  font-weight: 400;
   color: var(--lp-ink);
 }
 .lp-ppt-table {
