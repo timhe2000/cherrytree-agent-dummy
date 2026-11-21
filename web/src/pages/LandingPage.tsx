@@ -629,8 +629,8 @@ function LandingPage() {
             </span>
           </h1>
           <p className="lp-hero-sub">
-            Answer guided questions and get a complete Cofounder Agreement. No sketchy templates or
-            overpriced lawyers.
+            Apple almost failed before it started because of a bad cofounder agreement. Get yours
+            right from the start.
           </p>
           <div className="lp-hero-actions">
             <button className="lp-btn-primary" onClick={goDash}>
