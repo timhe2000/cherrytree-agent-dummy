@@ -3200,25 +3200,6 @@ body:has(.lp-has-curtain) {
 .lp-has-curtain .lp-footer::before {
   opacity: 0.2;
 }
-/* A giant wordmark filling the footer's width in a faint white, its bottom cropped by the
-   page edge (like causal.so's). Sized to the footer's width with container units. */
-.lp-footer {
-  container-type: inline-size;
-}
-.lp-footer-wordmark {
-  margin: clamp(48px, 6vw, 88px) 0 -48px;
-  overflow: hidden;
-  font-family: 'Manrope', sans-serif;
-  font-weight: 500;
-  font-size: 20.7cqw;
-  line-height: 0.78;
-  letter-spacing: -0.04em;
-  text-align: center;
-  white-space: nowrap;
-  color: rgba(255, 255, 255, 0.07);
-  user-select: none;
-  pointer-events: none;
-}
 /* White text on the black footer: links slightly dimmed, full white on hover. */
 .lp-has-curtain .lp-footer-copy,
 .lp-has-curtain .lp-footer-links a,

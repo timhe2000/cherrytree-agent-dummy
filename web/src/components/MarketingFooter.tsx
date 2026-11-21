@@ -19,10 +19,6 @@ function MarketingFooter() {
           </li>
         </ul>
       </div>
-      {/* A giant, faint wordmark across the bottom, cropped by the page edge. */}
-      <div className="lp-footer-wordmark" aria-hidden="true">
-        Cherrytree
-      </div>
     </footer>
   );
 }
