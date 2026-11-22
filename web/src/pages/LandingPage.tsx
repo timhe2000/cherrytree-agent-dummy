@@ -525,7 +525,7 @@ const LIT_PRICING =
   "Templates can't ask the right questions and lawyers can't answer them for lunch money. " +
   'Cherrytree does both.';
 const LIT_FAQ =
-  '“Cofounders are for a startup what location is for real estate.” — Paul Graham, cofounder of Y Combinator';
+  '“Cofounders are for a startup what location is for real estate.” – Paul Graham, cofounder of Y Combinator.';
 const LIT_LEGALESE =
   "You don't need to speak legalese to protect what you're building. You just tell your " +
   'story and we handle the rest.';
