@@ -6,6 +6,7 @@ import MarketingNav from '../components/MarketingNav.tsx';
 import MarketingFooter from '../components/MarketingFooter.tsx';
 import PlanCards from '../components/PlanCards.tsx';
 import ProtectCta from '../components/ProtectCta.tsx';
+import ScrollLitStatement from '../components/ScrollLitStatement.tsx';
 import FaqList, { type Faq } from '../components/FaqList.tsx';
 import { goToDashboard } from '../utils/goToDashboard.ts';
 import { MARKETING_PLANS } from '../constants/pricing.ts';
@@ -44,15 +45,19 @@ const FAQS: readonly Faq[] = [
   },
   {
     q: 'Is the price per agreement or per person?',
-    a: 'The price covers one agreement. You can add as many cofounders as you want, even on the Standard plan. Only one person pays and answers the questions; your cofounders review the draft before signing. A new company later needs a separate purchase.',
+    a: 'The price covers one agreement for your company. One founder fills it out on behalf of the whole team, and you can include as many cofounders as you need, even on Standard. A new company later needs a separate purchase.',
   },
   {
-    q: 'Can we buy for a whole cohort or portfolio?',
-    a: "Yes. Custom gives accelerators, VCs and universities volume pricing for every team, a dashboard to track each team's progress and a branded experience. Contact sales and we'll set you up.",
+    q: 'Is it a one-time payment or a subscription?',
+    a: "One-time. There's no subscription and nothing to renew.",
   },
   {
     q: 'Do we pay again to edit later?',
     a: 'No, edit all you want. The only repeat cost is if you create a brand-new agreement for a different company.',
+  },
+  {
+    q: 'Can we buy for a whole cohort or portfolio?',
+    a: "Yes. Custom gives accelerators, VCs and universities volume pricing for every team, a dashboard to track each team's progress and a branded experience. Contact sales and we'll set you up.",
   },
 ];
 
@@ -165,11 +170,11 @@ function PricingPage() {
           </section>
 
           {/* FAQ */}
-          <section className="lp-faq">
+          <section className="lp-faq lp-faq-ppt">
             <div className="lp-faq-inner">
               <div className="lp-faq-card">
                 <div className="lp-faq-visual">
-                  <h2>Frequently asked questions.</h2>
+                  <ScrollLitStatement text="Questions." />
                 </div>
                 <div className="lp-faq-panel">
                   <FaqList faqs={FAQS} />

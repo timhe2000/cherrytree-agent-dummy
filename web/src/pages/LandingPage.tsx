@@ -16,6 +16,7 @@ import { MARKETING_PLANS } from '../constants/pricing.ts';
 import PlanCards from '../components/PlanCards.tsx';
 import ScrollLitStatement from '../components/ScrollLitStatement.tsx';
 import ProtectCta from '../components/ProtectCta.tsx';
+import FaqList, { type Faq } from '../components/FaqList.tsx';
 import ButtonArrow from '../components/ButtonArrow.tsx';
 import { smoothScrollTo } from '../hooks/useSmoothScroll.ts';
 
@@ -484,10 +485,39 @@ const FEATURES = [
   },
 ];
 
+const FAQS: readonly Faq[] = [
+  {
+    q: "What's a cofounder agreement and why do I need one?",
+    a: "It's basically a prenup for your startup. It spells out equity, roles, and expectations so you don't end up in a messy breakup later. Think of it as cheap insurance against expensive fights.",
+  },
+  {
+    q: 'What does the agreement cover?',
+    a: 'Formation, equity, vesting, decision-making, IP, compensation, performance, non-compete and general provisions. Everything a cofounder agreement should.',
+  },
+  {
+    q: 'Why not just ask an AI chatbot to write one?',
+    a: "A chatbot writes whatever you ask for, but it doesn't know what to ask. Cherrytree walks you through the questions founders tend to skip, follows up where your answers are vague, and turns it all into a complete agreement that covers every section, not just the ones you thought of.",
+  },
+  {
+    q: 'Will investors take it seriously?',
+    a: 'Yes. You get a clean, standard-format agreement that holds up in due diligence.',
+  },
+  {
+    q: 'How long does it take?',
+    a: 'Most teams finish in one sitting. You answer in your own words and we turn it into a complete draft.',
+  },
+  {
+    q: "When's the right time to create a cofounder agreement?",
+    a: 'As early as possible. Day 1 is ideal, but day 100 is still better than never. The earlier you do it, the easier (and less awkward) it is.',
+  },
+];
+
 // Section titles whose words light up one by one as they scroll up the screen.
 const LIT_PRICING =
   "Templates can't ask the right questions and lawyers can't answer them for lunch money. " +
   'Cherrytree does both.';
+const LIT_FAQ =
+  '“Cofounders are for a startup what location is for real estate.” — Paul Graham, founder of Y Combinator';
 const LIT_LEGALESE =
   "You don't need to speak legalese to protect what you're building. You just tell your " +
   'story and we handle the rest.';
@@ -715,6 +745,18 @@ function LandingPage() {
               </div>
               <div className="lp-rv">
                 <PlanCards plans={MARKETING_PLANS} onStart={goDash} />
+              </div>
+            </div>
+          </section>
+
+          {/* ── FAQ ── */}
+          <section className="lp-faq">
+            <div className="lp-faq-inner">
+              <div className="lp-feat-header lp-lit-header">
+                <ScrollLitStatement text={LIT_FAQ} />
+              </div>
+              <div className="lp-faq-center">
+                <FaqList faqs={FAQS} />
               </div>
             </div>
           </section>

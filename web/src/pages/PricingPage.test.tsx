@@ -75,10 +75,11 @@ describe('PricingPage', () => {
     expect(faq.mainEntity.map((q) => q.name)).toEqual([
       'Which plan is right for me?',
       'Is the price per agreement or per person?',
-      'Can we buy for a whole cohort or portfolio?',
+      'Is it a one-time payment or a subscription?',
       'Do we pay again to edit later?',
+      'Can we buy for a whole cohort or portfolio?',
     ]);
-    expect(faq.mainEntity[2]?.acceptedAnswer.text).toMatch(/volume pricing for every team/);
+    expect(faq.mainEntity[4]?.acceptedAnswer.text).toMatch(/volume pricing for every team/);
 
     unmount();
     expect(document.getElementById('faq-schema')).toBeNull();
