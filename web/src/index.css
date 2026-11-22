@@ -2894,13 +2894,9 @@ select:disabled {
 .lp-faq .lp-feat-header.lp-lit-header {
   margin-bottom: calc(clamp(48px, 7vw, 96px) - 22px);
 }
-/* Landing: under the full-width statement the questions sit in two centred columns. */
-.lp-faq-cols {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0 128px;
-  align-items: start;
-  max-width: 1100px;
+/* Landing: under the full-width statement the questions sit in one centred column. */
+.lp-faq-center {
+  max-width: 760px;
   margin: 0 auto;
 }
 /* Pricing: same 960px centred column as the compare table (.lp-ppt), with the questions starting
@@ -3341,14 +3337,6 @@ body:has(.lp-has-curtain) {
   .lp-faq-ppt .lp-faq-card {
     grid-template-columns: 1fr;
     gap: 28px;
-  }
-  .lp-faq-cols {
-    grid-template-columns: 1fr;
-    gap: 0;
-  }
-  /* Stacked, the two lists read as one: carry the hairline across the join. */
-  .lp-faq-cols .lp-faq-list + .lp-faq-list {
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
   }
   .lp-protect-cta {
     padding: 56px 24px 140px;

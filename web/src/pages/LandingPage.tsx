@@ -495,6 +495,18 @@ const FAQS: readonly Faq[] = [
     a: 'Formation, equity, vesting, decision-making, IP, compensation, performance, non-compete and general provisions. Everything a cofounder agreement should.',
   },
   {
+    q: 'What do we get at the end?',
+    a: 'A complete cofounder agreement as a PDF, ready for everyone to review and sign.',
+  },
+  {
+    q: 'How long does it take?',
+    a: 'Most teams finish in one sitting. You answer in your own words and we turn it into a complete draft.',
+  },
+  {
+    q: 'Do all the cofounders need to fill it out?',
+    a: 'No. One founder fills it out on behalf of the team, and the others review and approve the draft before it’s final.',
+  },
+  {
     q: 'Why not just ask an AI chatbot to write one?',
     a: "A chatbot writes whatever you ask for, but it doesn't know what to ask. Cherrytree walks you through the questions founders tend to skip, follows up where your answers are vague, and turns it all into a complete agreement that covers every section, not just the ones you thought of.",
   },
@@ -503,17 +515,10 @@ const FAQS: readonly Faq[] = [
     a: 'Yes. You get a clean, standard-format agreement that holds up in due diligence.',
   },
   {
-    q: 'How long does it take?',
-    a: 'Most teams finish in one sitting. You answer in your own words and we turn it into a complete draft.',
-  },
-  {
     q: "When's the right time to create one?",
     a: 'As early as possible. Day 1 is ideal, but day 100 is still better than never. The earlier you do it, the easier (and less awkward) it is.',
   },
 ];
-
-// The FAQ's two columns: the first takes the extra question when the count is odd.
-const FAQ_COL_SPLIT = Math.ceil(FAQS.length / 2);
 
 // Section titles whose words light up one by one as they scroll up the screen.
 const LIT_PRICING =
@@ -758,10 +763,8 @@ function LandingPage() {
               <div className="lp-feat-header lp-lit-header">
                 <ScrollLitStatement text={LIT_FAQ} />
               </div>
-              {/* Two independent columns so opening a question only moves the ones below it. */}
-              <div className="lp-faq-cols">
-                <FaqList faqs={FAQS.slice(0, FAQ_COL_SPLIT)} />
-                <FaqList faqs={FAQS.slice(FAQ_COL_SPLIT)} />
+              <div className="lp-faq-center">
+                <FaqList faqs={FAQS} />
               </div>
             </div>
           </section>
