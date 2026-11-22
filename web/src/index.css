@@ -2889,12 +2889,26 @@ select:disabled {
 .lp-faq-visual {
   padding: 0;
 }
-/* Landing: the questions sit in a centred column under the full-width statement. */
-.lp-faq-center {
-  max-width: 760px;
+/* The rows' 22px top padding would add to the header gap; take it off so the first question sits
+   the same distance under the statement as other sections' content does. */
+.lp-faq .lp-feat-header.lp-lit-header {
+  margin-bottom: calc(clamp(48px, 7vw, 96px) - 22px);
+}
+/* Landing: under the full-width statement the questions sit in two centred columns. */
+.lp-faq-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 128px;
+  align-items: start;
+  max-width: 1100px;
   margin: 0 auto;
 }
-/* Pricing: questions start where the compare table's first plan column does (.lp-ppt-feature-col). */
+/* Pricing: same 960px centred column as the compare table (.lp-ppt), with the questions starting
+   where its first plan column does (.lp-ppt-feature-col). */
+.lp-faq-ppt .lp-faq-inner {
+  max-width: 960px;
+  margin: 0 auto;
+}
 .lp-faq-ppt .lp-faq-card {
   grid-template-columns: 46% 1fr;
   gap: 0;
@@ -2914,12 +2928,11 @@ select:disabled {
 .lp-faq-list {
   display: flex;
   flex-direction: column;
-  gap: 4px;
   width: 100%;
 }
-/* Flat rows with no background. */
-.lp-faq-item {
-  border-radius: var(--lp-radius);
+/* Flat rows split by faint 1px hairlines, the same as the About page's point rules. */
+.lp-faq-item + .lp-faq-item {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
 }
 .lp-faq-btn {
   display: flex;
@@ -3328,6 +3341,14 @@ body:has(.lp-has-curtain) {
   .lp-faq-ppt .lp-faq-card {
     grid-template-columns: 1fr;
     gap: 28px;
+  }
+  .lp-faq-cols {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  /* Stacked, the two lists read as one: carry the hairline across the join. */
+  .lp-faq-cols .lp-faq-list + .lp-faq-list {
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
   }
   .lp-protect-cta {
     padding: 56px 24px 140px;

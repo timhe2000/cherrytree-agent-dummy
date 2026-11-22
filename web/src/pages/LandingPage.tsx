@@ -507,17 +507,20 @@ const FAQS: readonly Faq[] = [
     a: 'Most teams finish in one sitting. You answer in your own words and we turn it into a complete draft.',
   },
   {
-    q: "When's the right time to create a cofounder agreement?",
+    q: "When's the right time to create one?",
     a: 'As early as possible. Day 1 is ideal, but day 100 is still better than never. The earlier you do it, the easier (and less awkward) it is.',
   },
 ];
+
+// The FAQ's two columns: the first takes the extra question when the count is odd.
+const FAQ_COL_SPLIT = Math.ceil(FAQS.length / 2);
 
 // Section titles whose words light up one by one as they scroll up the screen.
 const LIT_PRICING =
   "Templates can't ask the right questions and lawyers can't answer them for lunch money. " +
   'Cherrytree does both.';
 const LIT_FAQ =
-  '“Cofounders are for a startup what location is for real estate.” — Paul Graham, founder of Y Combinator';
+  '“Cofounders are for a startup what location is for real estate.” — Paul Graham, cofounder of Y Combinator';
 const LIT_LEGALESE =
   "You don't need to speak legalese to protect what you're building. You just tell your " +
   'story and we handle the rest.';
@@ -755,8 +758,10 @@ function LandingPage() {
               <div className="lp-feat-header lp-lit-header">
                 <ScrollLitStatement text={LIT_FAQ} />
               </div>
-              <div className="lp-faq-center">
-                <FaqList faqs={FAQS} />
+              {/* Two independent columns so opening a question only moves the ones below it. */}
+              <div className="lp-faq-cols">
+                <FaqList faqs={FAQS.slice(0, FAQ_COL_SPLIT)} />
+                <FaqList faqs={FAQS.slice(FAQ_COL_SPLIT)} />
               </div>
             </div>
           </section>
